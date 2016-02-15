@@ -1,5 +1,6 @@
 package com.waiter.waiterpoc;
 
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,13 +19,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements SignInFragment.OnFragmentInteractionListener, SignUpFragment.OnFragmentInteractionListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -58,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
 
@@ -83,146 +88,14 @@ public class LoginActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Sign In fragment
-     */
-    public static class SignInFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        // UI references.
-        private EditText mEmailView;
-        private EditText mPasswordView;
-        private View mProgressView;
-        private View mSignInFormView;
-
-        public SignInFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static SignInFragment newInstance(int sectionNumber) {
-            SignInFragment fragment = new SignInFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_signin, container, false);
-            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
-            // Set up the sign in form
-            mEmailView = (EditText) rootView.findViewById(R.id.emailText);
-
-            mPasswordView = (EditText) rootView.findViewById(R.id.passwordText);
-            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                        //attemptLogin();
-                        return true;
-                    }
-                    return false;
-                }
-            });
-
-            Button mEmailSignInButton = (Button) rootView.findViewById(R.id.email_sign_in_button);
-            mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //attemptLogin();
-                }
-            });
-
-            mSignInFormView = rootView.findViewById(R.id.signin_form);
-            mProgressView = rootView.findViewById(R.id.signin_progress);
-
-            return rootView;
-        }
+    @Override
+    public void onFragmentInteractionSignIn(Uri uri) {
+        Toast.makeText(this, "SignIn", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Sign Up fragment
-     */
-    public static class SignUpFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        // UI references.
-        private EditText mFirstNameView;
-        private EditText mLastNameView;
-        private EditText mEmailView;
-        private EditText mPasswordView;
-        private EditText mRepeatPasswordView;
-        private View mProgressView;
-        private View mSignUpFormView;
-
-        public SignUpFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static SignUpFragment newInstance(int sectionNumber) {
-            SignUpFragment fragment = new SignUpFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_signup, container, false);
-            //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
-            // Set up the sign in form
-            mFirstNameView= (EditText) rootView.findViewById(R.id.firstNameText);
-            mLastNameView = (EditText) rootView.findViewById(R.id.lastNameText);
-            mEmailView = (EditText) rootView.findViewById(R.id.emailText);
-
-            mPasswordView = (EditText) rootView.findViewById(R.id.passwordText);
-            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                        //attemptLogin();
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            mRepeatPasswordView = (EditText) rootView.findViewById(R.id.repeatPasswordText);
-
-            Button mEmailSignUpButton = (Button) rootView.findViewById(R.id.email_sign_up_button);
-            mEmailSignUpButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //attemptLogin();
-                }
-            });
-
-            mSignUpFormView = rootView.findViewById(R.id.signup_form);
-            mProgressView = rootView.findViewById(R.id.signup_progress);
-
-            return rootView;
-        }
+    @Override
+    public void onFragmentInteractionSignUp(Uri uri) {
+        Toast.makeText(this, "SignUp", Toast.LENGTH_SHORT).show();
     }
 
     public void onCheckboxClicked(View view) {
