@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,8 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.waiter.waiterpoc.dummy.DummyContent;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EventFragment.OnListFragmentInteractionListener {
 
     private static boolean connected = false;
 
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (!connected) {
+        if (connected) {
             Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -43,6 +46,12 @@ public class MainActivity extends AppCompatActivity
             startActivity(myIntent);
             MainActivity.this.startActivity(myIntent);
         }
+
+        EventFragment fragment = new EventFragment();
+        FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_frame, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -100,5 +109,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+
     }
 }
