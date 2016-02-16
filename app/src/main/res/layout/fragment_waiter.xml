@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="5dp">
+    android:paddingTop="10dp"
+    >
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -22,21 +22,12 @@
             android:padding="16dp"
             >
 
-            <ImageView
-                android:id="@+id/photo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_event_black_48dp"
-                />
-
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/photo"
-                android:layout_alignTop="@+id/photo"
                 android:textStyle="bold"
                 />
 
