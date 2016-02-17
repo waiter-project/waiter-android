@@ -1,6 +1,7 @@
 package com.waiter.waiterpoc;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,7 +19,7 @@ import android.view.MenuItem;
 import com.waiter.waiterpoc.dummy.DummyContent;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EventFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EventFragment.OnListFragmentInteractionListener, DebuggingFragment.OnFragmentInteractionListener {
 
     private static boolean connected = false;
 
@@ -95,7 +96,12 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             // Handle the camera action
         } else if (id == R.id.nav_event) {
-
+            EventFragment fragment = new EventFragment();
+            FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment);
+            fragmentTransaction.commit();
+            setTitle(getString(R.string.navigation_drawer_events));
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
@@ -104,6 +110,12 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.nav_debugging) {
+            DebuggingFragment fragment = new DebuggingFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment);
+            fragmentTransaction.commit();
+            setTitle(getString(R.string.navigation_drawer_debugging));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -113,6 +125,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    }
 
+    @Override
+    public void onFragmentInteractionDebugging(Uri uri) {
     }
 }

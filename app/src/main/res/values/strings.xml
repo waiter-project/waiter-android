@@ -11,6 +11,7 @@
     <string name="navigation_drawer_logout">Logout</string>
     <string name="navigation_drawer_share">Share</string>
     <string name="navigation_drawer_send">Send</string>
+    <string name="navigation_drawer_debugging">Debugging</string>
 
     <string name="action_settings">Settings</string>
 
@@ -34,8 +35,6 @@
     </string>
     <string name="license_agreement">I have read, and agree the license agreement.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--<string name="section_format">Hello World from section: %1$d</string>-->
 
 </resources>
