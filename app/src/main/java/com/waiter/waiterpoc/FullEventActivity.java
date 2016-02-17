@@ -6,14 +6,14 @@ import android.os.Bundle;
 
 import com.waiter.waiterpoc.dummy.DummyContent;
 
-public class FullEventActivity extends AppCompatActivity implements WaiterFragment.OnListFragmentInteractionListener {
+public class FullEventActivity extends AppCompatActivity implements EventFragment.OnListFragmentInteractionListener, WaiterFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_event);
 
-        EventFragment fragment = new EventFragment();
+        WaiterFragment fragment = new WaiterFragment();
         FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment);

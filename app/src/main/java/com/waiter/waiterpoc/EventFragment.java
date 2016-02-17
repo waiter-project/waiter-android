@@ -1,6 +1,7 @@
 package com.waiter.waiterpoc;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -67,6 +68,9 @@ public class EventFragment extends Fragment {
             recyclerView.addOnItemTouchListener(new MyEventRecyclerViewAdapter.RecyclerItemClickListener(context, new MyEventRecyclerViewAdapter.RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
+                    Intent myIntent = new Intent(getActivity(), FullEventActivity.class);
+                    getActivity().startActivity(myIntent);
+                    //getActivity().startActivity(myIntent);
                     System.out.println("It works !");
                 }
             }));
