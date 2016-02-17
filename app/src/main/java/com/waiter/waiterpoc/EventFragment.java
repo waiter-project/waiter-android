@@ -64,6 +64,12 @@ public class EventFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView.addOnItemTouchListener(new MyEventRecyclerViewAdapter.RecyclerItemClickListener(context, new MyEventRecyclerViewAdapter.RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    System.out.println("It works !");
+                }
+            }));
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
