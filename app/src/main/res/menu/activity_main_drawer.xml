@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:title="Debug">
+        <menu>
+            <item
+                android:id="@+id/nav_debugging"
+                android:icon="@drawable/ic_bug_report_black_48dp"
+                android:title="@string/navigation_drawer_debugging" />
+        </menu>
+    </item>
+
+
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_profile"

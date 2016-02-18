@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import retrofit2.Retrofit;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,6 +88,14 @@ public class SignInFragment extends Fragment {
 
         mSignInFormView = rootView.findViewById(R.id.signin_form);
         mProgressView = rootView.findViewById(R.id.signin_progress);
+
+        /*
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.waiter.com")
+                .build();
+
+        WaiterAPI waiterAPI = retrofit.create(WaiterAPI.class);
+        */
 
         return rootView;
     }
