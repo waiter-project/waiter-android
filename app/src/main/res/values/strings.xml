@@ -12,7 +12,6 @@
     <string name="navigation_drawer_share">Share</string>
     <string name="navigation_drawer_send">Send</string>
     <string name="navigation_drawer_debugging">Debugging</string>
-    <string name="navigation_drawer_debugging">Debugging</string>
     <string name="action_settings">Settings</string>
 
     <!-- Strings related to login -->
