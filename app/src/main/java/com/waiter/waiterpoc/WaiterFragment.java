@@ -1,6 +1,7 @@
 package com.waiter.waiterpoc;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -58,12 +59,20 @@ public class WaiterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_waiter_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView.addOnItemTouchListener(new MyEventRecyclerViewAdapter.RecyclerItemClickListener(context, new MyEventRecyclerViewAdapter.RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Intent myIntent = new Intent(getActivity(), LoadingPopup.class);
+                    getActivity().startActivity(myIntent);
+                    System.out.println("It works !");
+                }
+            }));
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
