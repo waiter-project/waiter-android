@@ -12,9 +12,6 @@ import com.waiter.waiterpoc.dummy.DummyContent;
 
 public class LoadingPopup extends AppCompatActivity implements WaiterFragment.OnListFragmentInteractionListener {
 
-    private PopupWindow popupWindow;
-    private LayoutInflater layoutInflater;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

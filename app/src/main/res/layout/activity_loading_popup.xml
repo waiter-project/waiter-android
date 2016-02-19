@@ -10,4 +10,13 @@
     tools:context="com.waiter.waiterpoc.LoadingPopup"
     android:id="@+id/relative">
 
+    <TextView
+        android:id="@+id/command"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:text="Commande en cours"
+        />
+
 </RelativeLayout>
