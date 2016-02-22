@@ -26,12 +26,6 @@ public class LoadingPopup extends AppCompatActivity implements WaiterFragment.On
 
     }
 
-
-    @Override
-    public View getView(int postion, View convertView, ViewGroup parent) {
-
-    }
-
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
