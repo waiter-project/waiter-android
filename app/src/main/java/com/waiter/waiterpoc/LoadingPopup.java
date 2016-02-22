@@ -3,6 +3,9 @@ package com.waiter.waiterpoc;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
+
 
 import com.waiter.waiterpoc.dummy.DummyContent;
 
@@ -20,6 +23,13 @@ public class LoadingPopup extends AppCompatActivity implements WaiterFragment.On
         int height = dm.heightPixels;
 
         getWindow().setLayout((int)(width*.8), (int)(height*.6));
+
+    }
+
+
+    @Override
+    public View getView(int postion, View convertView, ViewGroup parent) {
+
     }
 
     @Override

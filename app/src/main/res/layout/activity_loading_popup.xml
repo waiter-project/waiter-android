@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@android:color/black"
-        android:text="Commande en cours"
+        android:text="En attente d'acceptation"
         />
 
 </RelativeLayout>
