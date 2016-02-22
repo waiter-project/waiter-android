@@ -39,7 +39,7 @@
                 android:layout_toRightOf="@+id/photo"
                 android:layout_alignTop="@+id/photo"
                 android:textStyle="bold"
-                tools:text="Title"
+                android:text="Cafet'"
                 />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:textColor="@android:color/black"
                 android:layout_alignLeft="@+id/title"
                 android:layout_below="@+id/title"
-                tools:text="Placeholder"
+                android:text="C'est ici qu'on mange des bons burgers du monsieur aux cheveux blancs"
                 />
 
             <TextView
@@ -60,6 +60,7 @@
                 android:layout_below="@+id/description"
                 android:textStyle="italic"
                 android:layout_alignParentRight="true"
+                android:text="Tous les jours"
                 />
 
         </RelativeLayout>
