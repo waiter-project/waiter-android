@@ -20,13 +20,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".FullEventActivity" />
+        <activity
+            android:name=".LoadingPopup"
+            android:theme="@style/AppTheme.CustomTheme" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FullEventActivity" />
-        <activity android:name=".LoadingPopup"
-                android:theme="@style/AppTheme.CustomTheme"></activity>
+            android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".SignupActivity"
+            android:theme="@style/AppTheme.Dark" />
     </application>
 
 </manifest>

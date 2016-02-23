@@ -1,5 +1,6 @@
 package com.waiter.waiterpoc;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,13 @@ import com.waiter.waiterpoc.dummy.DummyContent;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EventFragment.OnListFragmentInteractionListener, DebuggingFragment.OnFragmentInteractionListener {
 
+    private static Context sContext;
+
     private static boolean connected = false;
+
+    public static Context getsContext() {
+        return sContext;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,20 +46,24 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (connected) {
-            Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
-            myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(myIntent);
-            MainActivity.this.startActivity(myIntent);
-        }
+        sContext = getApplicationContext();
+        connected = LoginActivity.isConnected();
 
-        EventFragment fragment = new EventFragment();
-        FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, fragment);
-        fragmentTransaction.commit();
+        if (!connected) {
+            Intent myIntent = new Intent(this, LoginActivity.class);
+            //myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            //myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(myIntent);
+            //MainActivity.this.startActivity(myIntent);
+        } else {
+            EventFragment fragment = new EventFragment();
+            FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.content_frame, fragment);
+            fragmentTransaction.commit();
+            setTitle("Events");
+        }
     }
 
     @Override
