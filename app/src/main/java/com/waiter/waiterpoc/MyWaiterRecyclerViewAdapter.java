@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.waiter.waiterpoc.WaiterFragment.OnListFragmentInteractionListener;
 import com.waiter.waiterpoc.dummy.DummyContent.DummyItem;
@@ -39,10 +41,9 @@ public class MyWaiterRecyclerViewAdapter extends RecyclerView.Adapter<MyWaiterRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mTitleView.setText(mValues.get(position).id);
+        //holder.mProfilView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).content);
-        holder.mDateView.setText(mValues.get(position).content);
-
+        holder.mRatingBar.setRating(5);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,17 +64,18 @@ public class MyWaiterRecyclerViewAdapter extends RecyclerView.Adapter<MyWaiterRe
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mTitleView;
+        public final ImageView mProfilView;
         public final TextView mContentView;
-        public final TextView mDateView;
+        public final RatingBar mRatingBar;
+
         public DummyItem mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mTitleView = (TextView) view.findViewById(R.id.title);
+            mProfilView = (ImageView) view.findViewById(R.id.profil);
             mContentView = (TextView) view.findViewById(R.id.description);
-            mDateView = (TextView) view.findViewById(R.id.date);
+            mRatingBar = (RatingBar) view.findViewById(R.id.rating);
         }
 
         @Override

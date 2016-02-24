@@ -6,8 +6,8 @@
     android:name="com.waiter.waiterpoc.WaiterFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.waiter.waiterpoc.WaiterFragment"
     tools:listitem="@layout/fragment_waiter" />

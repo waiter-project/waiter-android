@@ -22,8 +22,7 @@ public class FullEventActivity extends AppCompatActivity implements EventFragmen
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment);
         fragmentTransaction.commit();
-
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
