@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         sContext = getApplicationContext();
         connected = LoginActivity.isConnected();
 
-        if (connected) {
+        if (!connected) {
             Intent myIntent = new Intent(this, LoginActivity.class);
             //myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
