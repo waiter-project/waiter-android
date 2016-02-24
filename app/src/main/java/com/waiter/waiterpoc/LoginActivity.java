@@ -61,11 +61,10 @@ public class LoginActivity extends AppCompatActivity {
         boolean logout = myIntent.getBooleanExtra("logout", false);
         if (logout) {
             SharedPreferences.Editor editor = sp.edit();
-            editor.remove("login");
-            editor.remove("pwd");
+            editor.remove("email");
+            editor.remove("password");
             editor.commit();
         }
-
 
         // Set up the login form
         mEmailText = (EditText) findViewById(R.id.input_email);
