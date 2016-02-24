@@ -56,13 +56,18 @@ public class MainActivity extends AppCompatActivity
             //myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(myIntent);
             //MainActivity.this.startActivity(myIntent);
-        } else {
-            EventFragment fragment = new EventFragment();
-            FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.content_frame, fragment);
-            fragmentTransaction.commit();
-            setTitle("Events");
+        }
+
+        EventFragment fragment = new EventFragment();
+        FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_frame, fragment);
+        fragmentTransaction.commit();
+        setTitle("Events");
+
+        // Check internet connection
+        if (!CheckNetwork.isInternetAvailable(this)) {
+            Snackbar.make(findViewById(R.id.root_view), "No internet connection", Snackbar.LENGTH_LONG);
         }
     }
 
@@ -116,7 +121,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
-
+            Intent myIntent = new Intent(this, LoginActivity.class);
+            myIntent.putExtra("logout", true);
+            startActivity(myIntent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

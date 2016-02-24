@@ -5,8 +5,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Useful strings -->
+    <string name="debug">Debug</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="unknown_error">An unknown error happened, please try again later</string>
+    <string name="no_internet">No internet connection</string>
 
     <!-- Navigation Drawer entry -->
     <string name="navigation_drawer_profile">Profile</string>
@@ -43,7 +46,6 @@
     <string name="action_sign_up_short">Sign up</string>
     <string name="already_member">Already a member? Login</string>
     <string name="signup_failed_title">Registration Failed</string>
-    <string name="signup_failed_message">An unknown error happened, please try again later</string>
     <string name="signup_failed_email">Email address already used</string>
 
     <!-- TODO: Remove or change this placeholder text -->

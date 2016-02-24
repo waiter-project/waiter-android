@@ -3,7 +3,7 @@ package com.waiter.waiterpoc;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.preference.PreferenceManager;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.waiter.waiterpoc.models.RegisterAttempt;
 import com.waiter.waiterpoc.network.ServiceGenerator;
@@ -33,6 +34,7 @@ public class SignupActivity extends AppCompatActivity {
     private Button mRegisterButton;
     private AlertDialog.Builder builder;
     private AlertDialog dialog;
+    private Intent myIntent;
 
     // Initial variables
     //private SharedPreferences sp;
@@ -58,6 +60,14 @@ public class SignupActivity extends AppCompatActivity {
         mPasswordText = (EditText) findViewById(R.id.input_password);
         mRepeatPasswordText = (EditText) findViewById(R.id.input_repeat_password);
 
+        // Check email_prefilled from LoginActivity
+        myIntent = getIntent();
+        String email_prefilled = myIntent.getStringExtra("email_prefilled");
+        if (email_prefilled != null){
+            mEmailText.setText(email_prefilled);
+        }
+
+        // Set up various buttons/link
         mRegisterButton = (Button) findViewById(R.id.btn_signup);
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,12 +93,24 @@ public class SignupActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        builder.setMessage(R.string.signup_failed_message).setTitle(R.string.signup_failed_title);
+        builder.setTitle(R.string.signup_failed_title);
         dialog = builder.create();
+
+        // Check internet connection
+        if (!CheckNetwork.isInternetAvailable(this)) {
+            Toast.makeText(SignupActivity.this, "No internet connection", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void signup() {
         Log.d("SignupActivity", "Signup");
+
+        if (!CheckNetwork.isInternetAvailable(this)) {
+            builder.setMessage(R.string.no_internet);
+            dialog = builder.create();
+            dialog.show();
+            return ;
+        }
 
         if (!validate()) {
             //onSignupFailed();
@@ -127,10 +149,12 @@ public class SignupActivity extends AppCompatActivity {
                     */
                     progressDialog.dismiss();
 
-                    onSignupSuccess();
+                    onSignupSuccess(email, password);
                 } else {
                     Log.d("Failure", "Return: " + response.message() + " - Raw: " + response.raw().toString());
                     progressDialog.dismiss();
+                    builder.setMessage(R.string.signup_failed_email);
+                    dialog = builder.create();
                     onSignupFailed();
                 }
             }
@@ -139,15 +163,19 @@ public class SignupActivity extends AppCompatActivity {
             public void onFailure(Call<RegisterAttempt> call, Throwable t) {
                 Log.d("Error", t.getMessage());
                 progressDialog.dismiss();
+                builder.setMessage(R.string.unknown_error);
+                dialog = builder.create();
                 onSignupFailed();
             }
         });
     }
 
-    public void onSignupSuccess() {
+    public void onSignupSuccess(String email, String password) {
         Log.d("onSignupSuccess", "Function onSignupSuccess");
         mRegisterButton.setEnabled(true);
-        setResult(RESULT_OK, null);
+        getIntent().putExtra("email", email);
+        getIntent().putExtra("password", password);
+        setResult(RESULT_OK, getIntent());
         finish();
     }
 

@@ -1,5 +1,6 @@
 package com.waiter.waiterpoc;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -7,11 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,7 +35,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordText;
     private TextView mSignUpLink;
     private Button mLoginButton;
+    private AlertDialog.Builder builder;
     private AlertDialog dialog;
+    private Button mDebugButton;
 
     // Initial variables
     private SharedPreferences sp;
@@ -50,6 +55,17 @@ public class LoginActivity extends AppCompatActivity {
 
         // Set initial variables
         sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.getsContext());
+
+        // Check logout from MainActivity
+        Intent myIntent = getIntent();
+        boolean logout = myIntent.getBooleanExtra("logout", false);
+        if (logout) {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.remove("login");
+            editor.remove("pwd");
+            editor.commit();
+        }
+
 
         // Set up the login form
         mEmailText = (EditText) findViewById(R.id.input_email);
@@ -70,24 +86,64 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start the signup activity
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                String email = mEmailText.getText().toString();
+                if (!email.isEmpty()) {
+                    intent.putExtra("email_prefilled", email);
+                }
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
 
         // Set up the AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
-        builder.setMessage(R.string.signin_failed_message).setTitle(R.string.signin_failed_title);
+        builder.setTitle(R.string.signin_failed_title);
         dialog = builder.create();
+
+        // Set up the Debug Button
+        mDebugButton = (Button) findViewById(R.id.debug_btn);
+        mDebugButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEmailText.setText("admin@waiter.com");
+                mPasswordText.setText("azerty");
+                ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                onLoginSuccess();
+            }
+        });
+
+        // Check internet connection
+        if (!CheckNetwork.isInternetAvailable(this)) {
+            Toast.makeText(LoginActivity.this, "No internet connection", Toast.LENGTH_LONG).show();
+            //Snackbar.make((View) findViewById(R.id.root_view), "No internet connection", Snackbar.LENGTH_LONG).show();
+        }
+
+        // Check auto-login
+        String email = sp.getString("email", "");
+        String password = sp.getString("password", "");
+        if (!email.isEmpty() && !password.isEmpty()) {
+            mEmailText.setText(email);
+            mPasswordText.setText(password);
+            login();
+        }
+
     }
 
     public void login() {
         Log.d("LoginActivity", "Login");
+
+        if (!CheckNetwork.isInternetAvailable(this)) {
+            builder.setMessage(R.string.no_internet);
+            dialog = builder.create();
+            dialog.show();
+            return ;
+        }
 
         if (!validate()) {
             //onLoginFailed();
@@ -125,6 +181,8 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Log.d("Failure", "Return: " + response.message() + " - Raw: " + response.raw().toString());
                     progressDialog.dismiss();
+                    builder.setMessage(R.string.signin_failed_message);
+                    dialog = builder.create();
                     onLoginFailed();
                 }
 
@@ -134,6 +192,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<LoginAttempt> call, Throwable t) {
                 Log.d("Error", t.getMessage());
                 progressDialog.dismiss();
+                builder.setMessage(R.string.unknown_error);
+                dialog = builder.create();
                 onLoginFailed();
             }
         });
@@ -145,7 +205,15 @@ public class LoginActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
-                this.finish();
+
+                if (data != null) {
+                    mEmailText.setText(data.getExtras().getString("email"));
+                    mPasswordText.setText(data.getExtras().getString("password"));
+                }
+
+                login();
+
+                //this.finish();
             }
         }
     }
