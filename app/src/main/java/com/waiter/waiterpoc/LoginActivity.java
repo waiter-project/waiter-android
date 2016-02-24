@@ -259,12 +259,7 @@ public class LoginActivity extends AppCompatActivity {
             mPasswordText.setError(getString(R.string.error_field_required));
             valid = false;
         } else {
-            if (password.length() < 6 || password.length() > 20) {
-                mPasswordText.setError(getString(R.string.error_incorrect_password));
-                valid = false;
-            } else {
-                mPasswordText.setError(null);
-            }
+            mPasswordText.setError(null);
         }
 
         return valid;
