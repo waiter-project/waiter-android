@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="5dp"
     >
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cv"
+        android:layout_height="match_parent"
+        android:id="@+id/cvWaiter"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
         card_view:cardBackgroundColor="@android:color/white"
@@ -18,6 +19,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             >
 
             <ImageView
@@ -58,4 +60,4 @@
 
     </android.support.v7.widget.CardView>
 
-</RelativeLayout>
+</LinearLayout>
