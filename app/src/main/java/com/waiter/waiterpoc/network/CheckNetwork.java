@@ -1,4 +1,4 @@
-package com.waiter.waiterpoc;
+package com.waiter.waiterpoc.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

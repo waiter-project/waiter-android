@@ -47,9 +47,11 @@
         <item name="android:textColorPrimary">@color/iron</item>
         <item name="android:background">@color/colorPrimaryDark</item>
     </style>
+
+    <!-- RATING BAR -->
     <style name="RatingBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/ic_grade_black_48dp</item>
-        <item name="android:minHeight">48dip</item>
+        <item name="android:minHeight">24dip</item>
         <item name="android:maxHeight">48dip</item>
     </style>
 

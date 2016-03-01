@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
-public class User {
+public class RegisterResponse {
 
     @SerializedName("firstname")
     @Expose
@@ -16,9 +16,6 @@ public class User {
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("password")
-    @Expose
-    private String password;
     @SerializedName("tokenClient")
     @Expose
     private String tokenClient;
@@ -102,24 +99,6 @@ public class User {
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    /**
-     *
-     * @return
-     * The password
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     *
-     * @param password
-     * The password
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**

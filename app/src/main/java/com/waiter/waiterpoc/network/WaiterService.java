@@ -1,8 +1,12 @@
 package com.waiter.waiterpoc.network;
 
+import com.waiter.waiterpoc.models.Event;
+import com.waiter.waiterpoc.models.GenericResponse;
 import com.waiter.waiterpoc.models.GenericResponseArray;
 import com.waiter.waiterpoc.models.LoginAttempt;
+import com.waiter.waiterpoc.models.LoginResponse;
 import com.waiter.waiterpoc.models.RegisterAttempt;
+import com.waiter.waiterpoc.models.RegisterResponse;
 import com.waiter.waiterpoc.models.User;
 
 import retrofit2.Call;
@@ -10,10 +14,8 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
-/**
- * Created by kharra_m on 17/02/2016.
- */
 public interface WaiterService {
     //You can use rx.java for sophisticated composition of requests
     //@GET("/users/{user}")
@@ -32,11 +34,20 @@ public interface WaiterService {
 
     @Headers("app: client")
     @POST("/user/login")
-    Call<LoginAttempt> basicLogin(@Body LoginAttempt loginAttempt);
+    Call<GenericResponse<LoginResponse>> basicLogin(@Body LoginAttempt loginAttempt);
+
+    @GET("user/read/{userId}")
+    Call<GenericResponse<User>> getUser(@Path("userId") String userId);
 
     @Headers("app: client")
     @POST("/user/register")
-    Call<RegisterAttempt> basicRegister(@Body RegisterAttempt registerAttempt);
+    Call<GenericResponse<RegisterResponse>> basicRegister(@Body RegisterAttempt registerAttempt);
+
+    @GET("/event/list")
+    Call<GenericResponseArray<Event>> getEventsList();
+
+    @GET("/event/read/{eventId}")
+    Call<GenericResponse<Event>> getEvent(@Path("eventId") String eventId);
 
     @GET("/user/list")
     Call<GenericResponseArray<User>> getUsersList();

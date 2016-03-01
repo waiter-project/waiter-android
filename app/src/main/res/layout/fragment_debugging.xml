@@ -36,12 +36,14 @@
             android:gravity="center">
 
             <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:indeterminate="true"
                 android:layout_centerHorizontal="true"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:indeterminateDrawable="@drawable/progress"/>
 
             <ScrollView
                 android:layout_width="match_parent"

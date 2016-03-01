@@ -9,12 +9,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.waiter.waiterpoc.models.GenericResponse;
 import com.waiter.waiterpoc.models.RegisterAttempt;
+import com.waiter.waiterpoc.models.RegisterResponse;
+import com.waiter.waiterpoc.network.CheckNetwork;
 import com.waiter.waiterpoc.network.ServiceGenerator;
 import com.waiter.waiterpoc.network.WaiterService;
 
@@ -59,6 +63,9 @@ public class SignupActivity extends AppCompatActivity {
         mEmailText = (EditText) findViewById(R.id.input_email);
         mPasswordText = (EditText) findViewById(R.id.input_password);
         mRepeatPasswordText = (EditText) findViewById(R.id.input_repeat_password);
+
+        // Dismiss virtual keyboard at start
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // Check email_prefilled from LoginActivity
         myIntent = getIntent();
@@ -134,11 +141,11 @@ public class SignupActivity extends AppCompatActivity {
 
         RegisterAttempt registerAttempt = new RegisterAttempt(firstName, lastName, email, password, repeatPassword);
 
-        Call<RegisterAttempt> call = service.basicRegister(registerAttempt);
+        Call<GenericResponse<RegisterResponse>> call = service.basicRegister(registerAttempt);
 
-        call.enqueue(new Callback<RegisterAttempt>() {
+        call.enqueue(new Callback<GenericResponse<RegisterResponse>>() {
             @Override
-            public void onResponse(Call<RegisterAttempt> call, Response<RegisterAttempt> response) {
+            public void onResponse(Call<GenericResponse<RegisterResponse>> call, Response<GenericResponse<RegisterResponse>> response) {
                 if (response.isSuccess()) {
                     Log.d("Success", "Return: " + response.message() + " - Raw: " + response.raw().toString());
                     /*
@@ -149,7 +156,9 @@ public class SignupActivity extends AppCompatActivity {
                     */
                     progressDialog.dismiss();
 
-                    onSignupSuccess(email, password);
+                    RegisterResponse registerResponse = response.body().getData();
+
+                    onSignupSuccess(email, password, registerResponse.getFirstname(), registerResponse.getLastname());
                 } else {
                     Log.d("Failure", "Return: " + response.message() + " - Raw: " + response.raw().toString());
                     progressDialog.dismiss();
@@ -160,7 +169,7 @@ public class SignupActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<RegisterAttempt> call, Throwable t) {
+            public void onFailure(Call<GenericResponse<RegisterResponse>> call, Throwable t) {
                 Log.d("Error", t.getMessage());
                 progressDialog.dismiss();
                 builder.setMessage(R.string.unknown_error);
@@ -170,11 +179,13 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    public void onSignupSuccess(String email, String password) {
+    public void onSignupSuccess(String email, String password, String firstname, String lastname) {
         Log.d("onSignupSuccess", "Function onSignupSuccess");
         mRegisterButton.setEnabled(true);
         getIntent().putExtra("email", email);
         getIntent().putExtra("password", password);
+        getIntent().putExtra("firstname", firstname);
+        getIntent().putExtra("lastname", lastname);
         setResult(RESULT_OK, getIntent());
         finish();
     }

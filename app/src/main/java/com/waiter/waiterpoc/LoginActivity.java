@@ -3,6 +3,7 @@ package com.waiter.waiterpoc;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,13 +15,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.waiter.waiterpoc.models.GenericResponse;
 import com.waiter.waiterpoc.models.LoginAttempt;
+import com.waiter.waiterpoc.models.LoginResponse;
+import com.waiter.waiterpoc.network.CheckNetwork;
 import com.waiter.waiterpoc.network.ServiceGenerator;
 import com.waiter.waiterpoc.network.WaiterService;
 
@@ -29,6 +34,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private static final String LOG_TAG = "LoginActivity";
 
     // UI References
     private EditText mEmailText;
@@ -41,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Initial variables
     private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
     private static boolean connected = false;
     private static final int REQUEST_SIGNUP = 0;
 
@@ -54,15 +62,19 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // Set initial variables
-        sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.getsContext());
+        //sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        Context context = MainActivity.getsContext();
+        sp = context.getSharedPreferences(getString(R.string.preference_settings), 0);
+        editor = sp.edit();
 
         // Check logout from MainActivity
         Intent myIntent = getIntent();
         boolean logout = myIntent.getBooleanExtra("logout", false);
         if (logout) {
             SharedPreferences.Editor editor = sp.edit();
-            editor.remove("email");
-            editor.remove("password");
+            //editor.remove("email");
+            //editor.remove("password");
+            editor.clear();
             editor.commit();
         }
 
@@ -79,6 +91,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Dismiss virtual keyboard at start
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        // Set up sign up link
         mSignUpLink = (TextView) findViewById(R.id.link_sign_up);
         mSignUpLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,17 +177,25 @@ public class LoginActivity extends AppCompatActivity {
 
         LoginAttempt loginAttempt = new LoginAttempt(email, password);
 
-        Call<LoginAttempt> call = service.basicLogin(loginAttempt);
+        Call<GenericResponse<LoginResponse>> call = service.basicLogin(loginAttempt);
 
-        call.enqueue(new Callback<LoginAttempt>() {
+        call.enqueue(new Callback<GenericResponse<LoginResponse>>() {
             @Override
-            public void onResponse(Call<LoginAttempt> call, Response<LoginAttempt> response) {
+            public void onResponse(Call<GenericResponse<LoginResponse>> call, Response<GenericResponse<LoginResponse>> response) {
                 if (response.isSuccess()) {
-                    Log.d("Success", "Return: " + response.message() + " - Raw: " + response.raw().toString());
+                    LoginResponse loginResponse = response.body().getData();
 
-                    SharedPreferences.Editor editor = sp.edit();
+                    Log.d("Success", "Return: " + response.message() + " - Raw: " + response.raw().toString());
+                    Log.i(LOG_TAG, "Response ID = " + loginResponse.getId());
+                    Log.i(LOG_TAG, "Response Token client = " + loginResponse.getTokenClient());
+
                     editor.putString("email", email);
                     editor.putString("password", password);
+                    editor.putString("id", loginResponse.getId());
+                    editor.putString("tokenClient", loginResponse.getTokenClient());
+
+                    //editor.putString("firstname", );
+
                     editor.commit();
 
                     progressDialog.dismiss();
@@ -188,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<LoginAttempt> call, Throwable t) {
+            public void onFailure(Call<GenericResponse<LoginResponse>> call, Throwable t) {
                 Log.d("Error", t.getMessage());
                 progressDialog.dismiss();
                 builder.setMessage(R.string.unknown_error);
@@ -196,6 +220,10 @@ public class LoginActivity extends AppCompatActivity {
                 onLoginFailed();
             }
         });
+    }
+
+    private void getUserInfos() {
+
     }
 
     @Override
@@ -208,6 +236,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (data != null) {
                     mEmailText.setText(data.getExtras().getString("email"));
                     mPasswordText.setText(data.getExtras().getString("password"));
+                    editor.putString("firstname", data.getExtras().getString("firstname"));
+                    editor.putString("lastname", data.getExtras().getString("lastname"));
                 }
 
                 login();

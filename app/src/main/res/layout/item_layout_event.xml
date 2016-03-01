@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/eventPicture"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_event_black_48dp" />
+
+        <TextView
+            android:id="@+id/eventName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/eventPicture"
+            android:layout_alignTop="@+id/eventPicture"
+            android:textStyle="bold"
+            android:text="@string/placeholder_event_name" />
+
+        <TextView
+            android:id="@+id/eventAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:layout_alignStart="@+id/eventName"
+            android:layout_alignLeft="@+id/eventName"
+            android:layout_below="@+id/eventName"
+            android:text="@string/placeholder_event_address" />
+
+        <TextView
+            android:id="@+id/eventDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="10dp"
+            android:layout_below="@+id/eventAddress"
+            android:textStyle="italic"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/placeholder_event_date" />
+
+    </RelativeLayout>
+
+</LinearLayout>

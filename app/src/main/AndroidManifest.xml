@@ -3,8 +3,8 @@
     package="com.waiter.waiterpoc">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -22,20 +22,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FullEventActivity" >
+        <activity android:name=".OldFullEventActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
         <activity
             android:name=".LoadingPopup"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.Dark" />
-        <activity android:name=".SignupActivity"
+        <activity
+            android:name=".SignupActivity"
             android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".FullEventActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

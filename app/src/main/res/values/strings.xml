@@ -8,8 +8,31 @@
     <string name="debug">Debug</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+
+    <!-- Errors strings -->
     <string name="unknown_error">An unknown error happened, please try again later</string>
+    <string name="unknown_error_short">An unknown error happened</string>
     <string name="no_internet">No internet connection</string>
+    <string name="error_event">Event error</string>
+    <string name="no_events">There are no events at the moment.</string>
+    <string name="no_waiters">No waiters registered at this event.</string>
+
+    <!-- Placeholder strings -->
+    <string name="placeholder_firstname">Firstname</string>
+    <string name="placeholder_name">Firstname Name</string>
+    <string name="placeholder_email">email@domain.com</string>
+    <string name="placeholder_title">Title</string>
+    <string name="placeholder_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Nunc congue aliquam elit eu lacinia. Interdum et malesuada fames ac ante ipsum
+        primis in faucibus.</string>
+    <string name="placeholder_date">Date</string>
+    <string name="placeholder_address">Address</string>
+    <string name="placeholder_event_name">eventName</string>
+    <string name="placeholder_event_address">address</string>
+    <string name="placeholder_event_date">date</string>
+
+    <!-- SharedPreferences file names -->
+    <string name="preference_settings">com.waiter.waiter.poc.SP_SETTINGS</string>
 
     <!-- Navigation Drawer entry -->
     <string name="navigation_drawer_profile">Profile</string>
@@ -19,7 +42,11 @@
     <string name="navigation_drawer_share">Share</string>
     <string name="navigation_drawer_send">Send</string>
     <string name="navigation_drawer_debugging">Debugging</string>
+    <string name="navigation_drawer_about">About Waiter</string>
     <string name="action_settings">Settings</string>
+
+    <!-- App top bar | menu > main.xml  -->
+    <string name="menu_refresh">Refresh</string>
 
     <!-- Strings related to Login -->
     <string name="title_activity_login">Login</string>
@@ -47,6 +74,9 @@
     <string name="already_member">Already a member? Login</string>
     <string name="signup_failed_title">Registration Failed</string>
     <string name="signup_failed_email">Email address already used</string>
+
+    <!-- Strings related to WaiterFragment -->
+    <string name="request_waiter">Request</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

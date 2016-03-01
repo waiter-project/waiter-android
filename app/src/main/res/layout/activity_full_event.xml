@@ -1,68 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:paddingTop="10dp"
-    android:orientation="vertical"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    tools:context="com.waiter.waiterpoc.FullEventActivity">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cvFullEvent"
+        cardview:cardCornerRadius="0dp"
         android:foreground="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        >
+        android:clickable="true">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context="com.waiter.waiterpoc.FullEventActivity"
-            android:layout_gravity="center">
+            android:id="@+id/eventDetails">
 
+            <!-- ERROR CHECKING -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleLarge"
+                android:indeterminate="true"
+                android:layout_centerInParent="true"
+                android:indeterminateDrawable="@drawable/progress" />
+
+            <include
+                android:id="@+id/includeLayout"
+                layout="@layout/error_layout" />
+
+            <!-- LAYOUT INFOS -->
             <ImageView
-                android:id="@+id/photo"
+                android:id="@+id/eventPicture"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/ic_event_black_48dp"
-                />
+                android:src="@drawable/ic_event_black_48dp" />
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/eventName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16dp"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/photo"
-                android:layout_alignTop="@+id/photo"
+                android:layout_toRightOf="@+id/eventPicture"
+                android:layout_alignTop="@+id/eventPicture"
                 android:textStyle="bold"
-                android:text="Cafet'"
-                />
+                android:text="@string/placeholder_title" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/eventDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:layout_alignLeft="@+id/title"
-                android:layout_below="@+id/title"
-                android:text="C'est ici qu'on mange des bons burgers du monsieur aux cheveux blancs"
-                />
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:layout_below="@+id/description"
+                android:textColor="@color/colorPrimary"
+                android:layout_alignLeft="@+id/eventName"
+                android:layout_below="@+id/eventName"
                 android:textStyle="italic"
-                android:layout_alignParentRight="true"
-                android:text="Tous les jours"
-                />
+                android:text="@string/placeholder_date"
+                android:textSize="10dp" />
+
+            <TextView
+                android:id="@+id/eventDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/secondary_text_light"
+                android:layout_alignLeft="@+id/eventName"
+                android:layout_below="@+id/eventDate"
+                android:text="@string/placeholder_description" />
 
         </RelativeLayout>
 

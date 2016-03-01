@@ -2,11 +2,14 @@ package com.waiter.waiterpoc;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,15 +19,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.waiter.waiterpoc.dummy.DummyContent;
+import com.waiter.waiterpoc.fragments_nav_drawer.EventsFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EventFragment.OnListFragmentInteractionListener, DebuggingFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EventsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener, DebuggingFragment.OnFragmentInteractionListener {
+
+    private static final String LOG_TAG = "MainActivity";
 
     private static Context sContext;
 
     private static boolean connected = false;
+
+    private SharedPreferences sp; //crash completely
 
     public static Context getsContext() {
         return sContext;
@@ -48,27 +57,59 @@ public class MainActivity extends AppCompatActivity
 
         sContext = getApplicationContext();
         connected = LoginActivity.isConnected();
-
         if (!connected) {
-            Intent myIntent = new Intent(this, LoginActivity.class);
+            Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
             //myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             //myIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(myIntent);
             //MainActivity.this.startActivity(myIntent);
+        } else {
+            // Check internet connection
+            /*
+            if (!CheckNetwork.isInternetAvailable(this)) {
+                Snackbar.make(findViewById(R.id.root_view), "No internet connection", Snackbar.LENGTH_LONG);
+            }
+            */
         }
 
-        EventFragment fragment = new EventFragment();
+        //sp = PreferenceManager.getDefaultSharedPreferences(this); //crash completely
+        //sp = getSharedPreferences(getString(R.string.preference_settings), 0);
+        /*
+        TextView headerName = (TextView) navigationView.findViewById(R.id.header_name);
+        TextView headerEmail = (TextView) navigationView.findViewById(R.id.header_email);
+
+        headerEmail.setText("EMAIL TEST");
+        headerName.setText("NAME TEST");
+
+
+        String email = sp.getString("email", "");
+        if (!email.isEmpty()) {
+            headerEmail.setText(email);
+        }
+
+        String firstname = sp.getString("firstname", "");
+        String lastname = sp.getString("lastname", "");
+        if (!firstname.isEmpty() && !lastname.isEmpty()) {
+            headerName.setText(firstname + " " + lastname);
+        }
+        */
+
+        EventsFragment fragment = new EventsFragment();
         FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, fragment);
         fragmentTransaction.commit();
         setTitle("Events");
 
-        // Check internet connection
-        if (!CheckNetwork.isInternetAvailable(this)) {
-            Snackbar.make(findViewById(R.id.root_view), "No internet connection", Snackbar.LENGTH_LONG);
-        }
+        /*
+        EventFragment fragment = new EventFragment();
+        FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content_frame, fragment);
+        fragmentTransaction.commit();
+        setTitle("Events");
+        */
     }
 
     @Override
@@ -81,6 +122,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -95,13 +137,19 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        Log.i(LOG_TAG, "onOptionsItemSelected (menu item)");
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.menu_refresh) {
+            Log.i(LOG_TAG, "Refresh menu item selected");
+            return false;
         }
 
         return super.onOptionsItemSelected(item);
     }
+    */
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -112,12 +160,12 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
             // Handle the camera action
         } else if (id == R.id.nav_event) {
-            EventFragment fragment = new EventFragment();
+            EventsFragment fragment = new EventsFragment();
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.content_frame, fragment);
             fragmentTransaction.commit();
-            setTitle(getString(R.string.navigation_drawer_events));
+            setTitle("Events");
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
@@ -139,6 +187,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteractionEvents(Uri uri) {
     }
 
     @Override
