@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default values -->
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+
+    <!-- Forward 2016 values -->
+    <!--<color name="colorPrimary">#00bfa5</color>-->
+    <!--<color name="colorPrimaryDark">#004d40</color>-->
+    <!--<color name="colorAccent">#FFFFFF</color>-->
+
+    <color name="colorPrimary">#1E4561</color>
+    <color name="colorPrimaryDark">#153145</color>
+    <color name="colorAccent">#ec6565</color>
+
+    <color name="primary">#E43F3F</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="white">#FFFFFF</color>
+</resources>
