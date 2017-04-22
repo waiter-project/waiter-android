@@ -17,4 +17,6 @@
     <color name="primary">#E43F3F</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="hintColor">#ff757575</color>
 </resources>
