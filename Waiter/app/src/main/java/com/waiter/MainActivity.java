@@ -17,10 +17,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.lapism.searchview.SearchView;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener {
 
     private static final int NUM_PAGES = 2;
+
+    private DrawerLayout mDrawerLayout;
+
+    private SearchView mSearchView;
 
     private ViewPager mViewPager;
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -29,21 +35,27 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         /*
         ** Begin NavigationDrawer
          */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // End NavigationDrawer
+
+        /*
+        ** Begin SearchView
+         */
+        mSearchView = (SearchView) findViewById(R.id.searchView);
+        mSearchView.setHint(R.string.search_placeholder);
+        mSearchView.setOnMenuClickListener(new SearchView.OnMenuClickListener() {
+            @Override
+            public void onMenuClick() {
+                mDrawerLayout.openDrawer(GravityCompat.START); // finish();
+            }
+        });
+        // End Search View
 
         /*
         ** Begin SwipeTabs
