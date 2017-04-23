@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.waiter.dummy.DummyContent;
+import com.waiter.models.Event;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener {
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteractionEvent(DummyContent.DummyItem item) {
+    public void onListFragmentInteractionEvent(Event item) {
         Log.d("MainActivity", "onListFragmentInteractionEvent, DummyItem: " + String.valueOf(item));
     }
 }

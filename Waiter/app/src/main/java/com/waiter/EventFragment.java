@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 
 import com.waiter.dummy.DummyContent;
 import com.waiter.dummy.DummyContent.DummyItem;
+import com.waiter.models.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,7 +71,21 @@ public class EventFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new EventRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+
+            List<Event> eventList = new ArrayList<>();
+            List<String> listOfWaiters = new ArrayList<>();
+            listOfWaiters.add("58fc51f131087c0011378ebe");
+            eventList.add(new Event("58fc51e531087c0011378ebc",
+                    "Eiffel Tower",
+                    "A big piece of iron",
+                    "5 Avenue Anatole Paris France",
+                    48.8584,
+                    2.2945,
+                    "Everyday",
+                    1,
+                    listOfWaiters));
+
+            recyclerView.setAdapter(new EventRecyclerViewAdapter(eventList, mListener));
         }
         return view;
     }
@@ -104,6 +120,6 @@ public class EventFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteractionEvent(DummyItem item);
+        void onListFragmentInteractionEvent(Event event);
     }
 }

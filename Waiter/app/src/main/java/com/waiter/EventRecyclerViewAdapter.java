@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.waiter.EventFragment.OnListFragmentInteractionListener;
 import com.waiter.dummy.DummyContent.DummyItem;
+import com.waiter.models.Event;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
  */
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Event> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public EventRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public EventRecyclerViewAdapter(List<Event> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,6 +37,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
+        holder.mTitleView.setText(mValues.get(position).getName());
+        holder.mDescriptionView.setText(mValues.get(position).getDescription());
+        holder.mDateView.setText(mValues.get(position).getDate());
 //        holder.mIdView.setText(mValues.get(position).id);
 //        holder.mContentView.setText(mValues.get(position).content);
 
@@ -58,13 +62,19 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
+        public final TextView mTitleView;
+        public final TextView mDescriptionView;
+        public final TextView mDateView;
 //        public final TextView mIdView;
 //        public final TextView mContentView;
-        public DummyItem mItem;
+        public Event mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            mTitleView = (TextView) view.findViewById(R.id.eventTitle);
+            mDescriptionView = (TextView) view.findViewById(R.id.eventDescription);
+            mDateView = (TextView) view.findViewById(R.id.eventDate);
 //            mIdView = (TextView) view.findViewById(R.id.id);
 //            mContentView = (TextView) view.findViewById(R.id.content);
         }
