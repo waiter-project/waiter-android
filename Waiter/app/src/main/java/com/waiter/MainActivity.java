@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import com.waiter.dummy.DummyContent;
 import com.waiter.models.Event;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener {
 
@@ -67,7 +69,20 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            List fragmentList = getSupportFragmentManager().getFragments();
+
+            boolean handled = false;
+            for (Object f : fragmentList) {
+                if (f instanceof MapsFragment) {
+                    handled = ((MapsFragment) f).onBackPressed();
+                    if (handled) {
+                        break;
+                    }
+                }
+            }
+            if (!handled) {
+                super.onBackPressed();
+            }
         }
     }
 
