@@ -4,7 +4,6 @@
     <!-- Main Activity -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
 
     <!-- Navigation Drawer -->
     <string name="nav_profile">Profile</string>
@@ -12,6 +11,10 @@
     <string name="nav_payment">Payment</string>
     <string name="nav_history">History</string>
     <string name="nav_logout">Logout</string>
+
+    <!-- Options Menu -->
+    <string name="action_settings">Settings</string>
+    <string name="action_about">About Us</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
