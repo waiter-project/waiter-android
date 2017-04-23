@@ -17,8 +17,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.waiter.dummy.DummyContent;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener {
 
     private static final int NUM_PAGES = 2;
 
@@ -119,7 +121,13 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            return new MapsFragment();
+            switch (position) {
+                case 0:
+                    return new MapsFragment();
+                case 1:
+                    return new EventFragment();
+            }
+            return null;
         }
 
         @Override
@@ -141,6 +149,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteractionMaps(Uri uri) {
-        Log.d("onFragmentInteractionMa", String.valueOf(uri));
+        Log.d("MainActivity", "onFragmentInteractionMaps, uri: " + String.valueOf(uri));
+    }
+
+    @Override
+    public void onListFragmentInteractionEvent(DummyContent.DummyItem item) {
+        Log.d("MainActivity", "onListFragmentInteractionEvent, DummyItem: " + String.valueOf(item));
     }
 }
