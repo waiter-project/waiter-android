@@ -16,6 +16,7 @@
             app:mt_placeholder="@string/app_name"
             app:mt_hint="@string/search_placeholder"
             app:mt_maxSuggestionsCount="5"
+            app:mt_navIconEnabled="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/searchBar" />

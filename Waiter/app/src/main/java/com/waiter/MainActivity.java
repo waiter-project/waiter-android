@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         ** Start SearchBar
          */
         mSearchBar = (MaterialSearchBar) findViewById(R.id.searchBar);
-        mSearchBar.setNavButtonEnabled(true);
+        mSearchBar.setCardViewElevation(10);
         mSearchBar.setOnSearchActionListener(this);
 //        lastSearches = loadSearchSuggestionFromDisk();
 //        mSearchBar.setLastSuggestions(lastSearches);
