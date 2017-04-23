@@ -21,6 +21,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.waiter.models.Event;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
 
@@ -81,13 +85,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        // For dropping a marker at a point on the Map
-//        LatLng epitech = new LatLng(48.8151239, 2.3631254);
-//        mGoogleMap.addMarker(new MarkerOptions().position(epitech).title("Marker Title").snippet("Marker Description"));
+        List<Event> eventList = new ArrayList<>();
+        List<String> listOfWaiters = new ArrayList<>();
+        listOfWaiters.add("58fc51f131087c0011378ebe");
+        eventList.add(new Event("58fc51e531087c0011378ebc",
+                "Eiffel Tower",
+                "A big piece of iron",
+                "5 Avenue Anatole Paris France",
+                48.8584,
+                2.2945,
+                "Everyday",
+                1,
+                listOfWaiters));
 
-        // For zooming automatically to the location of the marker
-//        CameraPosition cameraPosition = new CameraPosition.Builder().target(epitech).zoom(14).build();
-//        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        LatLng latLng = new LatLng(48.8151239, 2.3631254); // Epitech Paris location
+        for (int i = 0; i < eventList.size(); i++) {
+            latLng = new LatLng(eventList.get(i).getLong(), eventList.get(i).getLat());
+            mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Marker Title").snippet("Marker Description"));
+        }
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     private void checkLocationPermission() {
