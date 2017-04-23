@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity
         mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_map_white_48dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white_48dp);
         // End SwipeTabs
     }
 
