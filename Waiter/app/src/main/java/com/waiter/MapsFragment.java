@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,9 +44,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private OnFragmentInteractionListener mListener;
 
+    private List<Event> eventList;
+
     private BottomSheetBehavior mBottomSheetBehavior;
 
     private TextView mEventTitle;
+    private TextView mEventPrice;
+    private TextView mEventDescription;
+    private TextView mEventAddress;
+    private TextView mEventDate;
+    private TextView mEventWaitersAvailable;
     private FloatingActionButton mFAB;
     private boolean showFAB = false;
 
@@ -94,8 +100,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         ** Start Bottom Sheet
          */
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator);
-        View bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
-        mEventTitle = (TextView) rootView.findViewById(R.id.eventTitle);
+        View bottomSheet = coordinatorLayout.findViewById(R.id.event_bottom_sheet);
+        mEventTitle = (TextView) bottomSheet.findViewById(R.id.eventTitle);
+        mEventPrice = (TextView) bottomSheet.findViewById(R.id.eventPrice);
+        mEventDescription = (TextView) bottomSheet.findViewById(R.id.eventDescription);
+        mEventAddress = (TextView) bottomSheet.findViewById(R.id.eventAddress);
+        mEventDate = (TextView) bottomSheet.findViewById(R.id.eventDate);
+        mEventWaitersAvailable = (TextView) bottomSheet.findViewById(R.id.eventWaitersAvailable);
         mFAB = (FloatingActionButton) bottomSheet.findViewById(R.id.fab);
 
         bottomSheet.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +154,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                Log.d("MapsFragment", "onStateChanged() | currentState = " + mBottomSheetBehavior.getState() + ", newState = " + newState);
+//                Log.d("MapsFragment", "onStateChanged() | currentState = " + mBottomSheetBehavior.getState() + ", newState = " + newState);
 
                 switch (newState) {
                     case BottomSheetBehavior.STATE_DRAGGING:
@@ -168,12 +179,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (slideOffset > -1 && slideOffset <= 0) {
-                    Log.d("MapsFragment", "onSlide() | HIDDEN > COLLAPSED");
-                } else if (slideOffset > 0 && slideOffset <= 1) {
-                    Log.d("MapsFragment", "onSlide() | COLLAPSED > EXPANDED");
-                }
-                Log.d("MapsFragment", "onSlide() | slideOffset = " + slideOffset);
+//                if (slideOffset > -1 && slideOffset <= 0) {
+//                    Log.d("MapsFragment", "onSlide() | HIDDEN > COLLAPSED");
+//                } else if (slideOffset > 0 && slideOffset <= 1) {
+//                    Log.d("MapsFragment", "onSlide() | COLLAPSED > EXPANDED");
+//                }
+//                Log.d("MapsFragment", "onSlide() | slideOffset = " + slideOffset);
             }
         });
         // End BottomSheet
@@ -191,7 +202,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        List<Event> eventList = new ArrayList<>();
+        eventList = new ArrayList<>();
         List<String> listOfWaiters = new ArrayList<>();
         listOfWaiters.add("58fc51f131087c0011378ebe");
         eventList.add(new Event("58fc51e531087c0011378ebc",
@@ -207,7 +218,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         LatLng latLng = new LatLng(48.8151239, 2.3631254); // Epitech Paris location
         for (int i = 0; i < eventList.size(); i++) {
             latLng = new LatLng(eventList.get(i).getLong(), eventList.get(i).getLat());
-            mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(eventList.get(i).getName()).snippet(eventList.get(i).getDescription()));
+            mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(String.valueOf(i)));
         }
         CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -222,7 +233,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mFAB.setVisibility(View.VISIBLE);
         }
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        mEventTitle.setText(marker.getTitle());
+
+        int eventID = Integer.parseInt(marker.getTitle());
+
+        mEventTitle.setText(eventList.get(eventID).getName());
+//        mEventPrice.setText();
+        mEventDescription.setText(eventList.get(eventID).getDescription());
+        mEventAddress.setText(eventList.get(eventID).getAddress());
+        mEventDate.setText(eventList.get(eventID).getDate());
+        mEventWaitersAvailable.setText(getString(R.string.waiters_available, eventList.get(eventID).getListOfWaiters().size()));
         return true;
     }
 

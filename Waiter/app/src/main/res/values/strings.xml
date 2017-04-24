@@ -11,13 +11,25 @@
     <string name="nav_payment">Payment</string>
     <string name="nav_history">History</string>
     <string name="nav_logout">Logout</string>
+    <string name="become_a_waiter">Become a waiter</string>
 
     <!-- Options Menu -->
     <string name="action_settings">Settings</string>
     <string name="action_about">About Us</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- MapsFragment -->
+    <string name="waiters_available">%1$d waiters available</string>
+
+    <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="become_a_waiter">Become a waiter</string>
     <string name="title_activity_maps">Map</string>
+    <string name="placeholder_title">Event Title</string>
+    <string name="placeholder_price">$8/hr</string>
+    <string name="placeholder_description">Event Description</string>
+    <string name="placeholder_address">Event Address</string>
+    <string name="placeholder_date">Event Date</string>
+    <string name="placeholder_waiters_available">0 waiters available</string>
+    <string name="placeholder_content">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id vulputate libero. Cras suscipit ligula sit amet lectus condimentum, non pretium nulla consequat. Vivamus sed pellentesque mi, eu pulvinar enim. Sed consequat tempus erat, nec condimentum lectus dictum ut. Phasellus ultrices sed nunc non imperdiet. Quisque sagittis dolor eget fringilla cursus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+    </string>
 </resources>
