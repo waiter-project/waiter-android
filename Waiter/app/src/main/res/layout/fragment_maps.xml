@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.waiter.MapsFragment">
 
     <com.google.android.gms.maps.MapView
@@ -17,6 +18,18 @@
 
         <include layout="@layout/bottom_sheet"
             android:id="@+id/event_bottom_sheet"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fab"
+            android:visibility="gone"
+            app:layout_anchor="@+id/event_bottom_sheet"
+            app:layout_anchorGravity="top|end"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:clickable="true"
+            android:src="@drawable/ic_room_service_white_48dp" />
 
     </android.support.design.widget.CoordinatorLayout>
 
