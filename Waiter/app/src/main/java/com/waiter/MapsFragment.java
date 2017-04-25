@@ -46,7 +46,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private OnFragmentInteractionListener mListener;
 
-    private List<Event> eventList;
+    private ArrayList<Event> mEventList;
 
     private View mBottomSheet;
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -76,6 +76,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            mEventList = getArguments().getParcelableArrayList("eventList");
         }
     }
 
@@ -202,24 +203,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        eventList = new ArrayList<>();
-        List<String> listOfWaiters = new ArrayList<>();
-        listOfWaiters.add("58fc51f131087c0011378ebe");
-        eventList.add(new Event("58fc51e531087c0011378ebc",
-                "Eiffel Tower",
-                "A big piece of iron",
-                "5 Avenue Anatole Paris France",
-                48.8584,
-                2.2945,
-                "Everyday",
-                1,
-                listOfWaiters));
+
 
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_resized);
 
         LatLng latLng = new LatLng(48.8151239, 2.3631254); // Epitech Paris location
-        for (int i = 0; i < eventList.size(); i++) {
-            latLng = new LatLng(eventList.get(i).getLong(), eventList.get(i).getLat());
+        for (int i = 0; i < mEventList.size(); i++) {
+            latLng = new LatLng(mEventList.get(i).getLong(), mEventList.get(i).getLat());
             mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(String.valueOf(i)).icon(icon));
         }
         CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
@@ -240,12 +230,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         int eventID = Integer.parseInt(marker.getTitle());
 
-        mEventTitle.setText(eventList.get(eventID).getName());
-//        mEventPrice.setText();
-        mEventDescription.setText(eventList.get(eventID).getDescription());
-        mEventAddress.setText(eventList.get(eventID).getAddress());
-        mEventDate.setText(eventList.get(eventID).getDate());
-        mEventWaitersAvailable.setText(getString(R.string.waiters_available, eventList.get(eventID).getListOfWaiters().size()));
+//        mEventTitle.setText(eventList.get(eventID).getName());
+////        mEventPrice.setText();
+//        mEventDescription.setText(eventList.get(eventID).getDescription());
+//        mEventAddress.setText(eventList.get(eventID).getAddress());
+//        mEventDate.setText(eventList.get(eventID).getDate());
+//        mEventWaitersAvailable.setText(getString(R.string.waiters_available, eventList.get(eventID).getListOfWaiters().size()));
         return true;
     }
 

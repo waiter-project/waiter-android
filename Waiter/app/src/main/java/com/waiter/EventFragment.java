@@ -17,12 +17,6 @@ import com.waiter.models.Event;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
 public class EventFragment extends Fragment {
 
     // TODO: Customize parameter argument names
@@ -30,6 +24,8 @@ public class EventFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private ArrayList<Event> mEventList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -54,6 +50,7 @@ public class EventFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mEventList = getArguments().getParcelableArrayList("eventList");
         }
     }
 
@@ -72,20 +69,7 @@ public class EventFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            List<Event> eventList = new ArrayList<>();
-            List<String> listOfWaiters = new ArrayList<>();
-            listOfWaiters.add("58fc51f131087c0011378ebe");
-            eventList.add(new Event("58fc51e531087c0011378ebc",
-                    "Eiffel Tower",
-                    "A big piece of iron",
-                    "5 Avenue Anatole Paris France",
-                    48.8584,
-                    2.2945,
-                    "Everyday",
-                    1,
-                    listOfWaiters));
-
-            recyclerView.setAdapter(new EventRecyclerViewAdapter(eventList, mListener));
+            recyclerView.setAdapter(new EventRecyclerViewAdapter(mEventList, mListener));
         }
         return view;
     }

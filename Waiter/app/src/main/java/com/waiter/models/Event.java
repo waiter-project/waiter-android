@@ -1,10 +1,13 @@
 package com.waiter.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Event {
+public class Event implements Parcelable {
 
     @SerializedName("_id")
     @Expose
@@ -119,4 +122,50 @@ public class Event {
         this.listOfWaiters = listOfWaiters;
     }
 
+    /**
+     * Constructs an Event from a Parcel
+     * @param parcel Source Parcel
+     */
+    public Event(Parcel parcel) {
+        this.id = parcel.readString();
+        this.name = parcel.readString();
+        this.description = parcel.readString();
+        this.address = parcel.readString();
+        this._long = parcel.readDouble();
+        this.lat = parcel.readDouble();
+        this.date = parcel.readString();
+        parcel.readStringList(this.listOfWaiters);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(address);
+        dest.writeDouble(_long);
+        dest.writeDouble(lat);
+        dest.writeString(date);
+        dest.writeStringList(listOfWaiters);
+    }
+
+    // Method to recreate a Question from a Parcel
+    public static Creator<Event> CREATOR = new Creator<Event>() {
+
+        @Override
+        public Event createFromParcel(Parcel source) {
+            return new Event(source);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+
+    };
 }

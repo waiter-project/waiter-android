@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import com.waiter.dummy.DummyContent;
 import com.waiter.models.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity
 
     private ViewPager mViewPager;
     private SectionsPagerAdapter mSectionsPagerAdapter;
+
+    private ArrayList<Event> mEventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,23 @@ public class MainActivity extends AppCompatActivity
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_map_white_48dp);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white_48dp);
         // End SwipeTabs
+
+        /*
+        ** Start Load Events from API
+         */
+        mEventList = new ArrayList<>();
+        List<String> listOfWaiters = new ArrayList<>();
+        listOfWaiters.add("58fc51f131087c0011378ebe");
+        mEventList.add(new Event("58fc51e531087c0011378ebc",
+                "Eiffel Tower",
+                "A big piece of iron",
+                "5 Avenue Anatole Paris France",
+                48.8584,
+                2.2945,
+                "Everyday",
+                1,
+                listOfWaiters));
+        // End Load Events from API
     }
 
     @Override
@@ -141,13 +162,24 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
+            Fragment fragment = null;
+
             switch (position) {
                 case 0:
-                    return new MapsFragment();
+                    fragment = new MapsFragment();
+                    break;
                 case 1:
-                    return new EventFragment();
+                    fragment = new EventFragment();
+                    break;
             }
-            return null;
+
+            if (fragment != null) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("eventList", mEventList);
+                fragment.setArguments(bundle);
+            }
+
+            return fragment;
         }
 
         @Override
