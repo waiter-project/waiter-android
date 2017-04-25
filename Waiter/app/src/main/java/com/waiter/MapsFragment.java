@@ -5,12 +5,19 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,15 +25,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.waiter.models.Event;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
     private boolean mPermissionDenied = false;
@@ -35,6 +45,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private GoogleMap mGoogleMap;
 
     private OnFragmentInteractionListener mListener;
+
+    private List<Event> eventList;
+
+    private View mBottomSheet;
+    private BottomSheetBehavior mBottomSheetBehavior;
+
+    private TextView mEventTitle;
+    private TextView mEventPrice;
+    private TextView mEventDescription;
+    private TextView mEventAddress;
+    private TextView mEventDate;
+    private TextView mEventWaitersAvailable;
+    private FloatingActionButton mFAB;
+    private boolean showFAB = false;
+
+    private Animation mGrowAnimation;
+    private Animation mShrinkAnimation;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -72,6 +99,96 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         mMapView.getMapAsync(this);
 
+        /*
+        ** Start Bottom Sheet
+         */
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator);
+        mBottomSheet = coordinatorLayout.findViewById(R.id.event_bottom_sheet);
+        mEventTitle = (TextView) mBottomSheet.findViewById(R.id.eventTitle);
+        mEventPrice = (TextView) mBottomSheet.findViewById(R.id.eventPrice);
+        mEventDescription = (TextView) mBottomSheet.findViewById(R.id.eventDescription);
+        mEventAddress = (TextView) mBottomSheet.findViewById(R.id.eventAddress);
+        mEventDate = (TextView) mBottomSheet.findViewById(R.id.eventDate);
+        mEventWaitersAvailable = (TextView) mBottomSheet.findViewById(R.id.eventWaitersAvailable);
+        mFAB = (FloatingActionButton) coordinatorLayout.findViewById(R.id.fab);
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBottomSheetBehavior.setHideable(true);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        mGrowAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.simple_grow);
+        mShrinkAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.simple_shrink);
+
+        mGrowAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mFAB.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) { }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+        mShrinkAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mFAB.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//                Log.d("MapsFragment", "onStateChanged() | currentState = " + mBottomSheetBehavior.getState() + ", newState = " + newState);
+
+                // this part hides the button immediately and waits bottom sheet
+                // to collapse to show
+
+                switch (newState) {
+//                    case BottomSheetBehavior.STATE_DRAGGING:
+//                        if (showFAB) {
+//                            mFAB.startAnimation(mGrowAnimation);
+//                        } else {
+//                            mFAB.startAnimation(mShrinkAnimation);
+//                        }
+//                        break;
+//
+//                    case BottomSheetBehavior.STATE_COLLAPSED:
+//                        showFAB = false;
+////                        mFAB.setVisibility(View.VISIBLE);
+////                        mFAB.startAnimation(mGrowAnimation);
+//                        break;
+//
+//                    case BottomSheetBehavior.STATE_EXPANDED:
+//                        showFAB = true;
+//                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//                mFAB.animate().scaleX(1 - slideOffset).scaleY(1 - slideOffset).setDuration(0).start();
+//                if (slideOffset > -1 && slideOffset <= 0) {
+//                    Log.d("MapsFragment", "onSlide() | HIDDEN > COLLAPSED");
+//                } else if (slideOffset > 0 && slideOffset <= 1) {
+//                    Log.d("MapsFragment", "onSlide() | COLLAPSED > EXPANDED");
+//                }
+                if (slideOffset >= -1 && slideOffset <= 0) {
+                    mFAB.animate().scaleX(slideOffset + 1).scaleY(slideOffset + 1).setDuration(0).start();
+                }
+//                Log.d("MapsFragment", "onSlide() | slideOffset = " + slideOffset);
+            }
+        });
+        // End BottomSheet
+
         return rootView;
     }
 
@@ -85,7 +202,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        List<Event> eventList = new ArrayList<>();
+        eventList = new ArrayList<>();
         List<String> listOfWaiters = new ArrayList<>();
         listOfWaiters.add("58fc51f131087c0011378ebe");
         eventList.add(new Event("58fc51e531087c0011378ebc",
@@ -98,13 +215,43 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 1,
                 listOfWaiters));
 
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_resized);
+
         LatLng latLng = new LatLng(48.8151239, 2.3631254); // Epitech Paris location
         for (int i = 0; i < eventList.size(); i++) {
             latLng = new LatLng(eventList.get(i).getLong(), eventList.get(i).getLat());
-            mGoogleMap.addMarker(new MarkerOptions().position(latLng).title("Marker Title").snippet("Marker Description"));
+            mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(String.valueOf(i)).icon(icon));
         }
         CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        mGoogleMap.setOnMarkerClickListener(this);
+        mGoogleMap.setOnMapClickListener(this);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (mFAB.getVisibility() == View.GONE) {
+            mFAB.setScaleX(0);
+            mFAB.setScaleY(0);
+            mFAB.setVisibility(View.VISIBLE);
+        }
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        int eventID = Integer.parseInt(marker.getTitle());
+
+        mEventTitle.setText(eventList.get(eventID).getName());
+//        mEventPrice.setText();
+        mEventDescription.setText(eventList.get(eventID).getDescription());
+        mEventAddress.setText(eventList.get(eventID).getAddress());
+        mEventDate.setText(eventList.get(eventID).getDate());
+        mEventWaitersAvailable.setText(getString(R.string.waiters_available, eventList.get(eventID).getListOfWaiters().size()));
+        return true;
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        bottomSheetToPreviousState();
     }
 
     private void checkLocationPermission() {
@@ -132,6 +279,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    private boolean bottomSheetToPreviousState() {
+        mBottomSheet.scrollTo(0, 0);
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+//            mFAB.startAnimation(mShrinkAnimation);
+            mFAB.setVisibility(View.GONE);
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//            mFAB.startAnimation(mGrowAnimation);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public boolean onMyLocationButtonClick() {
         return false;
@@ -139,8 +301,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onResume() {
-        super.onResume();
         mMapView.onResume();
+        super.onResume();
 //        if (mPermissionDenied) {
 //            // Permission was not granted, display error dialog.
 //            Toast.makeText(getActivity(), "Location permission denied.", Toast.LENGTH_LONG).show();
@@ -150,20 +312,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onPause() {
-        super.onPause();
         mMapView.onPause();
+        super.onPause();
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mMapView.onDestroy();
+        super.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
-        super.onLowMemory();
         mMapView.onLowMemory();
+        super.onLowMemory();
+    }
+
+    public boolean onBackPressed() {
+        return bottomSheetToPreviousState();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
