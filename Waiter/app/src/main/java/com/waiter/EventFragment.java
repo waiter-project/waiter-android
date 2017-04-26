@@ -3,19 +3,14 @@ package com.waiter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.waiter.dummy.DummyContent;
-import com.waiter.dummy.DummyContent.DummyItem;
 import com.waiter.models.Event;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EventFragment extends Fragment {
 
@@ -25,7 +20,7 @@ public class EventFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
 
-    private ArrayList<Event> mEventList;
+    private EventRecyclerViewAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -50,7 +45,6 @@ public class EventFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            mEventList = getArguments().getParcelableArrayList("eventList");
         }
     }
 
@@ -59,18 +53,31 @@ public class EventFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
 
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (recyclerView != null) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new EventRecyclerViewAdapter(mEventList, mListener));
+            mAdapter = new EventRecyclerViewAdapter(MainActivity.mEventList, mListener);
+
+            recyclerView.setAdapter(mAdapter);
         }
+
+        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mAdapter.refreshList();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+
         return view;
     }
 
@@ -103,7 +110,6 @@ public class EventFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteractionEvent(Event event);
     }
 }

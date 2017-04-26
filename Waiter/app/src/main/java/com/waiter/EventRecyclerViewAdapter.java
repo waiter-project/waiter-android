@@ -1,6 +1,7 @@
 package com.waiter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +41,6 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.mTitleView.setText(mValues.get(position).getName());
         holder.mDescriptionView.setText(mValues.get(position).getDescription());
         holder.mDateView.setText(mValues.get(position).getDate());
-//        holder.mIdView.setText(mValues.get(position).id);
-//        holder.mContentView.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +54,20 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         });
     }
 
+    public void clear() {
+        mValues.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Event> list) {
+        mValues.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void refreshList() {
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return mValues.size();
@@ -65,8 +78,6 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         public final TextView mTitleView;
         public final TextView mDescriptionView;
         public final TextView mDateView;
-//        public final TextView mIdView;
-//        public final TextView mContentView;
         public Event mItem;
 
         public ViewHolder(View view) {
@@ -75,14 +86,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             mTitleView = (TextView) view.findViewById(R.id.eventTitle);
             mDescriptionView = (TextView) view.findViewById(R.id.eventDescription);
             mDateView = (TextView) view.findViewById(R.id.eventDate);
-//            mIdView = (TextView) view.findViewById(R.id.id);
-//            mContentView = (TextView) view.findViewById(R.id.content);
         }
 
         @Override
         public String toString() {
-//            return super.toString() + " '" + mContentView.getText() + "'";
-            return super.toString() + " '" + "'";
+            return super.toString() + " '" + mTitleView.getText() + "'";
         }
     }
 }

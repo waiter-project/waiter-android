@@ -46,8 +46,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private OnFragmentInteractionListener mListener;
 
-    private ArrayList<Event> mEventList;
-
+    private CoordinatorLayout mCoordinatorLayout;
     private View mBottomSheet;
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -75,9 +74,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mEventList = getArguments().getParcelableArrayList("eventList");
-        }
     }
 
     @Override
@@ -87,6 +83,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        /*
+        ** Start Init Maps
+         */
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -99,19 +98,43 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
 
         mMapView.getMapAsync(this);
+        // End Init Maps
+
 
         /*
         ** Start Bottom Sheet
          */
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator);
-        mBottomSheet = coordinatorLayout.findViewById(R.id.event_bottom_sheet);
+        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator);
+        initializeUI();
+        // End BottomSheet
+
+        return rootView;
+    }
+
+    private void initializeUI() {
+        mBottomSheet = mCoordinatorLayout.findViewById(R.id.event_bottom_sheet);
         mEventTitle = (TextView) mBottomSheet.findViewById(R.id.eventTitle);
         mEventPrice = (TextView) mBottomSheet.findViewById(R.id.eventPrice);
         mEventDescription = (TextView) mBottomSheet.findViewById(R.id.eventDescription);
         mEventAddress = (TextView) mBottomSheet.findViewById(R.id.eventAddress);
         mEventDate = (TextView) mBottomSheet.findViewById(R.id.eventDate);
         mEventWaitersAvailable = (TextView) mBottomSheet.findViewById(R.id.eventWaitersAvailable);
-        mFAB = (FloatingActionButton) coordinatorLayout.findViewById(R.id.fab);
+        mFAB = (FloatingActionButton) mCoordinatorLayout.findViewById(R.id.fab);
+        mFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> listOfWaiters = new ArrayList<>();
+                MainActivity.mEventList.add(new Event("58fc51e531087c0011378ebc",
+                        "Event" + (MainActivity.mEventList.size() + 1),
+                        "Description",
+                        "Address",
+                        48.8584 + MainActivity.mEventList.size(),
+                        2.2945 + MainActivity.mEventList.size(),
+                        "Date",
+                        1,
+                        listOfWaiters));
+            }
+        });
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(true);
@@ -148,49 +171,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                Log.d("MapsFragment", "onStateChanged() | currentState = " + mBottomSheetBehavior.getState() + ", newState = " + newState);
-
-                // this part hides the button immediately and waits bottom sheet
-                // to collapse to show
-
-                switch (newState) {
-//                    case BottomSheetBehavior.STATE_DRAGGING:
-//                        if (showFAB) {
-//                            mFAB.startAnimation(mGrowAnimation);
-//                        } else {
-//                            mFAB.startAnimation(mShrinkAnimation);
-//                        }
-//                        break;
-//
-//                    case BottomSheetBehavior.STATE_COLLAPSED:
-//                        showFAB = false;
-////                        mFAB.setVisibility(View.VISIBLE);
-////                        mFAB.startAnimation(mGrowAnimation);
-//                        break;
-//
-//                    case BottomSheetBehavior.STATE_EXPANDED:
-//                        showFAB = true;
-//                        break;
-                }
+                // Not used.
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//                mFAB.animate().scaleX(1 - slideOffset).scaleY(1 - slideOffset).setDuration(0).start();
-//                if (slideOffset > -1 && slideOffset <= 0) {
-//                    Log.d("MapsFragment", "onSlide() | HIDDEN > COLLAPSED");
-//                } else if (slideOffset > 0 && slideOffset <= 1) {
-//                    Log.d("MapsFragment", "onSlide() | COLLAPSED > EXPANDED");
-//                }
                 if (slideOffset >= -1 && slideOffset <= 0) {
                     mFAB.animate().scaleX(slideOffset + 1).scaleY(slideOffset + 1).setDuration(0).start();
                 }
-//                Log.d("MapsFragment", "onSlide() | slideOffset = " + slideOffset);
             }
         });
-        // End BottomSheet
-
-        return rootView;
     }
 
     @Override
@@ -203,13 +193,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-
-
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_resized);
 
         LatLng latLng = new LatLng(48.8151239, 2.3631254); // Epitech Paris location
-        for (int i = 0; i < mEventList.size(); i++) {
-            latLng = new LatLng(mEventList.get(i).getLong(), mEventList.get(i).getLat());
+        for (int i = 0; i < MainActivity.mEventList.size(); i++) {
+            latLng = new LatLng(MainActivity.mEventList.get(i).getLong(), MainActivity.mEventList.get(i).getLat());
             mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(String.valueOf(i)).icon(icon));
         }
         CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
@@ -230,12 +218,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         int eventID = Integer.parseInt(marker.getTitle());
 
-//        mEventTitle.setText(eventList.get(eventID).getName());
-////        mEventPrice.setText();
-//        mEventDescription.setText(eventList.get(eventID).getDescription());
-//        mEventAddress.setText(eventList.get(eventID).getAddress());
-//        mEventDate.setText(eventList.get(eventID).getDate());
-//        mEventWaitersAvailable.setText(getString(R.string.waiters_available, eventList.get(eventID).getListOfWaiters().size()));
+        mEventTitle.setText(MainActivity.mEventList.get(eventID).getName());
+        //mEventPrice.setText();
+        mEventDescription.setText(MainActivity.mEventList.get(eventID).getDescription());
+        mEventAddress.setText(MainActivity.mEventList.get(eventID).getAddress());
+        mEventDate.setText(MainActivity.mEventList.get(eventID).getDate());
+        mEventWaitersAvailable.setText(getString(R.string.waiters_available, MainActivity.mEventList.get(eventID).getListOfWaiters().size()));
         return true;
     }
 
@@ -272,12 +260,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private boolean bottomSheetToPreviousState() {
         mBottomSheet.scrollTo(0, 0);
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-//            mFAB.startAnimation(mShrinkAnimation);
             mFAB.setVisibility(View.GONE);
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//            mFAB.startAnimation(mGrowAnimation);
         } else {
             return false;
         }

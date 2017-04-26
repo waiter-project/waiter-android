@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.waiter.dummy.DummyContent;
 import com.waiter.models.Event;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
-    private ArrayList<Event> mEventList;
+    public static ArrayList<Event> mEventList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,12 +172,6 @@ public class MainActivity extends AppCompatActivity
                 case 1:
                     fragment = new EventFragment();
                     break;
-            }
-
-            if (fragment != null) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("eventList", mEventList);
-                fragment.setArguments(bundle);
             }
 
             return fragment;
