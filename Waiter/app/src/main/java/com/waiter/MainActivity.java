@@ -1,5 +1,6 @@
 package com.waiter;
 
+import android.animation.ValueAnimator;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
 import com.waiter.dummy.DummyContent;
 import com.waiter.models.Event;
 
@@ -26,12 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener, FloatingSearchView.OnFocusChangeListener {
 
     private static final int NUM_PAGES = 2;
 
+    private FloatingSearchView mSearchView;
+
     private ViewPager mViewPager;
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private TabLayout mTabLayout;
 
     public static ArrayList<Event> mEventList;
 
@@ -39,21 +44,30 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         /*
         ** Begin NavigationDrawer
          */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // End NavigationDrawer
+
+        /*
+        ** Begin SearchView
+         */
+        mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
+        mSearchView.attachNavigationDrawerToMenuButton(drawer);
+        mSearchView.setOnMenuItemClickListener(this);
+        mSearchView.setOnFocusChangeListener(this);
+        //End Searchview
 
         /*
         ** Begin SwipeTabs
@@ -61,10 +75,10 @@ public class MainActivity extends AppCompatActivity
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_map_white_48dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white_48dp);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(0).setIcon(R.drawable.ic_map_white_48dp);
+        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white_48dp);
         // End SwipeTabs
 
         /*
@@ -83,6 +97,31 @@ public class MainActivity extends AppCompatActivity
                 1,
                 listOfWaiters));
         // End Load Events from API
+    }
+
+    @Override
+    public void onFocus() {
+        fadeInBackground(0, 150);
+    }
+
+    @Override
+    public void onFocusCleared() {
+        fadeInBackground(150, 0);
+    }
+
+    private void fadeInBackground(int alphaFocused, int alphaNotFocused) {
+        ValueAnimator anim = ValueAnimator.ofInt(alphaFocused, alphaNotFocused);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+
+                int value = (Integer) animation.getAnimatedValue();
+                mTabLayout.setBackgroundColor(getResources().getColor(R.color.black));
+                mTabLayout.getBackground().setAlpha(value);
+            }
+        });
+        anim.setDuration(250);
+        anim.start();
     }
 
     @Override
@@ -109,6 +148,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onActionMenuItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            Toast.makeText(this, "Settings clicked.", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.action_about) {
+            Toast.makeText(this, "About Us clicked.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -124,8 +174,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(this, "Settings clicked.", Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.action_about) {
+            Toast.makeText(this, "About Us clicked.", Toast.LENGTH_SHORT).show();
             return true;
         }
 
