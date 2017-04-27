@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.List;
+
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -154,7 +156,7 @@ public class Event implements Parcelable {
         dest.writeStringList(listOfWaiters);
     }
 
-    // Method to recreate a Question from a Parcel
+    // Method to recreate an Event from a Parcel
     public static Creator<Event> CREATOR = new Creator<Event>() {
 
         @Override

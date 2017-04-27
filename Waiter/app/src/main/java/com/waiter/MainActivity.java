@@ -3,6 +3,7 @@ package com.waiter;
 import android.animation.ValueAnimator;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,9 +19,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.waiter.data.EventSuggestion;
+import com.waiter.data.SuggestionHelper;
 import com.waiter.dummy.DummyContent;
 import com.waiter.models.Event;
 
@@ -28,7 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener, FloatingSearchView.OnFocusChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener, FloatingSearchView.OnFocusChangeListener, FloatingSearchView.OnQueryChangeListener, FloatingSearchView.OnSearchListener, AppBarLayout.OnOffsetChangedListener {
+
+    private final String TAG = "MainActivity";
 
     private static final int NUM_PAGES = 2;
 
@@ -40,22 +49,18 @@ public class MainActivity extends AppCompatActivity
 
     public static ArrayList<Event> mEventList;
 
+    private String mLastQuery = "";
+    private AppBarLayout mAppBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         /*
         ** Begin NavigationDrawer
          */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // End NavigationDrawer
@@ -66,8 +71,14 @@ public class MainActivity extends AppCompatActivity
         mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
         mSearchView.attachNavigationDrawerToMenuButton(drawer);
         mSearchView.setOnMenuItemClickListener(this);
+        mSearchView.setOnQueryChangeListener(this);
+        mSearchView.setOnSearchListener(this);
         mSearchView.setOnFocusChangeListener(this);
         //End Searchview
+
+        mAppBar = (AppBarLayout) findViewById(R.id.appbar);
+
+        mAppBar.addOnOffsetChangedListener(this);
 
         /*
         ** Begin SwipeTabs
@@ -79,6 +90,49 @@ public class MainActivity extends AppCompatActivity
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.getTabAt(0).setIcon(R.drawable.ic_map_white_48dp);
         mTabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white_48dp);
+        mTabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                super.onTabSelected(tab);
+                int numTab = tab.getPosition();
+                Log.d(TAG, "numTab = " + numTab);
+                if (numTab == 0) {
+                    View view = findViewById(R.id.view); // your toolbar within an AppBarLayout
+
+//                    mAppBar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
+
+//                    Log.d(TAG, "mAppBar.mAppBar.getX() = " + mAppBar.getX() + " | mAppBar.getY() = " + mAppBar.getY());
+//                    Log.d(TAG, "view.mAppBar.getX() = " + view.getX() + " | view.getY() = " + view.getY());
+//                    Log.d(TAG, "mTabLayout.mAppBar.getX() = " + mTabLayout.getX() + " | mTabLayout.getY() = " + mTabLayout.getY());
+//
+//                    if (mAppBar.getY() < 0) {
+//                        mAppBar.animate().translationY(mAppBar.getBottom()).setInterpolator(new DecelerateInterpolator()).start();
+//                    }
+
+
+
+                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) view.getLayoutParams();
+                    params.setScrollFlags(0);
+                    view.setLayoutParams(params);
+
+                    params = (AppBarLayout.LayoutParams) mTabLayout.getLayoutParams();
+                    params.setScrollFlags(0);
+                    mTabLayout.setLayoutParams(params);
+                } else {
+                    View view = findViewById(R.id.view); // your toolbar within an AppBarLayout
+
+//                    mAppBar.animate().translationY(-mAppBar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+
+                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) view.getLayoutParams();
+                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+                    view.setLayoutParams(params);
+
+                    params = (AppBarLayout.LayoutParams) mTabLayout.getLayoutParams();
+                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+                    mTabLayout.setLayoutParams(params);
+                }
+            }
+        });
         // End SwipeTabs
 
         /*
@@ -97,31 +151,6 @@ public class MainActivity extends AppCompatActivity
                 1,
                 listOfWaiters));
         // End Load Events from API
-    }
-
-    @Override
-    public void onFocus() {
-        fadeInBackground(0, 150);
-    }
-
-    @Override
-    public void onFocusCleared() {
-        fadeInBackground(150, 0);
-    }
-
-    private void fadeInBackground(int alphaFocused, int alphaNotFocused) {
-        ValueAnimator anim = ValueAnimator.ofInt(alphaFocused, alphaNotFocused);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-
-                int value = (Integer) animation.getAnimatedValue();
-                mTabLayout.setBackgroundColor(getResources().getColor(R.color.black));
-                mTabLayout.getBackground().setAlpha(value);
-            }
-        });
-        anim.setDuration(250);
-        anim.start();
     }
 
     @Override
@@ -205,6 +234,98 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onSearchTextChanged(String oldQuery, String newQuery) {
+        //get suggestions based on newQuery
+
+        //pass them on to the search view
+//        mSearchView.swapSuggestions(newSuggestions);
+
+        if (!oldQuery.equals("") && newQuery.equals("")) {
+            mSearchView.clearSuggestions();
+        } else {
+            mSearchView.showProgress();
+
+            SuggestionHelper.findSuggestions(this, newQuery, 5, 250, new SuggestionHelper.OnFindSuggestionsListener() {
+                @Override
+                public void onResults(List<EventSuggestion> results) {
+                    mSearchView.swapSuggestions(results);
+                    mSearchView.hideProgress();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
+        EventSuggestion eventSuggestion = (EventSuggestion) searchSuggestion;
+        SuggestionHelper.findEvents(this, eventSuggestion.getBody(),
+                new SuggestionHelper.OnFindEventsListener() {
+                    @Override
+                    public void onResults(List<Event> results) {
+//                        mSearchResultsAdapter.swapData(results);
+                    }
+                });
+
+        Log.d(TAG, "onSuggestionClicked()");
+
+        mLastQuery = searchSuggestion.getBody();
+
+        Toast.makeText(this, "'" + mLastQuery + "' clicked.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSearchAction(String currentQuery) {
+        mLastQuery = currentQuery;
+
+        SuggestionHelper.findEvents(this, currentQuery, new SuggestionHelper.OnFindEventsListener() {
+            @Override
+            public void onResults(List<Event> results) {
+//                mSearchResultsAdapter.swapData(results);
+            }
+        });
+
+        Toast.makeText(this, "onSearchAction()", Toast.LENGTH_SHORT).show();
+
+        Log.d(TAG, "onSearchAction()");
+    }
+
+    @Override
+    public void onFocus() {
+        fadeInBackground(0, 150);
+        //show suggestions when search bar gains focus (typically history suggestions)
+        if (mLastQuery != null && !mLastQuery.trim().isEmpty()) {
+            mSearchView.setSearchText(mLastQuery);
+            mSearchView.swapSuggestions(SuggestionHelper.getHistory(this, 3));
+        }
+    }
+
+    @Override
+    public void onFocusCleared() {
+        fadeInBackground(150, 0);
+        mSearchView.setSearchBarTitle(mLastQuery);
+    }
+
+    private void fadeInBackground(int alphaFocused, int alphaNotFocused) {
+        ValueAnimator anim = ValueAnimator.ofInt(alphaFocused, alphaNotFocused);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+
+                int value = (Integer) animation.getAnimatedValue();
+                mTabLayout.setBackgroundColor(getResources().getColor(R.color.black));
+                mTabLayout.getBackground().setAlpha(value);
+            }
+        });
+        anim.setDuration(250);
+        anim.start();
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        mSearchView.setTranslationY(verticalOffset);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
