@@ -33,23 +33,6 @@
 
         <include layout="@layout/content_main" />
 
-        <!--<android.support.v4.widget.NestedScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:clipToPadding="false"-->
-            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-            <!--&lt;!&ndash;<include layout="@layout/content_main" />&ndash;&gt;-->
-
-            <!--<TextView-->
-                <!--android:clipToPadding="false"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/placeholder_content"-->
-                <!--android:textSize="18sp"/>-->
-
-        <!--</android.support.v4.widget.NestedScrollView>-->
-
     </android.support.design.widget.CoordinatorLayout>
 
     <com.arlib.floatingsearchview.FloatingSearchView
@@ -68,52 +51,3 @@
         app:theme="@style/AppTheme.PopupOverlay" />
 
 </RelativeLayout>
-
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--tools:context="com.waiter.MainActivity">-->
-
-    <!--<android.support.design.widget.AppBarLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
-
-        <!--&lt;!&ndash;android:layout_height="70dp"&ndash;&gt;-->
-        <!--<com.arlib.floatingsearchview.FloatingSearchView-->
-            <!--android:id="@+id/floating_search_view"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--app:floatingSearch_dismissOnOutsideTouch="true"-->
-            <!--app:floatingSearch_searchBarMarginLeft="@dimen/search_view_inset"-->
-            <!--app:floatingSearch_searchBarMarginTop="@dimen/search_view_inset_top"-->
-            <!--app:floatingSearch_searchBarMarginRight="@dimen/search_view_inset"-->
-            <!--app:floatingSearch_searchHint="Search"-->
-            <!--app:floatingSearch_leftActionMode="showHamburger"-->
-            <!--app:floatingSearch_menu="@menu/main"-->
-            <!--app:floatingSearch_close_search_on_keyboard_dismiss="true"-->
-            <!--app:theme="@style/AppTheme.PopupOverlay" />-->
-
-        <!--<android.support.design.widget.TabLayout-->
-            <!--android:id="@+id/tabs"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content" />-->
-
-        <!--&lt;!&ndash;<android.support.v7.widget.Toolbar&ndash;&gt;-->
-        <!--&lt;!&ndash;android:id="@+id/toolbar"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="?attr/actionBarSize"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:background="?attr/colorPrimary"&ndash;&gt;-->
-        <!--&lt;!&ndash;app:layout_scrollFlags="scroll|enterAlways"&ndash;&gt;-->
-        <!--&lt;!&ndash;app:layout_collapseMode="parallax"&ndash;&gt;-->
-        <!--&lt;!&ndash;app:popupTheme="@style/AppTheme.PopupOverlay" />&ndash;&gt;-->
-
-    <!--</android.support.design.widget.AppBarLayout>-->
-
-    <!--<include layout="@layout/content_main" />-->
-
-<!--</android.support.design.widget.CoordinatorLayout>-->
