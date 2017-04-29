@@ -9,26 +9,20 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.waiter.data.EventSuggestion;
 import com.waiter.data.SuggestionHelper;
-import com.waiter.dummy.DummyContent;
 import com.waiter.models.Event;
 
 import java.util.ArrayList;
@@ -46,6 +40,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private TabLayout mTabLayout;
+    private View mView;
 
     public static ArrayList<Event> mEventList;
 
@@ -90,6 +85,7 @@ public class MainActivity extends AppCompatActivity
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.getTabAt(0).setIcon(R.drawable.ic_map_white_48dp);
         mTabLayout.getTabAt(1).setIcon(R.drawable.ic_view_list_white_48dp);
+        mView = findViewById(R.id.view);
         mTabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -97,39 +93,13 @@ public class MainActivity extends AppCompatActivity
                 int numTab = tab.getPosition();
                 Log.d(TAG, "numTab = " + numTab);
                 if (numTab == 0) {
-                    View view = findViewById(R.id.view); // your toolbar within an AppBarLayout
-
-//                    mAppBar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-
-//                    Log.d(TAG, "mAppBar.mAppBar.getX() = " + mAppBar.getX() + " | mAppBar.getY() = " + mAppBar.getY());
-//                    Log.d(TAG, "view.mAppBar.getX() = " + view.getX() + " | view.getY() = " + view.getY());
-//                    Log.d(TAG, "mTabLayout.mAppBar.getX() = " + mTabLayout.getX() + " | mTabLayout.getY() = " + mTabLayout.getY());
-//
-//                    if (mAppBar.getY() < 0) {
-//                        mAppBar.animate().translationY(mAppBar.getBottom()).setInterpolator(new DecelerateInterpolator()).start();
-//                    }
-
-
-
-                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) view.getLayoutParams();
+                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mView.getLayoutParams();
                     params.setScrollFlags(0);
-                    view.setLayoutParams(params);
-
-                    params = (AppBarLayout.LayoutParams) mTabLayout.getLayoutParams();
-                    params.setScrollFlags(0);
-                    mTabLayout.setLayoutParams(params);
+                    mView.setLayoutParams(params);
                 } else {
-                    View view = findViewById(R.id.view); // your toolbar within an AppBarLayout
-
-//                    mAppBar.animate().translationY(-mAppBar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
-
-                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) view.getLayoutParams();
+                    AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mView.getLayoutParams();
                     params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
-                    view.setLayoutParams(params);
-
-                    params = (AppBarLayout.LayoutParams) mTabLayout.getLayoutParams();
-                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
-                    mTabLayout.setLayoutParams(params);
+                    mView.setLayoutParams(params);
                 }
             }
         });
