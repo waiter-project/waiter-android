@@ -18,6 +18,11 @@
     <string name="action_settings">Settings</string>
     <string name="action_about">About Us</string>
 
+    <!-- Intro Activity -->
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="welcome">Welcome to Waiter</string>
+
     <!-- MapsFragment -->
     <string name="waiters_available">%1$d waiters available</string>
 
