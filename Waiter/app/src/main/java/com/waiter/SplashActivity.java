@@ -15,8 +15,6 @@ public class SplashActivity extends AppCompatActivity {
 
         SharedPreferences prefs = new SecurePreferences(this);
 
-        prefs.edit().putBoolean("is_logged_in", true).apply(); // to remove later
-
         boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
 
         if (isLoggedIn) {

@@ -1,6 +1,8 @@
 package com.waiter;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.securepreferences.SecurePreferences;
 import com.waiter.data.EventSuggestion;
 import com.waiter.data.SuggestionHelper;
 import com.waiter.models.Event;
@@ -183,6 +186,16 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void logout() {
+        SharedPreferences prefs = new SecurePreferences(this);
+        prefs.edit().putBoolean("is_logged_in", false).apply();
+
+        Intent intent = new Intent(this, IntroActivity.class);
+        startActivity(intent);
+
+        finish();
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -198,7 +211,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_logout) {
-
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
