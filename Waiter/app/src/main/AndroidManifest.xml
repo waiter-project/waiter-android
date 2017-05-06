@@ -28,6 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LoginActivity"
+            android:theme="@style/Theme.Intro" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -35,5 +38,6 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
+    compile 'com.heinrichreimersoftware:material-intro:1.6.2'
     testCompile 'junit:junit:4.12'
 }
