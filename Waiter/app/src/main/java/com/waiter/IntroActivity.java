@@ -20,10 +20,10 @@ public class IntroActivity extends AppCompatActivity {
     public void onClick_SignIn(View view) {
         Toast.makeText(this, "onClick_SignIn", Toast.LENGTH_SHORT).show();
 
-        SharedPreferences prefs = new SecurePreferences(this);
-        prefs.edit().putBoolean("is_logged_in", true).apply(); // to remove later
+//        SharedPreferences prefs = new SecurePreferences(this);
+//        prefs.edit().putBoolean("is_logged_in", true).apply(); // to remove later
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
 
         finish();
@@ -31,5 +31,10 @@ public class IntroActivity extends AppCompatActivity {
 
     public void onClick_SignUp(View view) {
         Toast.makeText(this, "onClick_SignUp", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
+        finish();
     }
 }

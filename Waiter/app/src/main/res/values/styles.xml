@@ -21,4 +21,25 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowBackground">@color/colorPrimary</item>
+
+        <item name="colorControlNormal">@color/iron</item>
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="android:textColorHint">@color/iron</item>
+
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+        <!--<item name="android:colorButtonNormal">@color/colorPrimaryDark</item>-->
+    </style>
+
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#FF6E6E</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>
