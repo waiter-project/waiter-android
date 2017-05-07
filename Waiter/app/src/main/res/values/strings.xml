@@ -31,6 +31,7 @@
     <string name="no_account_yet">No account yet? Join us!</string>
     <string name="err_msg_email">Enter a valid email address</string>
     <string name="err_msg_password">Enter a password</string>
+    <string name="signing_in">Signing In…</string>
 
     <!-- MapsFragment -->
     <string name="waiters_available">%1$d waiters available</string>

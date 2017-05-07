@@ -24,6 +24,10 @@ public class LoginActivity extends AppIntro {
         showSkipButton(false);
     }
 
+    public void nextSlide() {
+        this.nextButton.performClick();
+    }
+
     @Override
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);

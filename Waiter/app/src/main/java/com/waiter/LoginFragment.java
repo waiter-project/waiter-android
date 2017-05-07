@@ -1,6 +1,7 @@
 package com.waiter;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.github.paolorotolo.appintro.AppIntroFragment;
 import com.github.paolorotolo.appintro.ISlidePolicy;
 
 public class LoginFragment extends Fragment implements ISlidePolicy {
@@ -22,7 +24,10 @@ public class LoginFragment extends Fragment implements ISlidePolicy {
     private EditText mInputEmail, mInputPassword;
     private TextInputLayout mInputLayoutEmail, mInputLayoutPassword;
 
-    public static boolean validLogin = false;
+    private ProgressDialog mProgressDialog;
+
+    private boolean checkLogin = false;
+    private boolean validLogin = false;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -44,7 +49,6 @@ public class LoginFragment extends Fragment implements ISlidePolicy {
                              Bundle savedInstanceState) {
 
         mRootView = inflater.inflate(R.layout.fragment_login, container, false);
-        validLogin = false;
 
         mInputLayoutEmail = (TextInputLayout) mRootView.findViewById(R.id.input_layout_email);
         mInputLayoutPassword = (TextInputLayout) mRootView.findViewById(R.id.input_layout_password);
@@ -53,6 +57,11 @@ public class LoginFragment extends Fragment implements ISlidePolicy {
 
         mInputEmail.addTextChangedListener(new MyTextWatcher(mInputEmail));
         mInputPassword.addTextChangedListener(new MyTextWatcher(mInputPassword));
+
+        mProgressDialog = new ProgressDialog(getContext(), R.style.AppTheme_Dark_Dialog);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage(getString(R.string.signing_in));
 
         return mRootView;
     }
@@ -72,7 +81,7 @@ public class LoginFragment extends Fragment implements ISlidePolicy {
 
         if (email.isEmpty() || !isValidEmail(email)) {
             mInputLayoutEmail.setError(getString(R.string.err_msg_email));
-//            requestFocus(mInputEmail);
+            requestFocus(mInputEmail);
             return false;
         } else {
             mInputLayoutEmail.setErrorEnabled(false);
@@ -88,7 +97,7 @@ public class LoginFragment extends Fragment implements ISlidePolicy {
     private boolean validatePassword() {
         if (mInputPassword.getText().toString().trim().isEmpty()) {
             mInputLayoutPassword.setError(getString(R.string.err_msg_password));
-//            requestFocus(mInputPassword);
+            requestFocus(mInputPassword);
             return false;
         } else {
             mInputLayoutPassword.setErrorEnabled(false);
@@ -128,21 +137,52 @@ public class LoginFragment extends Fragment implements ISlidePolicy {
         }
     }
 
+    private void attemptLogin() {
+        mProgressDialog.show();
+
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+
+                        if (mInputPassword.getText().toString().equals("qwerty")) {
+                            validLogin = true;
+                            mProgressDialog.dismiss();
+                            Snackbar.make(mRootView, "Successful login", Snackbar.LENGTH_LONG).show();
+                            ((LoginActivity) getContext()).nextSlide();
+                        } else {
+                            mProgressDialog.dismiss();
+                            Snackbar.make(mRootView, "Invalid password", Snackbar.LENGTH_LONG).show();
+                            validLogin = false;
+                        }
+
+                    }
+
+                }, 3000);
+
+//        mProgressDialog.dismiss();
+    }
+
     @Override
     public boolean isPolicyRespected() {
 //        Utils.hideKeyboard(getActivity());
+
+        if (validLogin) {
+            return true;
+        }
+
         boolean validForm = submitForm();
 
         if (validForm) {
             mInputEmail.clearFocus();
             mInputPassword.clearFocus();
+            attemptLogin();
         }
 
-        return validForm;
+        return validForm && validLogin;
     }
 
     @Override
     public void onUserIllegallyRequestedNextPage() {
-        Snackbar.make(mRootView, "Invalid login", Snackbar.LENGTH_LONG).show();
+//        Snackbar.make(mRootView, "Invalid login", Snackbar.LENGTH_LONG).show();
     }
 }
