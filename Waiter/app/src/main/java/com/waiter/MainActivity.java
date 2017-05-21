@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener, FloatingSearchView.OnFocusChangeListener, FloatingSearchView.OnQueryChangeListener, FloatingSearchView.OnSearchListener, AppBarLayout.OnOffsetChangedListener {
 
     private final String TAG = "MainActivity";
+    private static final int REQUEST_CODE_INTRO = 1;
 
     private static final int NUM_PAGES = 2;
 
@@ -50,11 +51,24 @@ public class MainActivity extends AppCompatActivity
     private String mLastQuery = "";
     private AppBarLayout mAppBar;
 
+    private Bundle mSavedInstanceState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences prefs = new SecurePreferences(this);
+        boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
+        if (!isLoggedIn) {
+            Intent intent = new Intent(this, IntroActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_INTRO);
+        } else {
+            setupMainActivity();
+        }
+    }
+
+    private void setupMainActivity() {
         /*
         ** Begin NavigationDrawer
          */
@@ -72,15 +86,32 @@ public class MainActivity extends AppCompatActivity
         mSearchView.setOnQueryChangeListener(this);
         mSearchView.setOnSearchListener(this);
         mSearchView.setOnFocusChangeListener(this);
-        //End Searchview
+        //End SearchView
 
         mAppBar = (AppBarLayout) findViewById(R.id.appbar);
-
         mAppBar.addOnOffsetChangedListener(this);
 
         /*
-        ** Begin SwipeTabs
+        ** Start Load Events from API
          */
+        mEventList = new ArrayList<>();
+        List<String> listOfWaiters = new ArrayList<>();
+        listOfWaiters.add("58fc51f131087c0011378ebe");
+        mEventList.add(new Event("58fc51e531087c0011378ebc",
+                "Eiffel Tower",
+                "A big piece of iron",
+                "5 Avenue Anatole Paris France",
+                48.8584,
+                2.2945,
+                "Everyday",
+                1,
+                listOfWaiters));
+        // End Load Events from API
+
+        setupTabs();
+    }
+
+    private void setupTabs() {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -106,24 +137,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-        // End SwipeTabs
-
-        /*
-        ** Start Load Events from API
-         */
-        mEventList = new ArrayList<>();
-        List<String> listOfWaiters = new ArrayList<>();
-        listOfWaiters.add("58fc51f131087c0011378ebe");
-        mEventList.add(new Event("58fc51e531087c0011378ebc",
-                "Eiffel Tower",
-                "A big piece of iron",
-                "5 Avenue Anatole Paris France",
-                48.8584,
-                2.2945,
-                "Everyday",
-                1,
-                listOfWaiters));
-        // End Load Events from API
     }
 
     @Override
@@ -190,7 +203,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences prefs = new SecurePreferences(this);
         prefs.edit().putBoolean("is_logged_in", false).apply();
 
-        Intent intent = new Intent(this, IntroActivity.class);
+        Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
 
         finish();
@@ -311,7 +324,7 @@ public class MainActivity extends AppCompatActivity
         mSearchView.setTranslationY(verticalOffset);
     }
 
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -358,5 +371,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteractionEvent(Event item) {
         Log.d("MainActivity", "onListFragmentInteractionEvent, DummyItem: " + String.valueOf(item));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_INTRO) {
+            if (resultCode == RESULT_OK) {
+                SharedPreferences prefs = new SecurePreferences(this);
+                prefs.edit().putBoolean("is_logged_in", true).apply();
+                setupMainActivity();
+            } else {
+                finish();
+            }
+        }
     }
 }

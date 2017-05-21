@@ -1,35 +1,78 @@
 package com.waiter;
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.securepreferences.SecurePreferences;
+import com.heinrichreimersoftware.materialintro.app.NavigationPolicy;
+import com.heinrichreimersoftware.materialintro.app.OnNavigationBlockedListener;
+import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
+import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
+import com.heinrichreimersoftware.materialintro.slide.Slide;
 
-public class IntroActivity extends AppCompatActivity {
+public class IntroActivity extends com.heinrichreimersoftware.materialintro.app.IntroActivity {
+
+    private static final String TAG = "IntroActivity";
+    private static final int REQUEST_CODE_INTRO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_intro);
-    }
 
-    public void onClick_SignIn(View view) {
-        Toast.makeText(this, "onClick_SignIn", Toast.LENGTH_SHORT).show();
+        setButtonBackVisible(false);
 
-//        SharedPreferences prefs = new SecurePreferences(this);
-//        prefs.edit().putBoolean("is_logged_in", true).apply(); // to remove later
+        final Slide fakeSlide;
+        fakeSlide = new SimpleSlide.Builder()
+                .title(R.string.welcome)
+                .image(R.drawable.waiter_logo)
+                .background(R.color.colorPrimary)
+                .backgroundDark(R.color.colorPrimaryDark)
+                .scrollable(false)
+                .build();
+        addSlide(fakeSlide);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        final Slide loginSlide;
+        loginSlide = new FragmentSlide.Builder()
+                .background(R.color.colorPrimary)
+                .backgroundDark(R.color.colorPrimaryDark)
+                .fragment(LoginFragment.newInstance())
+                .canGoBackward(false)
+                .build();
+        addSlide(loginSlide);
 
-        finish();
-    }
+        final Slide permissionsSlide;
+        permissionsSlide = new SimpleSlide.Builder()
+                .title("We need your permission")
+                .description("In order to show you local events")
+                .image(R.drawable.custom_marker_resized)
+                .background(R.color.colorPrimary)
+                .backgroundDark(R.color.colorPrimaryDark)
+                .scrollable(false)
+                .permission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .canGoBackward(false)
+                .build();
+        addSlide(permissionsSlide);
 
-    public void onClick_SignUp(View view) {
-        Toast.makeText(this, "onClick_SignUp", Toast.LENGTH_SHORT).show();
+        addOnNavigationBlockedListener(new OnNavigationBlockedListener() {
+            @Override
+            public void onNavigationBlocked(int position, int direction) {
+                View contentView = findViewById(android.R.id.content);
+                if (contentView != null) {
+                    Slide slide = getSlide(position);
+
+                    if (slide == permissionsSlide) {
+                        Snackbar.make(contentView, "Please grant the permissions before proceeding.", Snackbar.LENGTH_SHORT).show();
+                    } else if (slide == loginSlide) {
+                        Snackbar.make(contentView, "Please sign in before proceeding.", Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
     }
 }

@@ -14,17 +14,14 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences prefs = new SecurePreferences(this);
-
         boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
-
         if (isLoggedIn) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(this, IntroActivity.class);
+            Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
         }
-
         finish();
     }
 }
