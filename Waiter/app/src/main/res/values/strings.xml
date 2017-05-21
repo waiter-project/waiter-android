@@ -23,7 +23,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="welcome">Welcome to Waiter</string>
 
-    <!-- Login Activity -->
+    <!-- LoginFragment -->
     <string name="sign_in">Sign In</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
@@ -38,8 +38,24 @@
     <string name="err_msg_password">Enter a password</string>
     <string name="welcome_back_user">Welcome back, %1$s!</string>
 
+    <!-- Signup Fragments -->
+    <string name="whats_your_name">What\'s your name?</string>
+    <string name="hint_fname">First name</string>
+    <string name="hint_lname">Last name</string>
+    <string name="whats_your_email">Your email address?</string>
+    <string name="hint_email_address">Email address</string>
+    <string name="create_password">Create a password</string>
+    <string name="password_instructions">Use at least 8 characters. Include both an uppercase letter and a number.</string>
+    <string name="password_confirmation">Password confirmation</string>
+    <string name="err_msg_password_confirmation">Password confirmation doesn\'t match</string>
+
     <!-- MapsFragment -->
     <string name="waiters_available">%1$d waiters available</string>
+
+    <!-- General strings -->
+    <string name="is_required">%1$s is required</string>
+    <string name="please_valid">Please enter a valid %1$s</string>
+    <string name="is_invalid">%1$s is invalid</string>
 
     <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

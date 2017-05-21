@@ -7,22 +7,34 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.view.WindowManager;
 
-import com.heinrichreimersoftware.materialintro.app.NavigationPolicy;
 import com.heinrichreimersoftware.materialintro.app.OnNavigationBlockedListener;
 import com.heinrichreimersoftware.materialintro.slide.FragmentSlide;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 import com.heinrichreimersoftware.materialintro.slide.Slide;
+import com.waiter.models.RequestSignup;
 
 public class IntroActivity extends com.heinrichreimersoftware.materialintro.app.IntroActivity {
 
     private static final String TAG = "IntroActivity";
     private static final int REQUEST_CODE_INTRO = 1;
 
+    private LoginFragment loginFragment;
+    private SignupNameFragment nameFragment;
+    private SignupEmailFragment emailFragment;
+    public static String errorEmailMessage = "";
+    private SignupPasswordFragment passwordFragment;
+    public static String errorPasswordMessage = "";
+
+    private RequestSignup requestSignup = new RequestSignup();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        final boolean signUp = intent.getBooleanExtra("sign_up", false);
 
         setButtonBackVisible(false);
 
@@ -37,13 +49,44 @@ public class IntroActivity extends com.heinrichreimersoftware.materialintro.app.
         addSlide(fakeSlide);
 
         final Slide loginSlide;
-        loginSlide = new FragmentSlide.Builder()
-                .background(R.color.colorPrimary)
-                .backgroundDark(R.color.colorPrimaryDark)
-                .fragment(LoginFragment.newInstance())
-                .canGoBackward(false)
-                .build();
-        addSlide(loginSlide);
+        final Slide nameSlide;
+        final Slide emailSlide;
+        final Slide passwordSlide;
+        if (signUp) {
+            loginSlide = null;
+            nameFragment = SignupNameFragment.newInstance();
+            nameSlide = new FragmentSlide.Builder()
+                    .background(R.color.colorPrimary)
+                    .backgroundDark(R.color.colorPrimaryDark)
+                    .fragment(nameFragment)
+                    .build();
+            addSlide(nameSlide);
+            emailFragment = SignupEmailFragment.newInstance();
+            emailSlide = new FragmentSlide.Builder()
+                    .background(R.color.colorPrimary)
+                    .backgroundDark(R.color.colorPrimaryDark)
+                    .fragment(emailFragment)
+                    .build();
+            addSlide(emailSlide);
+            passwordFragment = SignupPasswordFragment.newInstance();
+            passwordSlide = new FragmentSlide.Builder()
+                    .background(R.color.colorPrimary)
+                    .backgroundDark(R.color.colorPrimaryDark)
+                    .fragment(passwordFragment)
+                    .build();
+            addSlide(passwordSlide);
+        } else {
+            nameSlide = null;
+            emailSlide = null;
+            passwordSlide = null;
+            loginFragment = LoginFragment.newInstance();
+            loginSlide = new FragmentSlide.Builder()
+                    .background(R.color.colorPrimary)
+                    .backgroundDark(R.color.colorPrimaryDark)
+                    .fragment(loginFragment)
+                    .build();
+            addSlide(loginSlide);
+        }
 
         final Slide permissionsSlide;
         permissionsSlide = new SimpleSlide.Builder()
@@ -53,8 +96,8 @@ public class IntroActivity extends com.heinrichreimersoftware.materialintro.app.
                 .background(R.color.colorPrimary)
                 .backgroundDark(R.color.colorPrimaryDark)
                 .scrollable(false)
-                .permission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .canGoBackward(false)
+                .permission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .build();
         addSlide(permissionsSlide);
 
@@ -66,13 +109,70 @@ public class IntroActivity extends com.heinrichreimersoftware.materialintro.app.
                     Slide slide = getSlide(position);
 
                     if (slide == permissionsSlide) {
-                        Snackbar.make(contentView, "Please grant the permissions before proceeding.", Snackbar.LENGTH_SHORT).show();
-                    } else if (slide == loginSlide) {
-                        Snackbar.make(contentView, "Please sign in before proceeding.", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(contentView, "Please grant the permissions before proceeding.", Snackbar.LENGTH_LONG).show();
+                    }
+
+                    if (signUp) {
+                        if (slide == nameSlide) {
+                            Snackbar.make(contentView, "Please enter your name before proceeding.", Snackbar.LENGTH_LONG).show();
+                        } else if (slide == emailSlide) {
+                            Snackbar.make(contentView, errorEmailMessage, Snackbar.LENGTH_LONG).show();
+                        } else if (slide == passwordSlide) {
+                            Snackbar.make(contentView, errorPasswordMessage, Snackbar.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        if (slide == loginSlide) {
+                            Snackbar.make(contentView, "Please sign in before proceeding.", Snackbar.LENGTH_LONG).show();
+                        }
                     }
                 }
             }
         });
 
+        addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                View contentView = findViewById(android.R.id.content);
+                if (contentView != null) {
+                    Slide slide = getSlide(position);
+
+                    if (signUp) {
+                        if (position == 1) {
+                            nameFragment.firstFocus();
+                        } if (position == 2) { // After nameSlide
+                            emailFragment.firstFocus();
+                            requestSignup.setFirstname(nameFragment.getInputFirstName());
+                            requestSignup.setLastname(nameFragment.getInputLastName());
+                        } else if (position == 3) { // After emailSlide
+                            passwordFragment.firstFocus();
+                            requestSignup.setEmail(emailFragment.getInputEmail());
+                        } else if (position == 4) { // After passwordSlide
+                            requestSignup.setPassword(passwordFragment.getInputPassword());
+                        }
+                    } else {
+                        if (position == 1) {
+                            loginFragment.firstFocus();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    @Override
+    public Intent onSendActivityResult(int result) {
+        super.onSendActivityResult(result);
+        requestSignup.setType(0);
+        Log.d(TAG, "requestSignup = " + requestSignup.toString());
+        return null;
     }
 }

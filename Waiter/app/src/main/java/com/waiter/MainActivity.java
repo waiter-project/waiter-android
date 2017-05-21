@@ -61,8 +61,11 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences prefs = new SecurePreferences(this);
         boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
         if (!isLoggedIn) {
-            Intent intent = new Intent(this, IntroActivity.class);
-            startActivityForResult(intent, REQUEST_CODE_INTRO);
+            Intent previousIntent = getIntent();
+            final boolean signUp = previousIntent.getBooleanExtra("sign_up", false);
+            Intent newIntent = new Intent(this, IntroActivity.class);
+            newIntent.putExtra("sign_up", signUp);
+            startActivityForResult(newIntent, REQUEST_CODE_INTRO);
         } else {
             setupMainActivity();
         }

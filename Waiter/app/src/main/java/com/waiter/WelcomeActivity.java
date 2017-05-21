@@ -23,6 +23,9 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     public void onClick_SignUp(View view) {
-        Toast.makeText(this, "onClick_SignUp", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("sign_up", true);
+        startActivity(intent);
+        finish();
     }
 }

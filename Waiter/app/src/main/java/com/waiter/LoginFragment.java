@@ -2,6 +2,7 @@ package com.waiter;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.heinrichreimersoftware.materialintro.app.SlideFragment;
@@ -75,6 +77,11 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
     public void onDestroy() {
         loginHandler.removeCallbacks(loginRunnable);
         super.onDestroy();
+    }
+
+    @Override
+    public boolean canGoBackward() {
+        return false;
     }
 
     @Override
@@ -178,4 +185,9 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
             ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
+
+    public void firstFocus() {
+        Utils.showKeyboard(getActivity(), binding.inputEmail);
+    }
+
 }
