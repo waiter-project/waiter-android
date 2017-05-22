@@ -11,7 +11,6 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.securepreferences.SecurePreferences;
 import com.waiter.models.RequestLogin;
@@ -52,7 +50,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
     private WaiterClient waiterClient;
     private RequestLogin requestLogin;
 
-    View view;
+    private View view;
 
     @Nullable
     @Override
