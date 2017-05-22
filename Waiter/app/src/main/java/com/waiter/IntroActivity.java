@@ -141,20 +141,20 @@ public class IntroActivity extends com.heinrichreimersoftware.materialintro.app.
                     Slide slide = getSlide(position);
 
                     if (signUp) {
-                        if (position == 1) {
+                        if (slide == nameSlide) {
                             nameFragment.firstFocus();
-                        } if (position == 2) { // After nameSlide
+                        } if (slide == emailSlide) { // After nameSlide
                             emailFragment.firstFocus();
                             requestSignup.setFirstname(nameFragment.getInputFirstName());
                             requestSignup.setLastname(nameFragment.getInputLastName());
-                        } else if (position == 3) { // After emailSlide
+                        } else if (slide == passwordSlide) { // After emailSlide
                             passwordFragment.firstFocus();
                             requestSignup.setEmail(emailFragment.getInputEmail());
-                        } else if (position == 4) { // After passwordSlide
+                        } else if (slide == permissionsSlide) { // After passwordSlide
                             requestSignup.setPassword(passwordFragment.getInputPassword());
                         }
                     } else {
-                        if (position == 1) {
+                        if (slide == loginSlide) {
                             loginFragment.firstFocus();
                         }
                     }
