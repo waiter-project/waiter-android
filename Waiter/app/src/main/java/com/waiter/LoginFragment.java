@@ -158,11 +158,9 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
                         prefs.edit().putString("token", responseLogin.getData().getToken()).apply();
                     } else {
                         showErrorSnackbar("Response is null");
-                        cantMoveFurtherErrorMessage();
                     }
                 } else {
                     showErrorSnackbar("Response fail");
-                    cantMoveFurtherErrorMessage();
                 }
             }
 
@@ -170,7 +168,6 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
             public void onFailure(@NonNull Call<ResponseLogin> call, @NonNull Throwable t) {
                 mProgressDialog.dismiss();
                 showErrorSnackbar(t.getLocalizedMessage());
-                cantMoveFurtherErrorMessage();
             }
         });
     }
