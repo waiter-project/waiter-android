@@ -1,35 +1,56 @@
 package com.waiter;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.FloatRange;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.securepreferences.SecurePreferences;
+import agency.tango.materialintroscreen.MaterialIntroActivity;
+import agency.tango.materialintroscreen.SlideFragmentBuilder;
+import agency.tango.materialintroscreen.animations.IViewTranslation;
 
-public class IntroActivity extends AppCompatActivity {
+public class IntroActivity extends MaterialIntroActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_intro);
+
+        getBackButtonTranslationWrapper()
+                .setEnterTranslation(new IViewTranslation() {
+                    @Override
+                    public void translate(View view, @FloatRange(from = 0, to = 1.0) float percentage) {
+                        view.setAlpha(percentage);
+                    }
+                });
+
+        Intent intent = getIntent();
+        final boolean signUp = intent.getBooleanExtra("sign_up", false);
+
+        if (!signUp) {
+            addSlide(new LoginFragment());
+        } else {
+
+        }
+
+        addSlide(new SlideFragmentBuilder()
+                        .backgroundColor(R.color.colorPrimary)
+                        .buttonsColor(R.color.colorPrimaryDark)
+                        .neededPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION})
+                        .title(getString(R.string.we_need_your_permission))
+                        .description(getString(R.string.permission_location_description))
+                        .build());
     }
 
-    public void onClick_SignIn(View view) {
-        Toast.makeText(this, "onClick_SignIn", Toast.LENGTH_SHORT).show();
-
-        SharedPreferences prefs = new SecurePreferences(this);
-        prefs.edit().putBoolean("is_logged_in", true).apply(); // to remove later
-
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-
-        finish();
-    }
-
-    public void onClick_SignUp(View view) {
-        Toast.makeText(this, "onClick_SignUp", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onFinish() {
+        super.onFinish();
+        setResult(RESULT_OK);
     }
 }

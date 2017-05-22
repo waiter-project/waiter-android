@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences prefs = new SecurePreferences(this);
         prefs.edit().putBoolean("is_logged_in", false).apply();
 
-        Intent intent = new Intent(this, IntroActivity.class);
+        Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
 
         finish();
