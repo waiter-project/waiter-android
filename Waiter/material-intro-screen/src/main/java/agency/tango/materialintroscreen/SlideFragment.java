@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -103,8 +105,22 @@ public class SlideFragment extends ParallaxFragment {
         return hasPermissionsToGrant(neededPermissions);
     }
 
+    public void onNext(LinearLayout navigationView) { }
+
+    public void onBack() {
+        Log.d("SlideFragment", "onBack");
+    }
+
+    public boolean asyncTaskDone() {
+        return true;
+    }
+
     public boolean canMoveFurther() {
         return true;
+    }
+
+    public void moveToNextPage() {
+        ((MaterialIntroActivity)getActivity()).moveToNextPage();
     }
 
     public String cantMoveFurtherErrorMessage() {
