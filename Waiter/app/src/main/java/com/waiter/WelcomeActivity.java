@@ -1,16 +1,11 @@
 package com.waiter;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import com.securepreferences.SecurePreferences;
 
 public class WelcomeActivity extends AppCompatActivity {
 
