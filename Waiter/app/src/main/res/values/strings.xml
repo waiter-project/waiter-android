@@ -44,8 +44,35 @@
     <string name="err_login">Login failed</string>
     <string name="welcome_back_user">Welcome back, %1$s!</string>
 
+    <!-- Signup Fragments -->
+    <string name="whats_your_name">What\'s your name?</string>
+    <string name="hint_fname">First name</string>
+    <string name="hint_lname">Last name</string>
+    <string name="please_enter_name">Please enter your name before proceeding</string>
+    <string name="whats_your_email">Your email address?</string>
+    <string name="hint_email_address">Email address</string>
+    <string name="email_already_used">This email address is already used</string>
+    <string name="please_enter_email">Please enter a valid email address before proceeding</string>
+    <string name="create_password">Create a password</string>
+    <string name="password_instructions">Use at least 8 characters. Include both an uppercase letter and a number.</string>
+    <string name="password_confirmation">Password confirmation</string>
+    <string name="err_msg_password_confirmation">Password confirmation doesn\'t match</string>
+    <string name="when_your_birthday">When is your birthday?</string>
+    <string name="hint_birthday">Birthday</string>
+    <string name="birthday_instructions">You must be at least 18 years old to use Waiter.</string>
+    <string name="datepicker_title">Set your birth date</string>
+    <string name="please_sign_up">Please sign up before proceeding</string>
+    <string name="signing_up">Signing Up…</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="hi_user_welcome">Hi, %1$s!\nWelcome to Waiter!</string>
+
     <!-- MapsFragment -->
     <string name="waiters_available">%1$d waiters available</string>
+
+    <!-- General strings -->
+    <string name="is_required">%1$s is required</string>
+    <string name="please_valid">Please enter a valid %1$s</string>
+    <string name="is_invalid">%1$s is invalid</string>
 
     <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
