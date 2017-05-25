@@ -189,7 +189,7 @@ public class SignupEmailFragment extends SlideFragment {
                     else {
                         Log.d(TAG, "other larger issue, i.e. no network connection?");
                     }
-                    showErrorSnackbar(navigationView, t.getMessage());
+                    showErrorSnackbar(navigationView, t.getLocalizedMessage());
                     mProgressBar.setVisibility(View.GONE);
                     mInputLayoutEmail.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 }
