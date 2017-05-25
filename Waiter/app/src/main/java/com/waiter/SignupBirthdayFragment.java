@@ -59,6 +59,8 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
     private boolean signedUp = false;
     private boolean firstAttempt = true;
 
+    private IntroActivity introActivity;
+
     private WaiterClient waiterClient;
     private RequestSignup requestSignup;
 
@@ -82,6 +84,8 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
 
         mScrollView = (ScrollView) view.findViewById(R.id.scroll_view);
         mWelcomeUser = (TextView) view.findViewById(R.id.welcome_user);
+
+        introActivity = ((IntroActivity)getActivity());
 
         waiterClient = ClientGenerator.createClient(WaiterClient.class);
         requestSignup = new RequestSignup();
@@ -133,8 +137,9 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
         return R.color.colorPrimaryDark;
     }
 
-    public void disableInput(IntroActivity introActivity) {
+    public void disableInput() {
         mInputBirthday.setEnabled(false);
+        mSignupButton.setEnabled(false);
         introActivity.disableInput();
     }
 
@@ -184,8 +189,6 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
     private void signup() {
         mProgressDialog.show();
 
-        final IntroActivity introActivity = ((IntroActivity)getActivity());
-
         requestSignup.setFirstname(introActivity.getFirstName());
         requestSignup.setLastname(introActivity.getLastName());
         requestSignup.setEmail(introActivity.getEmailAddress());
@@ -208,7 +211,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                         mScrollView.setVisibility(View.GONE);
                         mWelcomeUser.setVisibility(View.VISIBLE);
 
-                        disableInput(introActivity);
+                        disableInput();
                         introActivity.setSignedUp(true);
 
                         SharedPreferences prefs = new SecurePreferences(getContext());
