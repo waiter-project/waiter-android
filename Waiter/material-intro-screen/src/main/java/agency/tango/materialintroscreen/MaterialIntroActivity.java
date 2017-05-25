@@ -155,7 +155,7 @@ public abstract class MaterialIntroActivity extends AppCompatActivity {
                 }
                 break;
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                adapter.getItem(position).onNext(navigationView);
+                adapter.getItem(position).onNext();
                 if (adapter.isLastSlide(position) && adapter.getItem(position).canMoveFurther() && adapter.getItem(position).asyncTaskDone()) {
                     performFinish();
                 } else if (adapter.shouldLockSlide(position)) {
@@ -392,7 +392,7 @@ public abstract class MaterialIntroActivity extends AppCompatActivity {
             nextButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fragment.onNext(navigationView);
+                    fragment.onNext();
                     if (!fragment.canMoveFurther()) {
                         errorOccurred(fragment);
                     } else if (fragment.asyncTaskDone()) {
@@ -493,7 +493,7 @@ public abstract class MaterialIntroActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             SlideFragment slideFragment = adapter.getItem(adapter.getLastItemPosition());
-            slideFragment.onNext(navigationView);
+            slideFragment.onNext();
             if (!slideFragment.canMoveFurther()) {
                 errorOccurred(slideFragment);
             } else if (slideFragment.asyncTaskDone()) {

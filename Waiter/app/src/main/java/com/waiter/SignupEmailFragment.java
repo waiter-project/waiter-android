@@ -133,8 +133,8 @@ public class SignupEmailFragment extends SlideFragment {
     }
 
     @Override
-    public void onNext(final LinearLayout navigationView) {
-        super.onNext(navigationView);
+    public void onNext() {
+        super.onNext();
         Log.d(TAG, "onNext called");
 
         if (introActivity.isSignedUp()) {
@@ -166,14 +166,14 @@ public class SignupEmailFragment extends SlideFragment {
                             mEmailAddress = email;
                             moveToNextPage();
                         } else {
-                            showErrorSnackbar(navigationView, "Error: Response Body is null");
+                            showErrorSnackbar(getString(R.string.response_body_null));
                         }
                     } else {
                         ResponseBody errorBody = response.errorBody();
                         if (errorBody != null) {
-                           showErrorSnackbar(navigationView, getString(R.string.email_already_used));
+                           showErrorSnackbar(getString(R.string.email_already_used));
                         } else {
-                            showErrorSnackbar(navigationView, "Error: Response Error Body is null");
+                            showErrorSnackbar(getString(R.string.response_error_body_null));
                         }
                     }
                     mProgressBar.setVisibility(View.GONE);
@@ -189,7 +189,7 @@ public class SignupEmailFragment extends SlideFragment {
                     else {
                         Log.d(TAG, "other larger issue, i.e. no network connection?");
                     }
-                    showErrorSnackbar(navigationView, t.getLocalizedMessage());
+                    showErrorSnackbar(t.getLocalizedMessage());
                     mProgressBar.setVisibility(View.GONE);
                     mInputLayoutEmail.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 }
@@ -197,7 +197,7 @@ public class SignupEmailFragment extends SlideFragment {
 
         } else {
             Log.d(TAG, "onNext: Email is invalid");
-            showErrorSnackbar(navigationView, getString(R.string.please_enter_email));
+            showErrorSnackbar(getString(R.string.please_enter_email));
         }
     }
 
@@ -217,16 +217,15 @@ public class SignupEmailFragment extends SlideFragment {
         }
     }
 
-    private void showErrorSnackbar(final LinearLayout navigationView, String message) {
+    private void showErrorSnackbar(String message) {
         if (view != null) {
             Snackbar.make(view, message, Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
-                    navigationView.setTranslationY(0f);
+                    introActivity.getNavigationView().setTranslationY(0f);
                     super.onDismissed(snackbar, event);
                 }
             }).show();
-//            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
         }
     }
 

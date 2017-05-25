@@ -105,7 +105,7 @@ public class SlideFragment extends ParallaxFragment {
         return hasPermissionsToGrant(neededPermissions);
     }
 
-    public void onNext(LinearLayout navigationView) { }
+    public void onNext() { }
 
     public void onBack() {
         Log.d("SlideFragment", "onBack");

@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import agency.tango.materialintroscreen.SlideFragment;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -218,10 +219,15 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                         prefs.edit().putBoolean("is_logged_in", true).apply();
 //                        prefs.edit().putString("token", responseSignup.getData().getUser().getToken()).apply();
                     } else {
-                        showErrorSnackbar("Response is null");
+                        showErrorSnackbar(getString(R.string.response_body_null));
                     }
                 } else {
-                    showErrorSnackbar("Response fail");
+                    ResponseBody errorBody = response.errorBody();
+                    if (errorBody != null) {
+//                        showErrorSnackbar(getString(R.string.email_already_used));
+                    } else {
+                        showErrorSnackbar(getString(R.string.response_error_body_null));
+                    }
                 }
             }
 
@@ -268,7 +274,15 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
     }
 
     private void showErrorSnackbar(String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        if (view != null) {
+            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    introActivity.getNavigationView().setTranslationY(0f);
+                    super.onDismissed(snackbar, event);
+                }
+            }).show();
+        }
     }
 
     private class MyTextWatcher implements TextWatcher {
