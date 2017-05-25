@@ -47,6 +47,8 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
     private boolean loggedIn = false;
     private boolean firstAttempt = true;
 
+    private IntroActivity introActivity;
+
     private WaiterClient waiterClient;
     private RequestLogin requestLogin;
 
@@ -83,6 +85,8 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
         mWelcomeUser = (TextView) view.findViewById(R.id.welcome_user);
         mLinkForgotPassword = (TextView) view.findViewById(R.id.link_forgot_password);
 
+        introActivity = ((IntroActivity)getActivity());
+
         waiterClient = ClientGenerator.createClient(WaiterClient.class);
         requestLogin = new RequestLogin();
 
@@ -103,6 +107,13 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
     @Override
     public int buttonsColor() {
         return R.color.colorPrimaryDark;
+    }
+
+    public void disableInput() {
+        mInputEmail.setEnabled(false);
+        mInputPassword.setEnabled(false);
+        mLoginButton.setEnabled(false);
+//        introActivity.disableInput();
     }
 
     @Override
@@ -152,6 +163,9 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
                         mLinkForgotPassword.setVisibility(View.GONE);
                         mScrollView.setVisibility(View.GONE);
                         mWelcomeUser.setVisibility(View.VISIBLE);
+
+                        disableInput();
+//                        introActivity.setLoggedIn(true);
 
                         SharedPreferences prefs = new SecurePreferences(getContext());
                         prefs.edit().putBoolean("is_logged_in", true).apply();
