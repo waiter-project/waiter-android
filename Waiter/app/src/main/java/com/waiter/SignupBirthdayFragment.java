@@ -151,10 +151,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
 
     public String getAuthToken() { return this.authToken; }
 
-    public String getUserId() {
-        Log.d(TAG, "getUserId: userId = " + userId);
-        return this.userId;
-    }
+    public String getUserId() { return this.userId; }
 
     @Override
     public boolean canMoveFurther() {
@@ -236,7 +233,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                 } else {
                     errorResponse = ErrorUtils.parseError(response);
                     if (errorResponse != null) {
-                        if (errorResponse.getData().getCauses().isEmpty()) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
                             showErrorSnackbar(errorResponse.getData().getMessage());
                         } else {
                             showErrorSnackbar(errorResponse.getData().getCauses().get(0));

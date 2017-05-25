@@ -16,7 +16,7 @@ public class ErrorResponse {
         private String message;
         @SerializedName("causes")
         @Expose
-        private List<String> causes = new ArrayList<>();
+        private List<String> causes = null;
 
         public String getMessage() {
             return message;
