@@ -75,6 +75,7 @@
     <string name="is_invalid">%1$s is invalid</string>
     <string name="response_body_null">Error: Response Body is null</string>
     <string name="response_error_body_null">Error: Response Error Body is null</string>
+    <string name="internal_error">Internal Error</string>
 
     <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

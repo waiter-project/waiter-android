@@ -25,17 +25,20 @@ import android.widget.TextView;
 
 import com.securepreferences.SecurePreferences;
 import com.waiter.custom.CustomTextInputLayout;
+import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestSignup;
 import com.waiter.models.ResponseSignup;
 import com.waiter.network.ClientGenerator;
 import com.waiter.network.WaiterClient;
+import com.waiter.utils.ErrorUtils;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 import agency.tango.materialintroscreen.SlideFragment;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,6 +67,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
 
     private WaiterClient waiterClient;
     private RequestSignup requestSignup;
+    private ErrorResponse errorResponse;
 
     private View view;
 
@@ -203,12 +207,13 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
             @Override
             public void onResponse(@NonNull Call<ResponseSignup> call, @NonNull Response<ResponseSignup> response) {
                 mProgressDialog.dismiss();
+                Log.d(TAG, "onResponse: response = " + ToStringBuilder.reflectionToString(response));
                 if (response.isSuccessful()) {
-                    ResponseSignup responseSignup = response.body();
-                    if (responseSignup != null) {
+                    ResponseSignup body = response.body();
+                    if (body != null) {
                         signedUp = true;
-                        Log.d(TAG, "onResponse: user = " + responseSignup.getData().getUser());
-                        mWelcomeUser.setText(getString(R.string.hi_user_welcome, responseSignup.getData().getUser().getId()));
+                        Log.d(TAG, "onResponse: user = " + body.getData().getUser());
+                        mWelcomeUser.setText(getString(R.string.hi_user_welcome, requestSignup.getFirstname()));
                         mScrollView.setVisibility(View.GONE);
                         mWelcomeUser.setVisibility(View.VISIBLE);
 
@@ -222,12 +227,37 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                         showErrorSnackbar(getString(R.string.response_body_null));
                     }
                 } else {
-                    ResponseBody errorBody = response.errorBody();
-                    if (errorBody != null) {
-//                        showErrorSnackbar(getString(R.string.email_already_used));
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null) {
+                        if (errorResponse.getData().getCauses().isEmpty()) {
+                            showErrorSnackbar(errorResponse.getData().getMessage());
+                        } else {
+                            showErrorSnackbar(errorResponse.getData().getCauses().get(0));
+                        }
                     } else {
-                        showErrorSnackbar(getString(R.string.response_error_body_null));
+                        showErrorSnackbar(getString(R.string.internal_error));
                     }
+//                    ResponseBody errorBody = response.errorBody();
+//                    if (errorBody != null) {
+//                        try {
+//                            Log.d(TAG, "onResponse: errorBody = " + errorBody.string());
+//                            Gson gson = new Gson();
+//
+//                            TypeAdapter<ErrorResponse> adapter = gson.getAdapter(ErrorResponse.class);
+//                            errorResponse = adapter.fromJson(errorBody.string());
+//                            if (errorResponse.getData().getCauses().isEmpty()) {
+//                                showErrorSnackbar(errorResponse.getData().getMessage());
+//                            } else {
+//                                showErrorSnackbar(errorResponse.getData().getCauses().get(0));
+//                            }
+//                        } catch (IOException e) {
+//                            showErrorSnackbar(getString(R.string.internal_error));
+//                            Log.d(TAG, "onResponse: error = " + e.getLocalizedMessage());
+//                            e.printStackTrace();
+//                        }
+//                    } else {
+//                        showErrorSnackbar(getString(R.string.response_error_body_null));
+//                    }
                 }
             }
 

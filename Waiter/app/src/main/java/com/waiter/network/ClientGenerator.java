@@ -18,9 +18,13 @@ public class ClientGenerator {
         return "http://192.168.1.9:5000";
     }
 
-    private static Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl(API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create());
+    private static Retrofit.Builder builder = new Retrofit.Builder().baseUrl(API_BASE_URL).addConverterFactory(GsonConverterFactory.create());
+
+    private static Retrofit retrofit = builder.client(httpClient.build()).build();
+
+    public static Retrofit retrofit() {
+        return retrofit;
+    }
 
     public static <S> S createClient(Class<S> clientClass) {
         /*
