@@ -188,7 +188,12 @@ public class MainActivity extends AppCompatActivity
 
     private void logout() {
         SharedPreferences prefs = new SecurePreferences(this);
-        prefs.edit().putBoolean("is_logged_in", false).apply();
+//        prefs.edit().remove("is_logged_in").apply();
+//        prefs.edit().remove("user_id").apply();
+//        prefs.edit().remove("first_name").apply();
+//        prefs.edit().remove("last_name").apply();
+//        prefs.edit().remove("auth_token").apply();
+        prefs.edit().clear().apply();
 
         Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
