@@ -9,6 +9,8 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class Event implements Parcelable {
 
     @SerializedName("_id")
@@ -170,4 +172,9 @@ public class Event implements Parcelable {
         }
 
     };
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }

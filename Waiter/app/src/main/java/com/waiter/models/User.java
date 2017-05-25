@@ -3,6 +3,8 @@ package com.waiter.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class User {
 
     @SerializedName("_id")
@@ -129,18 +131,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", type=" + type +
-                ", status='" + status + '\'' +
-                ", confirmToken='" + confirmToken + '\'' +
-                ", v=" + v +
-                ", waiterCurrentEvent=" + waiterCurrentEvent +
-                ", createdAt='" + createdAt + '\'' +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 }

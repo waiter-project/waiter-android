@@ -3,6 +3,8 @@ package com.waiter.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class RequestSignup {
 
     @SerializedName("firstname")
@@ -72,16 +74,8 @@ public class RequestSignup {
         this.type = type;
     }
 
-
     @Override
     public String toString() {
-        return "RequestSignup{" +
-                "firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", type=" + type +
-                '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 }
