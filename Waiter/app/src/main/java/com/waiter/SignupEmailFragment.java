@@ -159,20 +159,22 @@ public class SignupEmailFragment extends SlideFragment {
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                    Log.d(TAG, "onResponse");
                     if (response.isSuccessful()) {
-                        Log.d(TAG, "onResponse: response is successful");
-                        ResponseBody responseCheckEmailAvailable = response.body();
-                        if (responseCheckEmailAvailable != null) {
+                        ResponseBody body = response.body();
+                        if (body != null) {
                             isAvailable = true;
                             mEmailAddress = email;
                             moveToNextPage();
                         } else {
-                            showErrorSnackbar(navigationView, "Response is null");
+                            showErrorSnackbar(navigationView, "Error: Response Body is null");
                         }
                     } else {
-                        Log.d(TAG, "onResponse: response is not successful");
-                        showErrorSnackbar(navigationView, getString(R.string.email_already_used));
+                        ResponseBody errorBody = response.errorBody();
+                        if (errorBody != null) {
+                           showErrorSnackbar(navigationView, getString(R.string.email_already_used));
+                        } else {
+                            showErrorSnackbar(navigationView, "Error: Response Error Body is null");
+                        }
                     }
                     mProgressBar.setVisibility(View.GONE);
                     mInputLayoutEmail.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
@@ -187,7 +189,7 @@ public class SignupEmailFragment extends SlideFragment {
                     else {
                         Log.d(TAG, "other larger issue, i.e. no network connection?");
                     }
-                    showErrorSnackbar(navigationView, t.getLocalizedMessage());
+                    showErrorSnackbar(navigationView, t.getMessage());
                     mProgressBar.setVisibility(View.GONE);
                     mInputLayoutEmail.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 }
