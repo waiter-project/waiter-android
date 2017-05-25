@@ -71,7 +71,7 @@
                             android:imeActionLabel="@string/action_sign_in" />
                     </android.support.design.widget.TextInputLayout>
 
-                    <Button
+                    <android.support.v7.widget.AppCompatButton
                         android:id="@+id/login_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

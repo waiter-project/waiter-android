@@ -54,7 +54,7 @@
                         android:imeOptions="actionDone" />
                 </com.waiter.custom.CustomTextInputLayout>
 
-                <Button
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/signup_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
