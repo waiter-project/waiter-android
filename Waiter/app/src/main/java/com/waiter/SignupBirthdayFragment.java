@@ -3,7 +3,6 @@ package com.waiter;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,7 +22,6 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.securepreferences.SecurePreferences;
 import com.waiter.custom.CustomTextInputLayout;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestSignup;
@@ -68,6 +66,9 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
     private WaiterClient waiterClient;
     private RequestSignup requestSignup;
     private ErrorResponse errorResponse;
+
+    private String userId;
+    private String authToken;
 
     private View view;
 
@@ -148,6 +149,13 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
         introActivity.disableInput();
     }
 
+    public String getAuthToken() { return this.authToken; }
+
+    public String getUserId() {
+        Log.d(TAG, "getUserId: userId = " + userId);
+        return this.userId;
+    }
+
     @Override
     public boolean canMoveFurther() {
         return signedUp;
@@ -220,9 +228,8 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                         disableInput();
                         introActivity.setSignedUp(true);
 
-                        SharedPreferences prefs = new SecurePreferences(getContext());
-                        prefs.edit().putBoolean("is_logged_in", true).apply();
-//                        prefs.edit().putString("token", responseSignup.getData().getUser().getToken()).apply();
+                        authToken = body.getData().getToken();
+                        userId = body.getData().getUser().getId();
                     } else {
                         showErrorSnackbar(getString(R.string.response_body_null));
                     }
