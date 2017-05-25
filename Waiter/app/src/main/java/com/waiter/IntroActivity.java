@@ -95,11 +95,11 @@ public class IntroActivity extends MaterialIntroActivity {
         Log.d(TAG, "onFinish");
         SharedPreferences prefs = new SecurePreferences(this);
         if (!signUp) {
-//            prefs.edit().putString("user_id", loginFragment.getUserId())
-//                    .putString("first_name", loginFragment.getFirstName())
-//                    .putString("last_name", loginFragment.getLastName())
-//                    .putString("token", loginFragment.getToken())
-//                    .apply();
+            prefs.edit().putString("user_id", loginFragment.getUserId())
+                    .putString("first_name", loginFragment.getFirstName())
+                    .putString("last_name", loginFragment.getLastName())
+                    .putString("auth_token", loginFragment.getAuthToken())
+                    .apply();
         } else {
             prefs.edit().putString("user_id", signupBirthdayFragment.getUserId())
                     .putString("first_name", signupNameFragment.getFirstName())

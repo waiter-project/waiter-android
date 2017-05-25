@@ -23,10 +23,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.securepreferences.SecurePreferences;
+import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestLogin;
 import com.waiter.models.ResponseLogin;
 import com.waiter.network.ClientGenerator;
 import com.waiter.network.WaiterClient;
+import com.waiter.utils.ErrorUtils;
 
 import agency.tango.materialintroscreen.SlideFragment;
 import okhttp3.ResponseBody;
@@ -52,6 +54,12 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 
     private WaiterClient waiterClient;
     private RequestLogin requestLogin;
+    private ErrorResponse errorResponse;
+
+    private String userId;
+    private String authToken;
+    private String firstName;
+    private String lastName;
 
     private View view;
 
@@ -117,6 +125,14 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 //        introActivity.disableInput();
     }
 
+    public String getAuthToken() { return this.authToken; }
+
+    public String getUserId() { return this.userId; }
+
+    public String getFirstName() { return this.firstName; }
+
+    public String getLastName() { return this.lastName; }
+
     @Override
     public boolean canMoveFurther() {
         return loggedIn;
@@ -157,10 +173,10 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
             public void onResponse(@NonNull Call<ResponseLogin> call, @NonNull Response<ResponseLogin> response) {
                 mProgressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    ResponseLogin responseLogin = response.body();
-                    if (responseLogin != null) {
+                    ResponseLogin body = response.body();
+                    if (body != null) {
                         loggedIn = true;
-                        mWelcomeUser.setText(getString(R.string.welcome_back_user, responseLogin.getData().getFirstName()));
+                        mWelcomeUser.setText(getString(R.string.welcome_back_user, body.getData().getUser().getFirstname()));
                         mLinkForgotPassword.setVisibility(View.GONE);
                         mScrollView.setVisibility(View.GONE);
                         mWelcomeUser.setVisibility(View.VISIBLE);
@@ -168,18 +184,23 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
                         disableInput();
 //                        introActivity.setLoggedIn(true);
 
-                        SharedPreferences prefs = new SecurePreferences(getContext());
-                        prefs.edit().putBoolean("is_logged_in", true).apply();
-                        prefs.edit().putString("token", responseLogin.getData().getToken()).apply();
+                        authToken = body.getData().getToken();
+                        userId = body.getData().getUser().getId();
+                        firstName = body.getData().getUser().getFirstname();
+                        lastName = body.getData().getUser().getLastname();
                     } else {
                         showErrorSnackbar(getString(R.string.response_body_null));
                     }
                 } else {
-                    ResponseBody errorBody = response.errorBody();
-                    if (errorBody != null) {
-//                        showErrorSnackbar(getString(R.string.email_already_used));
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            showErrorSnackbar(errorResponse.getData().getMessage());
+                        } else {
+                            showErrorSnackbar(errorResponse.getData().getCauses().get(0));
+                        }
                     } else {
-                        showErrorSnackbar(getString(R.string.response_error_body_null));
+                        showErrorSnackbar(getString(R.string.internal_error));
                     }
                 }
             }
