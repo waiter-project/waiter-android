@@ -228,18 +228,18 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                         authToken = body.getData().getToken();
                         userId = body.getData().getUser().getId();
                     } else {
-                        showErrorSnackbar(getString(R.string.response_body_null));
+                        introActivity.showMessage(getString(R.string.response_body_null));
                     }
                 } else {
                     errorResponse = ErrorUtils.parseError(response);
                     if (errorResponse != null) {
                         if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
-                            showErrorSnackbar(errorResponse.getData().getMessage());
+                            introActivity.showMessage(errorResponse.getData().getMessage());
                         } else {
-                            showErrorSnackbar(errorResponse.getData().getCauses().get(0));
+                            introActivity.showMessage(errorResponse.getData().getCauses().get(0));
                         }
                     } else {
-                        showErrorSnackbar(getString(R.string.internal_error));
+                        introActivity.showMessage(getString(R.string.internal_error));
                     }
 //                    ResponseBody errorBody = response.errorBody();
 //                    if (errorBody != null) {
@@ -250,17 +250,17 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
 //                            TypeAdapter<ErrorResponse> adapter = gson.getAdapter(ErrorResponse.class);
 //                            errorResponse = adapter.fromJson(errorBody.string());
 //                            if (errorResponse.getData().getCauses().isEmpty()) {
-//                                showErrorSnackbar(errorResponse.getData().getMessage());
+//                                introActivity.showMessage(errorResponse.getData().getMessage());
 //                            } else {
-//                                showErrorSnackbar(errorResponse.getData().getCauses().get(0));
+//                                introActivity.showMessage(errorResponse.getData().getCauses().get(0));
 //                            }
 //                        } catch (IOException e) {
-//                            showErrorSnackbar(getString(R.string.internal_error));
+//                            introActivity.showMessage(getString(R.string.internal_error));
 //                            Log.d(TAG, "onResponse: error = " + e.getLocalizedMessage());
 //                            e.printStackTrace();
 //                        }
 //                    } else {
-//                        showErrorSnackbar(getString(R.string.response_error_body_null));
+//                        introActivity.showMessage(getString(R.string.response_error_body_null));
 //                    }
                 }
             }
@@ -268,7 +268,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
             @Override
             public void onFailure(@NonNull Call<ResponseSignup> call, @NonNull Throwable t) {
                 mProgressDialog.dismiss();
-                showErrorSnackbar(t.getLocalizedMessage());
+                introActivity.showMessage(t.getLocalizedMessage());
             }
         });
     }
@@ -304,18 +304,6 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-
-    private void showErrorSnackbar(String message) {
-        if (view != null) {
-            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    introActivity.getNavigationView().setTranslationY(0f);
-                    super.onDismissed(snackbar, event);
-                }
-            }).show();
         }
     }
 

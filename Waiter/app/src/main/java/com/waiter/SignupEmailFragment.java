@@ -166,14 +166,14 @@ public class SignupEmailFragment extends SlideFragment {
                             mEmailAddress = email;
                             moveToNextPage();
                         } else {
-                            showErrorSnackbar(getString(R.string.response_body_null));
+                            introActivity.showMessage(getString(R.string.response_body_null));
                         }
                     } else {
                         ResponseBody errorBody = response.errorBody();
                         if (errorBody != null) {
-                           showErrorSnackbar(getString(R.string.email_already_used));
+                            introActivity.showMessage(getString(R.string.email_already_used));
                         } else {
-                            showErrorSnackbar(getString(R.string.response_error_body_null));
+                            introActivity.showMessage(getString(R.string.response_error_body_null));
                         }
                     }
                     mProgressBar.setVisibility(View.GONE);
@@ -189,7 +189,7 @@ public class SignupEmailFragment extends SlideFragment {
                     else {
                         Log.d(TAG, "other larger issue, i.e. no network connection?");
                     }
-                    showErrorSnackbar(t.getLocalizedMessage());
+                    introActivity.showMessage(t.getLocalizedMessage());
                     mProgressBar.setVisibility(View.GONE);
                     mInputLayoutEmail.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 }
@@ -197,7 +197,7 @@ public class SignupEmailFragment extends SlideFragment {
 
         } else {
             Log.d(TAG, "onNext: Email is invalid");
-            showErrorSnackbar(getString(R.string.please_enter_email));
+            introActivity.showMessage(getString(R.string.please_enter_email));
         }
     }
 
@@ -214,18 +214,6 @@ public class SignupEmailFragment extends SlideFragment {
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-
-    private void showErrorSnackbar(String message) {
-        if (view != null) {
-            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    introActivity.getNavigationView().setTranslationY(0f);
-                    super.onDismissed(snackbar, event);
-                }
-            }).show();
         }
     }
 

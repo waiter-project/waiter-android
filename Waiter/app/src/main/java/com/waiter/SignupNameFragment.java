@@ -130,18 +130,6 @@ public class SignupNameFragment extends SlideFragment {
         }
     }
 
-    private void showErrorSnackbar(String message) {
-        if (view != null) {
-            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).setCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    introActivity.getNavigationView().setTranslationY(0f);
-                    super.onDismissed(snackbar, event);
-                }
-            }).show();
-        }
-    }
-
     private class MyTextWatcher implements TextWatcher {
 
         private View view;
