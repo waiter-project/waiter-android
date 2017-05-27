@@ -18,13 +18,64 @@
     <string name="action_settings">Settings</string>
     <string name="action_about">About Us</string>
 
-    <!-- Intro Activity -->
-    <string name="sign_in">Sign In</string>
+    <!-- Welcome Activity -->
+    <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
     <string name="welcome">Welcome to Waiter</string>
 
+    <!-- IntroActivity -->
+    <string name="we_need_your_permission">We need your permission</string>
+    <string name="permission_location_description">In order to show you local events</string>
+
+    <!-- LoginFragment -->
+    <string name="sign_in">Sign In</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="action_log_in_short">Log in</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="no_account_yet">No account yet? Join us!</string>
+    <string name="please_sign_in">Please sign in before proceeding</string>
+    <string name="action_log_in">Log in</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="logged_in">Logged In!</string>
+    <string name="signing_in">Signing In…</string>
+    <string name="err_msg_email">Enter a valid email address</string>
+    <string name="err_msg_password">Enter a password</string>
+    <string name="err_login">Login failed</string>
+    <string name="welcome_back_user">Welcome back, %1$s!</string>
+
+    <!-- Signup Fragments -->
+    <string name="whats_your_name">What\'s your name?</string>
+    <string name="hint_fname">First name</string>
+    <string name="hint_lname">Last name</string>
+    <string name="please_enter_name">Please enter your name before proceeding</string>
+    <string name="whats_your_email">Your email address?</string>
+    <string name="hint_email_address">Email address</string>
+    <string name="email_already_used">This email address is already used</string>
+    <string name="please_enter_email">Please enter a valid email address before proceeding</string>
+    <string name="create_password">Create a password</string>
+    <string name="password_instructions">Use at least 8 characters. Include both an uppercase letter and a number.</string>
+    <string name="password_confirmation">Password confirmation</string>
+    <string name="err_msg_password_confirmation">Password confirmation doesn\'t match</string>
+    <string name="when_your_birthday">When is your birthday?</string>
+    <string name="hint_birthday">Birthday</string>
+    <string name="birthday_instructions">You must be at least 18 years old to use Waiter.</string>
+    <string name="datepicker_title">Set your birth date</string>
+    <string name="please_sign_up">Please sign up before proceeding</string>
+    <string name="signing_up">Signing Up…</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="hi_user_welcome">Hi, %1$s!\nWelcome to Waiter!</string>
+
     <!-- MapsFragment -->
     <string name="waiters_available">%1$d waiters available</string>
+
+    <!-- General strings -->
+    <string name="is_required">%1$s is required</string>
+    <string name="please_valid">Please enter a valid %1$s</string>
+    <string name="is_invalid">%1$s is invalid</string>
+    <string name="response_body_null">Error: Response Body is null</string>
+    <string name="response_error_body_null">Error: Response Error Body is null</string>
+    <string name="internal_error">Internal Error</string>
 
     <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

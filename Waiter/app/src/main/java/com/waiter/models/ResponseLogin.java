@@ -3,19 +3,17 @@ package com.waiter.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class ResponseLogin {
 
     public class Data {
-
         @SerializedName("token")
         @Expose
         private String token;
-        @SerializedName("userId")
+        @SerializedName("user")
         @Expose
-        private String userId;
-        @SerializedName("firstName")
-        @Expose
-        private String firstName;
+        private User user;
 
         public String getToken() {
             return token;
@@ -25,22 +23,18 @@ public class ResponseLogin {
             this.token = token;
         }
 
-        public String getUserId() {
-            return userId;
+        public User getUser() {
+            return user;
         }
 
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setUser(User user) {
+            this.user = user;
         }
 
-        public String getFirstName() {
-            return firstName;
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
         }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
     }
 
     @SerializedName("status")
@@ -66,4 +60,8 @@ public class ResponseLogin {
         this.data = data;
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }
