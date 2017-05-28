@@ -7,10 +7,6 @@
             android:icon="@drawable/ic_account_circle_black_48dp"
             android:title="@string/nav_profile" />
         <item
-            android:id="@+id/nav_events"
-            android:icon="@drawable/ic_event_black_48dp"
-            android:title="@string/nav_events" />
-        <item
             android:id="@+id/nav_payment"
             android:icon="@drawable/ic_payment_black_48dp"
             android:title="@string/nav_payment" />

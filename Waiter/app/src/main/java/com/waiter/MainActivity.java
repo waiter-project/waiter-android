@@ -245,8 +245,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             // Handle the camera action
-        } else if (id == R.id.nav_events) {
-
         } else if (id == R.id.nav_payment) {
 
         } else if (id == R.id.nav_history) {
