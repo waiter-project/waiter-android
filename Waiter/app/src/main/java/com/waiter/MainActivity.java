@@ -215,13 +215,14 @@ public class MainActivity extends AppCompatActivity
             mMapsFragment.setLastKnownLocation(true);
         } else if (id == R.id.action_refresh) {
             Toast.makeText(this, "Refresh clicked.", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_maps) {
-            if (mViewPager.getCurrentItem() != 0) {
-                mViewPager.setCurrentItem(0);
-            }
-        } else if (id == R.id.action_list) {
-            if (mViewPager.getCurrentItem() != 1) {
+        } else if (id == R.id.action_view) {
+            int currentTab = mViewPager.getCurrentItem();
+            if (currentTab == 0) {
                 mViewPager.setCurrentItem(1);
+                item.setTitle(getString(R.string.action_maps));
+            } else if (currentTab == 1) {
+                mViewPager.setCurrentItem(0);
+                item.setTitle(getString(R.string.action_list));
             }
         }
     }
@@ -244,11 +245,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_refresh) {
             Toast.makeText(this, "Refresh clicked.", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (id == R.id.action_maps) {
-            Toast.makeText(this, "Maps View clicked.", Toast.LENGTH_SHORT).show();
-            return true;
-        } else if (id == R.id.action_list) {
-            Toast.makeText(this, "List View clicked.", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.action_view) {
+            Toast.makeText(this, "Action View clicked.", Toast.LENGTH_SHORT).show();
             return true;
         }
 
