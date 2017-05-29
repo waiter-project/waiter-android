@@ -130,12 +130,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void initializeUI() {
         mBottomSheet = mCoordinatorLayout.findViewById(R.id.event_bottom_sheet);
-        mEventTitle = (TextView) mBottomSheet.findViewById(R.id.eventTitle);
-        mEventPrice = (TextView) mBottomSheet.findViewById(R.id.eventPrice);
-        mEventDescription = (TextView) mBottomSheet.findViewById(R.id.eventDescription);
-        mEventAddress = (TextView) mBottomSheet.findViewById(R.id.eventAddress);
-        mEventDate = (TextView) mBottomSheet.findViewById(R.id.eventDate);
-        mEventWaitersAvailable = (TextView) mBottomSheet.findViewById(R.id.eventWaitersAvailable);
+        mEventTitle = (TextView) mBottomSheet.findViewById(R.id.event_title);
+        mEventPrice = (TextView) mBottomSheet.findViewById(R.id.event_price);
+        mEventDescription = (TextView) mBottomSheet.findViewById(R.id.event_description);
+        mEventAddress = (TextView) mBottomSheet.findViewById(R.id.event_address);
+        mEventDate = (TextView) mBottomSheet.findViewById(R.id.event_date);
+        mEventWaitersAvailable = (TextView) mBottomSheet.findViewById(R.id.event_waiters_available);
         mFAB = (FloatingActionButton) mCoordinatorLayout.findViewById(R.id.fab);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
