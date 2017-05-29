@@ -41,9 +41,10 @@ import com.waiter.models.Event;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
+    private static final float DEFAULT_ZOOM = 14;
     private boolean mPermissionDenied = false;
 
     private MapView mMapView;
@@ -204,10 +205,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mGoogleMap = googleMap;
 
         checkLocationPermission();
-        mGoogleMap.setOnMyLocationButtonClickListener(this);
 
-        mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        if (Utils.isEmulator()) {
+            mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        }
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_resized);
 
@@ -288,11 +290,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
-    public boolean onMyLocationButtonClick() {
-        return false;
-    }
-
-    @Override
     public void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -361,8 +358,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mListener = null;
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    public void setLastKnownLocation(boolean withAnimation) {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
             return;
@@ -375,8 +371,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             Toast.makeText(getContext(), "Get current location failed.", Toast.LENGTH_SHORT).show();
         }
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
-        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(DEFAULT_ZOOM).build();
+        if (withAnimation) {
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        setLastKnownLocation(false);
     }
 
     @Override

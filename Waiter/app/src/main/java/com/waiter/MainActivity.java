@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity
     private TabLayout mTabLayout;
     private View mView;
 
+    private MapsFragment mMapsFragment;
+    private EventFragment mEventFragment;
+
     public static ArrayList<Event> mEventList;
 
     private String mLastQuery = "";
@@ -81,6 +84,8 @@ public class MainActivity extends AppCompatActivity
         /*
         ** Begin SwipeTabs
          */
+        mMapsFragment = new MapsFragment();
+        mEventFragment = new EventFragment();
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -189,7 +194,9 @@ public class MainActivity extends AppCompatActivity
     public void onActionMenuItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_refresh) {
+        if (id == R.id.action_location) {
+            mMapsFragment.setLastKnownLocation(true);
+        } else if (id == R.id.action_refresh) {
             Toast.makeText(this, "Refresh clicked.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.action_maps) {
             if (mViewPager.getCurrentItem() != 0) {
@@ -371,18 +378,12 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = null;
-
-            switch (position) {
-                case 0:
-                    fragment = new MapsFragment();
-                    break;
-                case 1:
-                    fragment = new EventFragment();
-                    break;
+            if (position == 0) {
+                return mMapsFragment;
+            } else if (position == 1) {
+                return mEventFragment;
             }
-
-            return fragment;
+            return null;
         }
 
         @Override
