@@ -209,6 +209,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_location) {
+            if (mViewPager.getCurrentItem() != 0) {
+                mViewPager.setCurrentItem(0);
+            }
             mMapsFragment.setLastKnownLocation(true);
         } else if (id == R.id.action_refresh) {
             Toast.makeText(this, "Refresh clicked.", Toast.LENGTH_SHORT).show();
