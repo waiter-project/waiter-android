@@ -189,10 +189,16 @@ public class MainActivity extends AppCompatActivity
     public void onActionMenuItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            Toast.makeText(this, "Settings clicked.", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.action_about) {
-            Toast.makeText(this, "About Us clicked.", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_refresh) {
+            Toast.makeText(this, "Refresh clicked.", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.action_maps) {
+            if (mViewPager.getCurrentItem() != 0) {
+                mViewPager.setCurrentItem(0);
+            }
+        } else if (id == R.id.action_list) {
+            if (mViewPager.getCurrentItem() != 1) {
+                mViewPager.setCurrentItem(1);
+            }
         }
     }
 
@@ -211,11 +217,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toast.makeText(this, "Settings clicked.", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_refresh) {
+            Toast.makeText(this, "Refresh clicked.", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (id == R.id.action_about) {
-            Toast.makeText(this, "About Us clicked.", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.action_maps) {
+            Toast.makeText(this, "Maps View clicked.", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (id == R.id.action_list) {
+            Toast.makeText(this, "List View clicked.", Toast.LENGTH_SHORT).show();
             return true;
         }
 
