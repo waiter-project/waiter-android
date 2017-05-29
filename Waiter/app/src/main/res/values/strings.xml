@@ -72,6 +72,9 @@
     <!-- MapsFragment -->
     <string name="waiters_available">%1$d waiters available</string>
 
+    <!-- EventFragment -->
+    <string name="save_event">Save this event</string>
+
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
     <string name="please_valid">Please enter a valid %1$s</string>

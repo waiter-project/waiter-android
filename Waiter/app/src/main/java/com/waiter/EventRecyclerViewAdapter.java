@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.waiter.EventFragment.OnListFragmentInteractionListener;
@@ -19,6 +20,8 @@ import java.util.List;
  * TODO: Replace the implementation with code for your data type.
  */
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
+
+    private static final String TAG = "EventRecyclerViewAdapte";
 
     private final List<Event> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -39,8 +42,23 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTitleView.setText(mValues.get(position).getName());
+//        holder.mPriceView.setText(mValues.get(position).getPrice());
+        holder.mPriceView.setText(R.string.placeholder_price);
         holder.mDescriptionView.setText(mValues.get(position).getDescription());
         holder.mDateView.setText(mValues.get(position).getDate());
+        holder.mStarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView imageView = (ImageView) v;
+                if (holder.savedEvent) {
+                    imageView.setImageResource(R.drawable.ic_star_border_grey_500_24dp);
+                    holder.savedEvent = false;
+                } else {
+                    imageView.setImageResource(R.drawable.ic_star_amber_500_24dp);
+                    holder.savedEvent = true;
+                }
+            }
+        });
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,16 +94,22 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mTitleView;
+        public final TextView mPriceView;
         public final TextView mDescriptionView;
         public final TextView mDateView;
+        public final ImageView mStarView;
         public Event mItem;
+
+        public boolean savedEvent = false;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mTitleView = (TextView) view.findViewById(R.id.eventTitle);
-            mDescriptionView = (TextView) view.findViewById(R.id.eventDescription);
-            mDateView = (TextView) view.findViewById(R.id.eventDate);
+            mTitleView = (TextView) view.findViewById(R.id.event_title);
+            mPriceView = (TextView) view.findViewById(R.id.event_price);
+            mDescriptionView = (TextView) view.findViewById(R.id.event_description);
+            mDateView = (TextView) view.findViewById(R.id.event_date);
+            mStarView = (ImageView) view.findViewById(R.id.event_star);
         }
 
         @Override
