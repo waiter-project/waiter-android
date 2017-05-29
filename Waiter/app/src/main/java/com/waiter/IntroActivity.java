@@ -96,12 +96,14 @@ public class IntroActivity extends MaterialIntroActivity {
         SharedPreferences prefs = new SecurePreferences(this);
         if (!signUp) {
             prefs.edit().putString("user_id", loginFragment.getUserId())
+                    .putString("user_email", loginFragment.getUserEmail())
                     .putString("first_name", loginFragment.getFirstName())
                     .putString("last_name", loginFragment.getLastName())
                     .putString("auth_token", loginFragment.getAuthToken())
                     .apply();
         } else {
             prefs.edit().putString("user_id", signupBirthdayFragment.getUserId())
+                    .putString("user_email", signupEmailFragment.getEmailAddress())
                     .putString("first_name", signupNameFragment.getFirstName())
                     .putString("last_name", signupNameFragment.getLastName())
                     .putString("auth_token", signupBirthdayFragment.getAuthToken())
@@ -118,12 +120,14 @@ public class IntroActivity extends MaterialIntroActivity {
         SharedPreferences prefs = new SecurePreferences(this);
         boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
         String userId = prefs.getString("user_id", "empty");
+        String userEmail = prefs.getString("user_email", "empty");
         String firstName = prefs.getString("first_name", "empty");
         String lastName = prefs.getString("last_name", "empty");
         String authToken = prefs.getString("auth_token", "empty");
 
         Log.d(TAG, "checkSecurePreferences: isLoggedIn = " + isLoggedIn);
         Log.d(TAG, "checkSecurePreferences: userId = " + userId);
+        Log.d(TAG, "checkSecurePreferences: userEmail = " + userEmail);
         Log.d(TAG, "checkSecurePreferences: firstName = " + firstName);
         Log.d(TAG, "checkSecurePreferences: lastName = " + lastName);
         Log.d(TAG, "checkSecurePreferences: authToken = " + authToken);

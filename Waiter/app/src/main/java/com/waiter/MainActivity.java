@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
@@ -64,6 +66,18 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View navHeaderLayout = navigationView.getHeaderView(0);
+        TextView userEmail = (TextView) navHeaderLayout.findViewById(R.id.user_email);
+        TextView userName = (TextView) navHeaderLayout.findViewById(R.id.user_name);
+
+        SharedPreferences prefs = new SecurePreferences(this);
+        String email = prefs.getString("user_email", getString(R.string.placeholder_email));
+        String firstName = prefs.getString("first_name", getString(R.string.placeholder_fname));
+        String lastName = prefs.getString("last_name", getString(R.string.placeholder_lname));
+
+        userEmail.setText(email);
+        userName.setText(firstName + " " + lastName);
         // End NavigationDrawer
 
         /*

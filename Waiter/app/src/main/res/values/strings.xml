@@ -83,6 +83,9 @@
     <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="placeholder_email">email@domain.com</string>
+    <string name="placeholder_fname">FirstName</string>
+    <string name="placeholder_lname">LastName</string>
     <string name="placeholder_title">Event Title</string>
     <string name="placeholder_price">$8/hr</string>
     <string name="placeholder_description">Event Description</string>

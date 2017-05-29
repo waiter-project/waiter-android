@@ -57,6 +57,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
     private ErrorResponse errorResponse;
 
     private String userId;
+    private String userEmail;
     private String authToken;
     private String firstName;
     private String lastName;
@@ -129,6 +130,8 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 
     public String getUserId() { return this.userId; }
 
+    public String getUserEmail() { return this.userEmail; }
+
     public String getFirstName() { return this.firstName; }
 
     public String getLastName() { return this.lastName; }
@@ -186,6 +189,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 
                         authToken = body.getData().getToken();
                         userId = body.getData().getUser().getId();
+                        userEmail = mInputEmail.getText().toString();
                         firstName = body.getData().getUser().getFirstname();
                         lastName = body.getData().getUser().getLastname();
                     } else {
