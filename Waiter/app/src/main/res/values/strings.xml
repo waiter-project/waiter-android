@@ -75,6 +75,9 @@
     <!-- EventFragment -->
     <string name="save_event">Save this event</string>
 
+    <!-- History Activity -->
+    <string name="history_title">Wait history</string>
+
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
     <string name="please_valid">Please enter a valid %1$s</string>
@@ -98,4 +101,7 @@
     <string name="placeholder_content">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id vulputate libero. Cras suscipit ligula sit amet lectus condimentum, non pretium nulla consequat. Vivamus sed pellentesque mi, eu pulvinar enim. Sed consequat tempus erat, nec condimentum lectus dictum ut. Phasellus ultrices sed nunc non imperdiet. Quisque sagittis dolor eget fringilla cursus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
     </string>
+    <string name="placeholder_date_time">Mar 03 - 8:25 AM</string>
+    <string name="placeholder_time">3h 47min</string>
+    <string name="placeholder_total_price">$23.54</string>
 </resources>

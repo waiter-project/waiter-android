@@ -32,6 +32,10 @@
         <activity
             android:name=".IntroActivity"
             android:theme="@style/Theme.Intro" />
+        <activity
+            android:name=".HistoryActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
