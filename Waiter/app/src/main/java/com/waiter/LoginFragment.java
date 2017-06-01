@@ -179,7 +179,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
                     ResponseLogin body = response.body();
                     if (body != null) {
                         loggedIn = true;
-                        mWelcomeUser.setText(getString(R.string.welcome_back_user, body.getData().getUser().getFirstname()));
+                        mWelcomeUser.setText(getString(R.string.welcome_back_user, body.getData().getUser().getFirstName()));
                         mLinkForgotPassword.setVisibility(View.GONE);
                         mScrollView.setVisibility(View.GONE);
                         mWelcomeUser.setVisibility(View.VISIBLE);
@@ -190,8 +190,8 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
                         authToken = body.getData().getToken();
                         userId = body.getData().getUser().getId();
                         userEmail = mInputEmail.getText().toString();
-                        firstName = body.getData().getUser().getFirstname();
-                        lastName = body.getData().getUser().getLastname();
+                        firstName = body.getData().getUser().getFirstName();
+                        lastName = body.getData().getUser().getLastName();
                     } else {
                         introActivity.showMessage(getString(R.string.response_body_null));
                     }

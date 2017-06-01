@@ -16,7 +16,7 @@ public interface WaiterClient {
     @POST("/user/login")
     Call<ResponseLogin> login(@Body RequestLogin requestLogin);
 
-    @POST("/user")
+    @POST("/user/register")
     Call<ResponseSignup> signup(@Body RequestSignup requestSignup);
 
     @GET("/user/available/{email}")

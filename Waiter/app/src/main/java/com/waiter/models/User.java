@@ -10,12 +10,12 @@ public class User {
     @SerializedName("_id")
     @Expose
     private String id;
-    @SerializedName("firstname")
+    @SerializedName("firstName")
     @Expose
-    private String firstname;
-    @SerializedName("lastname")
+    private String firstName;
+    @SerializedName("lastName")
     @Expose
-    private String lastname;
+    private String lastName;
     @SerializedName("email")
     @Expose
     private String email;
@@ -49,20 +49,20 @@ public class User {
         this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {

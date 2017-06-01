@@ -199,8 +199,8 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
     private void signup() {
         mProgressDialog.show();
 
-        requestSignup.setFirstname(introActivity.getFirstName());
-        requestSignup.setLastname(introActivity.getLastName());
+        requestSignup.setFirstName(introActivity.getFirstName());
+        requestSignup.setLastName(introActivity.getLastName());
         requestSignup.setEmail(introActivity.getEmailAddress());
         requestSignup.setPassword(introActivity.getPassword());
         requestSignup.setBirthday(mInputBirthday.getText().toString().trim());
@@ -218,7 +218,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                     if (body != null) {
                         signedUp = true;
                         Log.d(TAG, "onResponse: user = " + body.getData().getUser());
-                        mWelcomeUser.setText(getString(R.string.hi_user_welcome, requestSignup.getFirstname()));
+                        mWelcomeUser.setText(getString(R.string.hi_user_welcome, requestSignup.getFirstName()));
                         mScrollView.setVisibility(View.GONE);
                         mWelcomeUser.setVisibility(View.VISIBLE);
 
