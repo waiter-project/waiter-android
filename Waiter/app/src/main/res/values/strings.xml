@@ -78,6 +78,17 @@
     <!-- History Activity -->
     <string name="history_title">Wait history</string>
 
+    <!-- Profile Activity -->
+    <string name="profile_title">Profile</string>
+    <string name="action_edit">Edit profile</string>
+    <string name="change_password">Change password</string>
+    <string name="save_changes">Save changes</string>
+    <string name="hint_phone">Phone number</string>
+    <string name="hint_street_address">Street address</string>
+    <string name="dialog_discard_changes">Discard your changes?</string>
+    <string name="discard">Discard</string>
+    <string name="cancel">Cancel</string>
+
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
     <string name="please_valid">Please enter a valid %1$s</string>
@@ -90,8 +101,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="placeholder_email">email@domain.com</string>
-    <string name="placeholder_fname">FirstName</string>
-    <string name="placeholder_lname">LastName</string>
+    <string name="placeholder_phone">(123) 456-7890</string>
+    <string name="placeholder_full_name">John Doe</string>
+    <string name="placeholder_fname">John</string>
+    <string name="placeholder_lname">Doe</string>
+    <string name="placeholder_profile_address">202 Park Street, Los Angeles</string>
     <string name="placeholder_title">Event Title</string>
     <string name="placeholder_price">$8/hr</string>
     <string name="placeholder_description">Event Description</string>

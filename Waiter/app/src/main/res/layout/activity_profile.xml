@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.waiter.ProfileActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/profile_title"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="@drawable/ic_arrow_back_white_24dp">
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Profile picture & Name -->
+        <RelativeLayout
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_account_circle_black_48dp" />
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:layout_below="@id/profile_picture"
+                android:layout_centerHorizontal="true"
+                android:text="@string/placeholder_full_name"/>
+
+            <!-- Edit Layout Name -->
+            <LinearLayout
+                android:id="@+id/edit_layout_name"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_below="@id/profile_picture"
+                android:layout_centerHorizontal="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:baselineAligned="false">
+
+                <!-- First name Label -->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_fname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    app:errorTextAppearance="@style/error_appearance">
+                    <EditText
+                        android:id="@+id/input_fname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_fname"
+                        android:inputType="textPersonName|textCapWords" />
+                </android.support.design.widget.TextInputLayout>
+
+                <!-- Last name Label -->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_lname"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    app:errorTextAppearance="@style/error_appearance">
+                    <EditText
+                        android:id="@+id/input_lname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_lname"
+                        android:inputType="textPersonName|textCapWords" />
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <include layout="@layout/item_divider" />
+
+        <!-- Email -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/ivContactItem3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_email_black_24dp" />
+
+            <TextView
+                android:id="@+id/profile_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/ivContactItem3"
+                android:layout_toRightOf="@id/ivContactItem3"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/placeholder_email"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#212121" />
+
+            <!-- Email Label -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_email"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/ivContactItem3"
+                android:layout_toRightOf="@id/ivContactItem3"
+                app:errorTextAppearance="@style/error_appearance">
+                <EditText
+                    android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_email_address"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
+
+        <include layout="@layout/item_divider" />
+
+        <!-- Phone number -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/ivContactItem1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_phone_black_24dp" />
+
+            <TextView
+                android:id="@+id/profile_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/ivContactItem1"
+                android:layout_toRightOf="@id/ivContactItem1"
+                android:text="@string/placeholder_phone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#212121" />
+
+            <!-- Phone Label -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_phone"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/ivContactItem1"
+                android:layout_toRightOf="@id/ivContactItem1"
+                app:errorTextAppearance="@style/error_appearance">
+                <EditText
+                    android:id="@+id/input_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_phone"
+                    android:inputType="phone" />
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
+
+        <include layout="@layout/item_divider" />
+
+        <!-- Address -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/ivContactItem5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_location_on_black_24dp" />
+
+            <TextView
+                android:id="@+id/profile_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/ivContactItem5"
+                android:layout_toRightOf="@id/ivContactItem5"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/placeholder_profile_address"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#212121" />
+
+            <!-- Phone Label -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_address"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/ivContactItem5"
+                android:layout_toRightOf="@id/ivContactItem5"
+                app:errorTextAppearance="@style/error_appearance">
+                <EditText
+                    android:id="@+id/input_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_street_address"
+                    android:inputType="textPostalAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
+
+        <include layout="@layout/item_divider" />
+
+        <!-- Change Password Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/password_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:onClick="onClick_Change_Password"
+                android:text="@string/change_password"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/save_btn"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:onClick="onClick_Save_Changes"
+                android:text="@string/save_changes"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginTop="8dp">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/profile_picture"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:src="@drawable/ic_account_circle_black_48dp" />-->
+
+        <!--<LinearLayout-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:layout_toRightOf="@+id/profile_picture"-->
+            <!--android:layout_toEndOf="@+id/profile_picture"-->
+            <!--android:layout_marginBottom="31dp">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/profile_fname"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Headline"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="8dp"-->
+                <!--android:text="@string/placeholder_fname"/>-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/profile_lname"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Headline"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="8dp"-->
+                <!--android:text="@string/placeholder_lname" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:layout_below="@id/profile_picture"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/profile_email"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/placeholder_email"-->
+                <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>-->
+
+            <!--<android.support.v7.widget.AppCompatButton-->
+                <!--android:id="@+id/password_btn"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="24dp"-->
+                <!--android:layout_marginTop="24dp"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:onClick="onClick_Change_Password"-->
+                <!--android:text="@string/change_password"/>-->
+
+        <!--</LinearLayout>-->
+
+    <!--</RelativeLayout>-->
+
+</LinearLayout>
