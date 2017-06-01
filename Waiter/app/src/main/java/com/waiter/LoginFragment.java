@@ -26,7 +26,7 @@ import com.securepreferences.SecurePreferences;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestLogin;
 import com.waiter.models.ResponseLogin;
-import com.waiter.network.ClientGenerator;
+import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
 import com.waiter.utils.ErrorUtils;
 
@@ -97,7 +97,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 
         introActivity = ((IntroActivity)getActivity());
 
-        waiterClient = ClientGenerator.createClient(WaiterClient.class);
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
         requestLogin = new RequestLogin();
 
         return view;

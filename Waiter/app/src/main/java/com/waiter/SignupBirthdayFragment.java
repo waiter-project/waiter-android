@@ -26,7 +26,7 @@ import com.waiter.custom.CustomTextInputLayout;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestSignup;
 import com.waiter.models.ResponseSignup;
-import com.waiter.network.ClientGenerator;
+import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
 import com.waiter.utils.ErrorUtils;
 
@@ -93,7 +93,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
 
         introActivity = ((IntroActivity)getActivity());
 
-        waiterClient = ClientGenerator.createClient(WaiterClient.class);
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
         requestSignup = new RequestSignup();
 
         setupDatePicker();

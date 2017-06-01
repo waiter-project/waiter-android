@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.waiter.network.ClientGenerator;
+import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
 
 import agency.tango.materialintroscreen.SlideFragment;
@@ -60,7 +60,7 @@ public class SignupEmailFragment extends SlideFragment {
 
         introActivity = (IntroActivity)getActivity();
 
-        waiterClient = ClientGenerator.createClient(WaiterClient.class);
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
 
         return view;
     }
