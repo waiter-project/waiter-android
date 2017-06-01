@@ -1,5 +1,7 @@
 package com.waiter.network;
 
+import com.waiter.Utils;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -7,7 +9,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    private static final String BASE_URL = "https://api.github.com/";
+    private static final String BASE_URL = setApiBaseUrl();
+
+    private static String setApiBaseUrl() {
+        if (Utils.isEmulator()) {
+            return "http://10.0.2.2:5000";
+        }
+        return "http://192.168.1.9:5000";
+    }
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
@@ -15,6 +24,10 @@ public class ServiceGenerator {
                     .addConverterFactory(GsonConverterFactory.create());
 
     private static Retrofit retrofit = builder.build();
+
+    public static Retrofit retrofit() {
+        return retrofit;
+    }
 
     private static HttpLoggingInterceptor logging =
             new HttpLoggingInterceptor()
@@ -43,7 +56,7 @@ public class ServiceGenerator {
 //import retrofit2.Retrofit;
 //import retrofit2.converter.gson.GsonConverterFactory;
 //
-//public class ClientGenerator {
+//public class ServiceGenerator {
 //
 //    private static final String API_BASE_URL = setApiBaseUrl();
 //    private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -63,7 +76,7 @@ public class ServiceGenerator {
 //        return retrofit;
 //    }
 //
-//    public static <S> S createClient(Class<S> clientClass) {
+//    public static <S> S createService(Class<S> clientClass) {
 //        /*
 //         ** Debug log
 //         */
@@ -79,7 +92,7 @@ public class ServiceGenerator {
 //    }
 //
 //    /*
-//    public static <S> S createClient(Class<S> clientClass, String email, String password) {
+//    public static <S> S createService(Class<S> clientClass, String email, String password) {
 //        if (email != null && password != null) {
 //            String credentials = email + ":" + password;
 //            final String basic = "Basic" + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
