@@ -1,7 +1,9 @@
 package com.waiter;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +22,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.securepreferences.SecurePreferences;
+import com.waiter.models.ErrorResponse;
+import com.waiter.models.RequestUpdateProfile;
+import com.waiter.network.ServiceGenerator;
+import com.waiter.network.WaiterClient;
 import com.waiter.utils.CustomTextWatcher;
+import com.waiter.utils.ErrorUtils;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -43,11 +55,20 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText mInputAddress;
     private TextInputLayout mInputLayoutAddress;
     private Button mSaveButton;
+    private ProgressDialog mProgressDialog;
 
     private LinearLayout mRootView;
     private AlertDialog mDialog;
 
     private boolean editMode = false;
+
+    private WaiterClient waiterClient;
+    private RequestUpdateProfile requestUpdateProfile;
+    private ErrorResponse errorResponse;
+    private String authToken;
+    private String userId;
+
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +78,14 @@ public class ProfileActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        prefs = new SecurePreferences(this);
         setupUI();
+
+        authToken = prefs.getString("auth_token", "");
+        userId = prefs.getString("user_id", "");
+
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
+        requestUpdateProfile = new RequestUpdateProfile();
     }
 
     @Override
@@ -66,8 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
         return true;
     }
 
-    private void setupUI() {
-        SharedPreferences prefs = new SecurePreferences(this);
+    private void refreshData() {
         String userEmail = prefs.getString("user_email", "No email address");
         String firstName = prefs.getString("first_name", "No first name");
         String lastName = prefs.getString("last_name", "No last name");
@@ -75,16 +102,32 @@ public class ProfileActivity extends AppCompatActivity {
         String streetAddress = prefs.getString("street_address", "No street address");
 
         // View Mode
+        mNameView.setText(firstName + " " + lastName);
+        mEmailView.setText(userEmail);
+        mPhoneView.setText(phoneNumber);
+        mAddressView.setText(streetAddress);
+
+        // Edit Mode
+        if (!firstName.equals("No first name"))
+            mInputFirstName.setText(firstName);
+        if (!lastName.equals("No last name"))
+            mInputLastName.setText(lastName);
+        if (!userEmail.equals("No email address"))
+            mInputEmail.setText(userEmail);
+        if (!phoneNumber.equals("No phone number"))
+            mInputPhone.setText(phoneNumber);
+        if (!streetAddress.equals("No street address"))
+            mInputAddress.setText(streetAddress);
+    }
+
+    private void setupUI() {
+        // View Mode
         mPictureView = (ImageView) findViewById(R.id.profile_picture);
         mNameView = (TextView) findViewById(R.id.profile_name);
         mEmailView = (TextView) findViewById(R.id.profile_email);
         mPhoneView = (TextView) findViewById(R.id.profile_phone);
         mAddressView = (TextView) findViewById(R.id.profile_address);
         mPasswordButton = (Button) findViewById(R.id.password_btn);
-        mNameView.setText(firstName + " " + lastName);
-        mEmailView.setText(userEmail);
-        mPhoneView.setText(phoneNumber);
-        mAddressView.setText(streetAddress);
 
         // Edit Mode
         mEditLayoutName = (LinearLayout) findViewById(R.id.edit_layout_name);
@@ -99,16 +142,9 @@ public class ProfileActivity extends AppCompatActivity {
         mInputAddress = (EditText) findViewById(R.id.input_address);
         mInputLayoutAddress = (TextInputLayout) findViewById(R.id.input_layout_address);
         mSaveButton = (Button) findViewById(R.id.save_btn);
-        if (!firstName.equals("No first name"))
-            mInputFirstName.setText(firstName);
-        if (!lastName.equals("No last name"))
-            mInputLastName.setText(lastName);
-        if (!userEmail.equals("No email address"))
-            mInputEmail.setText(userEmail);
-        if (!phoneNumber.equals("No phone number"))
-            mInputPhone.setText(phoneNumber);
-        if (!streetAddress.equals("No street address"))
-            mInputAddress.setText(streetAddress);
+
+        refreshData();
+
         mInputFirstName.addTextChangedListener(new CustomTextWatcher(mInputFirstName, mInputLayoutFirstName, getString(R.string.is_required, "First name")));
         mInputLastName.addTextChangedListener(new CustomTextWatcher(mInputLastName, mInputLayoutLastName, getString(R.string.is_required, "Last name")));
         mInputEmail.addTextChangedListener(new CustomTextWatcher(mInputEmail, mInputLayoutEmail, getString(R.string.err_msg_email)));
@@ -129,6 +165,11 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
         mDialog = builder.create();
+
+        mProgressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage(getString(R.string.updating_profile));
     }
 
     @Override
@@ -194,7 +235,59 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateProfile() {
-        hideEditMode();
+        mProgressDialog.show();
+
+        requestUpdateProfile.setFirstName(mInputFirstName.getText().toString());
+        requestUpdateProfile.setLastName(mInputLastName.getText().toString());
+        requestUpdateProfile.setEmail(mInputEmail.getText().toString());
+//        requestUpdateProfile.setPhone(mInputPhone.getText().toString());
+//        requestUpdateProfile.setAddress(mInputAddress.getText().toString());
+        Call<ResponseBody> call = waiterClient.updateProfile(authToken, userId, requestUpdateProfile);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                mProgressDialog.dismiss();
+                if (response.isSuccessful()) {
+                    saveChanges();
+                    refreshData();
+                    hideEditMode();
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        Snackbar.make(mRootView, getString(R.string.update_profile_success), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                    setResult(RESULT_OK);
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mRootView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mRootView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+                    setResult(RESULT_CANCELED);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                mProgressDialog.dismiss();
+                Snackbar.make(mRootView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                setResult(RESULT_CANCELED);
+            }
+        });
+    }
+
+    private void saveChanges() {
+        prefs.edit().putString("user_email", mInputEmail.getText().toString())
+                .putString("first_name", mInputFirstName.getText().toString())
+                .putString("last_name", mInputLastName.getText().toString())
+                .apply();
     }
 
     private void showEditMode() {

@@ -37,8 +37,11 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener, FloatingSearchView.OnFocusChangeListener, FloatingSearchView.OnQueryChangeListener, FloatingSearchView.OnSearchListener, AppBarLayout.OnOffsetChangedListener {
 
     private final String TAG = "MainActivity";
+    private static final int REQUEST_CODE_PROFILE = 1;
 
     private static final int NUM_PAGES = 2;
+
+    private View navHeaderLayout;
 
     private FloatingSearchView mSearchView;
 
@@ -67,17 +70,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        View navHeaderLayout = navigationView.getHeaderView(0);
-        TextView userEmail = (TextView) navHeaderLayout.findViewById(R.id.user_email);
-        TextView userName = (TextView) navHeaderLayout.findViewById(R.id.user_name);
-
-        SharedPreferences prefs = new SecurePreferences(this);
-        String email = prefs.getString("user_email", getString(R.string.placeholder_email));
-        String firstName = prefs.getString("first_name", getString(R.string.placeholder_fname));
-        String lastName = prefs.getString("last_name", getString(R.string.placeholder_lname));
-
-        userEmail.setText(email);
-        userName.setText(firstName + " " + lastName);
+        navHeaderLayout = navigationView.getHeaderView(0);
+        setNavDrawerData();
         // End NavigationDrawer
 
         /*
@@ -268,6 +262,30 @@ public class MainActivity extends AppCompatActivity
         finish();
     }
 
+    private void setNavDrawerData() {
+        TextView userEmail = (TextView) navHeaderLayout.findViewById(R.id.user_email);
+        TextView userName = (TextView) navHeaderLayout.findViewById(R.id.user_name);
+
+        SharedPreferences prefs = new SecurePreferences(this);
+        String email = prefs.getString("user_email", getString(R.string.placeholder_email));
+        String firstName = prefs.getString("first_name", getString(R.string.placeholder_fname));
+        String lastName = prefs.getString("last_name", getString(R.string.placeholder_lname));
+
+        userEmail.setText(email);
+        userName.setText(firstName + " " + lastName);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_PROFILE) {
+            if (resultCode == RESULT_OK) {
+                setNavDrawerData();
+            }
+        }
+    }
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -276,7 +294,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_PROFILE);
         } else if (id == R.id.nav_payment) {
 
         } else if (id == R.id.nav_history) {

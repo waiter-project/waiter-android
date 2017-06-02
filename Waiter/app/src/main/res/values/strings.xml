@@ -88,6 +88,8 @@
     <string name="dialog_discard_changes">Discard your changes?</string>
     <string name="discard">Discard</string>
     <string name="cancel">Cancel</string>
+    <string name="updating_profile">Updating Profile…</string>
+    <string name="update_profile_success">Profile updated successfully</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
