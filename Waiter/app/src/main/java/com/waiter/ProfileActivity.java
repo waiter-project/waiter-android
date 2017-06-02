@@ -2,6 +2,7 @@ package com.waiter;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +15,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.securepreferences.SecurePreferences;
+import com.waiter.utils.CustomTextWatcher;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -41,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextInputLayout mInputLayoutAddress;
     private Button mSaveButton;
 
+    private LinearLayout mRootView;
     private AlertDialog mDialog;
 
     private boolean editMode = false;
@@ -105,6 +109,13 @@ public class ProfileActivity extends AppCompatActivity {
             mInputPhone.setText(phoneNumber);
         if (!streetAddress.equals("No street address"))
             mInputAddress.setText(streetAddress);
+        mInputFirstName.addTextChangedListener(new CustomTextWatcher(mInputFirstName, mInputLayoutFirstName, getString(R.string.is_required, "First name")));
+        mInputLastName.addTextChangedListener(new CustomTextWatcher(mInputLastName, mInputLayoutLastName, getString(R.string.is_required, "Last name")));
+        mInputEmail.addTextChangedListener(new CustomTextWatcher(mInputEmail, mInputLayoutEmail, getString(R.string.err_msg_email)));
+        mInputPhone.addTextChangedListener(new CustomTextWatcher(mInputPhone, mInputLayoutPhone, getString(R.string.is_invalid, "Phone number")));
+        mInputAddress.addTextChangedListener(new CustomTextWatcher(mInputAddress, mInputLayoutAddress, getString(R.string.is_invalid, "Street address")));
+
+        mRootView = (LinearLayout) findViewById(R.id.root_view);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.dialog_discard_changes)
@@ -161,6 +172,28 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void onClick_Save_Changes(View view) {
+        boolean validForm = submitForm();
+        if (validForm) {
+            mInputFirstName.clearFocus();
+            mInputLastName.clearFocus();
+            mInputEmail.clearFocus();
+            mInputPhone.clearFocus();
+            mInputAddress.clearFocus();
+            updateProfile();
+        } else {
+            Snackbar.make(mRootView, "A field is invalid", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean submitForm() {
+        return !mInputLayoutFirstName.isErrorEnabled()
+                && !mInputLayoutLastName.isErrorEnabled()
+                && !mInputLayoutEmail.isErrorEnabled()
+                && !mInputLayoutPhone.isErrorEnabled()
+                && !mInputLayoutAddress.isErrorEnabled();
+    }
+
+    private void updateProfile() {
         hideEditMode();
     }
 
