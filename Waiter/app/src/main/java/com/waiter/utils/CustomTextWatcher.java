@@ -45,6 +45,9 @@ public class CustomTextWatcher implements TextWatcher {
 //            case R.id.input_layout_password_confirmation:
 //                validatePasswordConfirmation();
 //                break;
+            case R.id.input_current_password:
+                validateCurrentPassword(false);
+                break;
             case R.id.input_birthday:
                 validateBirthday();
                 break;
@@ -116,6 +119,18 @@ public class CustomTextWatcher implements TextWatcher {
         return true;
     }
 
+    private boolean validateCurrentPassword(boolean showError) {
+        String password = ((EditText) view).getText().toString();
+
+        if (!isValidPassword(password)) {
+            textInputLayout.setError(errorMessage);
+//            requestFocus(mInputPassword);
+            return false;
+        } else {
+            textInputLayout.setErrorEnabled(false);
+        }
+        return true;
+    }
     private static boolean isValidPassword(String password) {
         return password.length() >= MIN_PASSWORD_LENGTH && !TextUtils.isEmpty(password);
     }

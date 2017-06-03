@@ -89,7 +89,13 @@
     <string name="discard">Discard</string>
     <string name="cancel">Cancel</string>
     <string name="updating_profile">Updating Profile…</string>
-    <string name="update_profile_success">Profile updated successfully</string>
+    <string name="update_success">%1$s updated successfully</string>
+
+    <!-- UpdatePassword Activity -->
+    <string name="update_password">Update Password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="updating_password">Updating Password…</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
