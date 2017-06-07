@@ -160,4 +160,11 @@ public class SuggestionHelper {
         }
     }
 
+    public static void refreshSuggestions() {
+        sEventSuggestions.clear();
+        for (Event event : MainActivity.mEventList) {
+            sEventSuggestions.add(new EventSuggestion(event.getName()));
+        }
+    }
+
 }

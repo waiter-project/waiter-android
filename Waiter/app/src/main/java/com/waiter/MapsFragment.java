@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -36,15 +37,28 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.waiter.models.ErrorResponse;
 import com.waiter.models.Event;
+import com.waiter.models.ResponseEventsNearLocation;
+import com.waiter.network.ServiceGenerator;
+import com.waiter.network.WaiterClient;
+import com.waiter.utils.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener {
+
+    private static final String TAG = "MapsFragment";
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
     private static final float DEFAULT_ZOOM = 14;
+
     private boolean mPermissionDenied = false;
 
     private MapView mMapView;
@@ -70,6 +84,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private Animation mGrowAnimation;
     private Animation mShrinkAnimation;
 
+    private WaiterClient waiterClient;
+    private ErrorResponse errorResponse;
+
     public MapsFragment() {
         // Required empty public constructor
     }
@@ -90,6 +107,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         super.onCreate(savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
 
         /*
         ** Start Init Maps
@@ -141,14 +160,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View v) {
                 List<String> listOfWaiters = new ArrayList<>();
+                List<Double> location = new ArrayList<Double>();
+                location.add(2.2945 + MainActivity.mEventList.size());
+                location.add(48.8584 + MainActivity.mEventList.size());
                 MainActivity.mEventList.add(new Event("58fc51e531087c0011378ebc",
                         "Event" + (MainActivity.mEventList.size() + 1),
                         "Description",
                         "Address",
-                        48.8584 + MainActivity.mEventList.size(),
-                        2.2945 + MainActivity.mEventList.size(),
+                        location,
                         "Date",
-                        1,
                         listOfWaiters));
             }
         });
@@ -206,25 +226,34 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         checkLocationPermission();
 
+        mGoogleMap.setOnCameraIdleListener(this);
+        mGoogleMap.setOnCameraMoveStartedListener(this);
+        mGoogleMap.setOnCameraMoveListener(this);
+        mGoogleMap.setOnCameraMoveCanceledListener(this);
+
         if (Utils.isEmulator()) {
             mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         }
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_resized);
+        mGoogleMap.setOnMarkerClickListener(this);
+        mGoogleMap.setOnMapClickListener(this);
+    }
 
+    private void putMarkersOnMap() {
+        mGoogleMap.clear();
+
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_resized);
 //        LatLng latLng = new LatLng(48.8151239, 2.3631254); // Epitech Paris location
         for (int i = 0; i < MainActivity.mEventList.size(); i++) {
 //            latLng = new LatLng(MainActivity.mEventList.get(i).getLong(), MainActivity.mEventList.get(i).getLat());
-            LatLng latLng = new LatLng(MainActivity.mEventList.get(i).getLong(), MainActivity.mEventList.get(i).getLat());
+            LatLng latLng = new LatLng(MainActivity.mEventList.get(i).getLocation().get(1), MainActivity.mEventList.get(i).getLocation().get(0));
             mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(String.valueOf(i)).icon(icon));
         }
 //        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
 //        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-        mGoogleMap.setOnMarkerClickListener(this);
-        mGoogleMap.setOnMapClickListener(this);
     }
+
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -335,9 +364,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed() {
         if (mListener != null) {
-            mListener.onFragmentInteractionMaps(uri);
+            mListener.onFragmentInteractionMaps();
         }
     }
 
@@ -394,6 +423,78 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     }
 
+    @Override
+    public void onCameraMoveStarted(int reason) {
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            Log.d(TAG, "onCameraMoveStarted: The user gestured on the map.");
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION) {
+            Log.d(TAG, "onCameraMoveStarted: The user tapped something on the map.");
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION) {
+            Log.d(TAG, "onCameraMoveStarted: The app moved the camera.");
+        }
+    }
+
+    @Override
+    public void onCameraMove() {
+        Log.d(TAG, "onCameraMove: The camera is moving.");
+    }
+
+    @Override
+    public void onCameraMoveCanceled() {
+        Log.d(TAG, "onCameraMoveCanceled: Camera movement canceled.");
+    }
+
+    @Override
+    public void onCameraIdle() {
+        Log.d(TAG, "onCameraIdle: The camera has stopped moving: " + mGoogleMap.getCameraPosition().toString());
+//        Toast.makeText(getContext(), "onCameraIdle: The camera has stopped moving: " + mGoogleMap.getCameraPosition().toString(), Toast.LENGTH_LONG).show();
+        if (mGoogleMap.getCameraPosition().target.latitude != 0 && mGoogleMap.getCameraPosition().target.longitude != 0) {
+//            Toast.makeText(getContext(), mGoogleMap.getCameraPosition().target.toString(), Toast.LENGTH_LONG).show();
+            loadEvents();
+        }
+    }
+
+    private void loadEvents() {
+        Call<ResponseEventsNearLocation> call = waiterClient.getEventsNearLocation(
+                mGoogleMap.getCameraPosition().target.longitude,
+                mGoogleMap.getCameraPosition().target.latitude,
+                mGoogleMap.getCameraPosition().zoom);
+
+        call.enqueue(new Callback<ResponseEventsNearLocation>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseEventsNearLocation> call, @NonNull Response<ResponseEventsNearLocation> response) {
+                if (response.isSuccessful()) {
+                    ResponseEventsNearLocation body = response.body();
+                    if (body != null) {
+                        MainActivity.mEventList = body.getData().getEvents();
+                        putMarkersOnMap();
+                        mListener.onFragmentInteractionMaps();
+//                        Snackbar.make(((MainActivity)getActivity()).getViewPager(), getString(R.string.update_success, "Events"), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(((MainActivity)getActivity()).getViewPager(), getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(((MainActivity)getActivity()).getViewPager(), errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(((MainActivity)getActivity()).getViewPager(), errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(((MainActivity)getActivity()).getViewPager(), getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseEventsNearLocation> call, @NonNull Throwable t) {
+                Snackbar.make(((MainActivity)getActivity()).getViewPager(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -406,6 +507,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteractionMaps(Uri uri);
+        void onFragmentInteractionMaps();
     }
 }

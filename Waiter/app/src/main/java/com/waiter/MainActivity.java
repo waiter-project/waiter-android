@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity
     private MapsFragment mMapsFragment;
     private EventFragment mEventFragment;
 
-    public static ArrayList<Event> mEventList;
+    public static List<Event> mEventList;
 
     private String mLastQuery = "";
     private AppBarLayout mAppBar;
@@ -125,53 +124,6 @@ public class MainActivity extends AppCompatActivity
         ** Start Load Events from API
          */
         mEventList = new ArrayList<>();
-        List<String> listOfWaiters = new ArrayList<>();
-        listOfWaiters.add("58fc51f131087c0011378ebe");
-//        mEventList.add(new Event("58fc51e531087c0011378ebc",
-//                "Eiffel Tower",
-//                "A big piece of iron",
-//                "5 Avenue Anatole Paris France",
-//                48.8584,
-//                2.2945,
-//                "Everyday",
-//                1,
-//                listOfWaiters));
-        mEventList.add(new Event("1",
-                "Hilltop Park",
-                "Beautiful view of Long Beach",
-                "2351 Dawson Ave, Signal Hill, CA 90755",
-                33.799368,
-                -118.1656432,
-                "Everyday",
-                1,
-                listOfWaiters));
-        mEventList.add(new Event("2",
-                "Bookstore Spring Sales",
-                "-20% on every items at the bookstore!",
-                "6049 E 7th St, Long Beach, CA 90840",
-                33.7799968,
-                -118.1143435,
-                "Mar. 3rd, 2017",
-                1,
-                listOfWaiters));
-        mEventList.add(new Event("3",
-                "iPhone 8 Launch",
-                "The new iPhone launches today at your nearest Apple Store!",
-                "242 Los Cerritos Center, Cerritos, CA 90703",
-                33.862665,
-                -118.094118,
-                "Sept. 9, 2017",
-                1,
-                listOfWaiters));
-        mEventList.add(new Event("4",
-                "Taco Tuesday",
-                "Tired after your final week? Free tacos for everyone!",
-                "Every Taco restaurant ever",
-                33.7882741,
-                -118.1237334,
-                "May 19, 2017",
-                1,
-                listOfWaiters));
         // End Load Events from API
     }
 
@@ -405,6 +357,10 @@ public class MainActivity extends AppCompatActivity
         mSearchView.setTranslationY(verticalOffset);
     }
 
+    public ViewPager getViewPager() {
+        return this.mViewPager;
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -439,8 +395,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteractionMaps(Uri uri) {
-        Log.d("MainActivity", "onFragmentInteractionMaps, uri: " + String.valueOf(uri));
+    public void onFragmentInteractionMaps() {
+        Log.d("MainActivity", "onFragmentInteractionMaps");
+        mEventFragment.refreshEventsList();
+        SuggestionHelper.refreshSuggestions();
     }
 
     @Override

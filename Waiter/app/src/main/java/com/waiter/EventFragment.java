@@ -77,7 +77,7 @@ public class EventFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mAdapter.refreshList();
+                refreshEventsList();
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -85,6 +85,11 @@ public class EventFragment extends Fragment {
         return view;
     }
 
+    public void refreshEventsList() {
+        mAdapter.clear();
+        mAdapter.addAll(MainActivity.mEventList);
+        mAdapter.refreshList();
+    }
 
     @Override
     public void onAttach(Context context) {

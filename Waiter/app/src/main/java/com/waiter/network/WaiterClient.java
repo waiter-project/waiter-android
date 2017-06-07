@@ -4,6 +4,7 @@ import com.waiter.models.RequestLogin;
 import com.waiter.models.RequestSignup;
 import com.waiter.models.RequestUpdatePassword;
 import com.waiter.models.RequestUpdateProfile;
+import com.waiter.models.ResponseEventsNearLocation;
 import com.waiter.models.ResponseLogin;
 import com.waiter.models.ResponseSignup;
 
@@ -17,6 +18,8 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface WaiterClient {
+
+    // User Routes
     @POST("/user/login")
     Call<ResponseLogin> login(@Body RequestLogin requestLogin);
 
@@ -31,4 +34,8 @@ public interface WaiterClient {
 
     @PUT("/user/{userId}/password")
     Call<ResponseBody> updatePassword(@Header("x-access-token") String token, @Path("userId") String userId, @Body RequestUpdatePassword requestUpdatePassword);
+
+    // Event Routes
+    @GET("/event/long/{long}/lat/{lat}/zoom/{zoom}")
+    Call<ResponseEventsNearLocation> getEventsNearLocation(@Path("long") double longitude, @Path("lat") double latitude, @Path("zoom") float zoom);
 }
