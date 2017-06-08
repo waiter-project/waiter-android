@@ -402,7 +402,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteractionEvent(Event item) {
-        Log.d("MainActivity", "onListFragmentInteractionEvent, DummyItem: " + String.valueOf(item));
+    public void onListFragmentInteractionEvent(int position) {
+        Intent intent = new Intent(this, FullEventActivity.class);
+        intent.putExtra("EVENT_POSITION", position);
+        startActivity(intent);
     }
 }

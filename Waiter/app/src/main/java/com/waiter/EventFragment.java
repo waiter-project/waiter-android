@@ -119,6 +119,6 @@ public class EventFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteractionEvent(Event event);
+        void onListFragmentInteractionEvent(int position);
     }
 }

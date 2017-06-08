@@ -66,7 +66,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteractionEvent(holder.mItem);
+                    mListener.onListFragmentInteractionEvent(holder.getAdapterPosition());
                 }
             }
         });

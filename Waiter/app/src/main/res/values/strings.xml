@@ -75,6 +75,10 @@
     <!-- EventFragment -->
     <string name="save_event">Save this event</string>
 
+    <!-- FullEvent Activity -->
+    <string name="event_title">Event</string>
+    <string name="request">Request a Waiter</string>
+
     <!-- History Activity -->
     <string name="history_title">Wait history</string>
 
