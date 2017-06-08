@@ -1,5 +1,6 @@
 package com.waiter.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -28,23 +29,9 @@ public class Event {
     @Expose
     private List<String> listOfWaiters = null;
 
-    /**
-     * No args constructor for use in serialization
-     *
-     */
     public Event() {
     }
 
-    /**
-     *
-     * @param id
-     * @param listOfWaiters
-     * @param location
-     * @param address
-     * @param description
-     * @param name
-     * @param date
-     */
     public Event(String id, String name, String description, String address, List<Double> location, String date, List<String> listOfWaiters) {
         super();
         this.id = id;

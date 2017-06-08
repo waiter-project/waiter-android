@@ -301,8 +301,11 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "onSuggestionClicked()");
 
         mLastQuery = searchSuggestion.getBody();
+        int mLastQueryPosition = ((EventSuggestion) searchSuggestion).getEventPosition();
 
-        Toast.makeText(this, "'" + mLastQuery + "' clicked.", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, FullEventActivity.class);
+        intent.putExtra("EVENT_POSITION", mLastQueryPosition);
+        startActivity(intent);
     }
 
     @Override
