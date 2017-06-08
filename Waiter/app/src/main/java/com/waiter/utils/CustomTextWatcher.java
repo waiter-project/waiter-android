@@ -74,7 +74,7 @@ public class CustomTextWatcher implements TextWatcher {
         return true;
     }
 
-    private static boolean isValidEmail(String email) {
+    public static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
@@ -152,7 +152,7 @@ public class CustomTextWatcher implements TextWatcher {
         return true;
     }
 
-    private boolean isValidBirthday(String birthday) {
+    public static boolean isValidBirthday(String birthday) {
         return !TextUtils.isEmpty(birthday);
     }
 
