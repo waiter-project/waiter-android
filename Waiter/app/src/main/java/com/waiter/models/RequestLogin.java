@@ -1,7 +1,10 @@
 package com.waiter.models;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.onesignal.OneSignal;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -13,6 +16,9 @@ public class RequestLogin {
     @SerializedName("password")
     @Expose
     private String password;
+    @SerializedName("deviceId")
+    @Expose
+    private String deviceId;
 
     public String getEmail() {
         return email;
@@ -28,6 +34,14 @@ public class RequestLogin {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     @Override

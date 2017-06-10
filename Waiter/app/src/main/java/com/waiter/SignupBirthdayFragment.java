@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
 import com.waiter.custom.CustomTextInputLayout;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestSignup;
@@ -206,6 +207,14 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
         requestSignup.setPassword(introActivity.getPassword());
         requestSignup.setBirthday(mInputBirthday.getText().toString().trim());
         requestSignup.setType(0);
+        OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+            @Override
+            public void idsAvailable(String userId, String registrationId) {
+                requestSignup.setDeviceId(userId);
+                Log.d("OneSignal", "UserId:" + userId);
+            }
+        });
+
         Log.d(TAG, "signup: requestSignup = " + requestSignup);
         Call<ResponseSignup> call = waiterClient.signup(requestSignup);
 

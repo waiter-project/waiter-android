@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
 import com.securepreferences.SecurePreferences;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestLogin;
@@ -169,8 +171,15 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 
         requestLogin.setEmail(mInputEmail.getText().toString());
         requestLogin.setPassword(mInputPassword.getText().toString());
-        Call<ResponseLogin> call = waiterClient.login(requestLogin);
+        OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+            @Override
+            public void idsAvailable(String userId, String registrationId) {
+                requestLogin.setDeviceId(userId);
+                Log.d("OneSignal", "UserId:" + userId);
+            }
+        });
 
+        Call<ResponseLogin> call = waiterClient.login(requestLogin);
         call.enqueue(new Callback<ResponseLogin>() {
             @Override
             public void onResponse(@NonNull Call<ResponseLogin> call, @NonNull Response<ResponseLogin> response) {

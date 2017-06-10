@@ -3,7 +3,6 @@ package com.waiter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -24,6 +23,7 @@ import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.onesignal.OneSignal;
 import com.securepreferences.SecurePreferences;
 import com.waiter.data.EventSuggestion;
 import com.waiter.data.SuggestionHelper;
@@ -225,6 +225,8 @@ public class MainActivity extends AppCompatActivity
 
         userEmail.setText(email);
         userName.setText(firstName + " " + lastName);
+
+        OneSignal.syncHashedEmail(email);
     }
 
     @Override
