@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_height="match_parent"
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -99,7 +100,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:alpha="0.36"
-                android:src="@drawable/ic_place_black_24dp" />
+                app:srcCompat="@drawable/ic_place_black_24dp" />
 
             <TextView
                 android:id="@+id/event_address"
@@ -126,7 +127,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:alpha="0.36"
-                android:src="@drawable/ic_schedule_black_24dp" />
+                app:srcCompat="@drawable/ic_schedule_black_24dp" />
 
             <TextView
                 android:id="@+id/event_date"
@@ -153,7 +154,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:alpha="0.36"
-                android:src="@drawable/ic_people_black_24dp" />
+                app:srcCompat="@drawable/ic_people_black_24dp" />
 
             <TextView
                 android:id="@+id/event_waiters_available"
