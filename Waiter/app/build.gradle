@@ -11,6 +11,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        manifestPlaceholders = [onesignal_app_id: "7d0bc3b2-2567-4ea0-bfae-ec67478165cd",
+                                // Project number pulled from dashboard, local value is ignored.
+                                onesignal_google_project_number: "REMOTE"]
     }
     buildTypes {
         release {
@@ -27,10 +30,11 @@ dependencies {
     })
     compile project(':material-intro-screen')
     compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.onesignal:OneSignal:[3.5.3,4.0.0)'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.android.gms:play-services-maps:10.2.6'
-    compile 'com.google.android.gms:play-services-location:10.2.6'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.github.arimorty:floatingsearchview:2.0.4'

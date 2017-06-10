@@ -7,6 +7,7 @@
 
     <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
     <application
+        android:name=".WaiterApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_waiter"
         android:label="@string/app_name"
@@ -63,6 +64,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <!-- Example: Sets all OneSignal notification's accent color to Green by default.  -->
+        <!-- Color format is in ARGB. -->
+        <meta-data android:name="com.onesignal.NotificationAccentColor.DEFAULT" android:value="FF1E4561" />
 
     </application>
 
