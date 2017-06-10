@@ -21,11 +21,9 @@ import retrofit2.http.Path;
 public interface WaiterClient {
 
     // User Routes
-    @Headers("device: android")
     @POST("/user/login")
     Call<ResponseLogin> login(@Body RequestLogin requestLogin);
 
-    @Headers("device: android")
     @POST("/user/register")
     Call<ResponseSignup> signup(@Body RequestSignup requestSignup);
 
