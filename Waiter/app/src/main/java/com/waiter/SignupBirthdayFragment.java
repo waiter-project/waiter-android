@@ -242,7 +242,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                     }
                 } else {
                     errorResponse = ErrorUtils.parseError(response);
-                    if (errorResponse != null) {
+                    if (errorResponse != null && errorResponse.getData() != null) {
                         if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
                             introActivity.showMessage(errorResponse.getData().getMessage());
                         } else {

@@ -206,7 +206,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
                     }
                 } else {
                     errorResponse = ErrorUtils.parseError(response);
-                    if (errorResponse != null) {
+                    if (errorResponse != null && errorResponse.getData() != null) {
                         if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
                             introActivity.showMessage(errorResponse.getData().getMessage());
                         } else {

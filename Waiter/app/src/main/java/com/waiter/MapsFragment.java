@@ -475,7 +475,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                     }
                 } else {
                     errorResponse = ErrorUtils.parseError(response);
-                    if (errorResponse != null) {
+                    if (errorResponse != null && errorResponse.getData() != null) {
                         if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
                             Snackbar.make(((MainActivity)getActivity()).getViewPager(), errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
                         } else {
