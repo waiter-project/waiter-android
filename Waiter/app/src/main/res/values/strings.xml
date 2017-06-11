@@ -77,7 +77,7 @@
 
     <!-- FullEvent Activity -->
     <string name="event_title">Event</string>
-    <string name="request">Request a Waiter</string>
+    <string name="request_a_waiter">Request a Waiter</string>
 
     <!-- History Activity -->
     <string name="history_title">Wait history</string>
@@ -100,6 +100,14 @@
     <string name="current_password">Current password</string>
     <string name="new_password">New password</string>
     <string name="updating_password">Updating Password…</string>
+
+    <!-- RequestDialog Fragment -->
+    <string name="how_many_waiters">How many waiters?</string>
+    <string name="request">Request</string>
+    <string name="request_one_waiter">Request 1 waiter</string>
+    <string name="request_waiters">Request %1$d waiters</string>
+    <string name="requesting_waiters">Requesting waiters…</string>
+    <string name="request_sent">Request Sent</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>

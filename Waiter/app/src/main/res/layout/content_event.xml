@@ -172,7 +172,7 @@
             android:id="@+id/request_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/request"
+            android:text="@string/request_a_waiter"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:textColor="@android:color/white"

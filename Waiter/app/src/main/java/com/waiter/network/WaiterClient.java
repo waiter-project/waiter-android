@@ -1,5 +1,6 @@
 package com.waiter.network;
 
+import com.waiter.models.RequestCreateWait;
 import com.waiter.models.RequestLogin;
 import com.waiter.models.RequestSignup;
 import com.waiter.models.RequestUpdatePassword;
@@ -7,6 +8,7 @@ import com.waiter.models.RequestUpdateProfile;
 import com.waiter.models.ResponseEventsNearLocation;
 import com.waiter.models.ResponseLogin;
 import com.waiter.models.ResponseSignup;
+import com.waiter.models.Wait;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -39,4 +41,8 @@ public interface WaiterClient {
     // Event Routes
     @GET("/event/long/{long}/lat/{lat}/zoom/{zoom}")
     Call<ResponseEventsNearLocation> getEventsNearLocation(@Path("long") double longitude, @Path("lat") double latitude, @Path("zoom") float zoom);
+
+    // Wait Routes
+    @POST("/wait")
+    Call<Wait> createWait(@Body RequestCreateWait requestCreateWait);
 }

@@ -1,11 +1,13 @@
 package com.waiter;
 
 import android.animation.ValueAnimator;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener, EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener, FloatingSearchView.OnFocusChangeListener, FloatingSearchView.OnQueryChangeListener, FloatingSearchView.OnSearchListener, AppBarLayout.OnOffsetChangedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener,
+        EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener,
+        FloatingSearchView.OnFocusChangeListener, FloatingSearchView.OnQueryChangeListener,
+        FloatingSearchView.OnSearchListener, AppBarLayout.OnOffsetChangedListener,
+        RequestDialogFragment.RequestDialogListener {
 
     private final String TAG = "MainActivity";
     private static final int REQUEST_CODE_PROFILE = 1;
@@ -52,10 +59,16 @@ public class MainActivity extends AppCompatActivity
     private MapsFragment mMapsFragment;
     private EventFragment mEventFragment;
 
+    RequestDialogFragment requestDialogFragment;
+    private ProgressDialog mProgressDialog;
+
     public static List<Event> mEventList;
 
     private String mLastQuery = "";
     private AppBarLayout mAppBar;
+
+    private static String userId;
+    private static String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +132,13 @@ public class MainActivity extends AppCompatActivity
             }
         });
         // End SwipeTabs
+
+        requestDialogFragment = new RequestDialogFragment();
+        mProgressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage(getString(R.string.requesting_waiters));
+        requestDialogFragment.setProgressDialog(mProgressDialog);
 
         /*
         ** Start Load Events from API
@@ -214,17 +234,29 @@ public class MainActivity extends AppCompatActivity
         finish();
     }
 
+    public static String getUserId() {
+        return userId;
+    }
+
+    public static String getUserEmail() {
+        return userEmail;
+    }
+
     private void setNavDrawerData() {
-        TextView userEmail = (TextView) navHeaderLayout.findViewById(R.id.user_email);
-        TextView userName = (TextView) navHeaderLayout.findViewById(R.id.user_name);
+        TextView userEmailView = (TextView) navHeaderLayout.findViewById(R.id.user_email);
+        TextView userNameView = (TextView) navHeaderLayout.findViewById(R.id.user_name);
 
         SharedPreferences prefs = new SecurePreferences(this);
         String email = prefs.getString("user_email", getString(R.string.placeholder_email));
         String firstName = prefs.getString("first_name", getString(R.string.placeholder_fname));
         String lastName = prefs.getString("last_name", getString(R.string.placeholder_lname));
+        String id = prefs.getString("user_id", "empty");
 
-        userEmail.setText(email);
-        userName.setText(firstName + " " + lastName);
+        userEmailView.setText(email);
+        userNameView.setText(firstName + " " + lastName);
+
+        userEmail = email;
+        userId = id;
 
         OneSignal.syncHashedEmail(email);
     }
@@ -362,6 +394,22 @@ public class MainActivity extends AppCompatActivity
         mSearchView.setTranslationY(verticalOffset);
     }
 
+    @Override
+    public void onDialogPositiveClick(AppCompatDialogFragment dialog, int value) {
+        dialog.dismiss();
+//        Toast.makeText(this, "onDialogPositiveClick (request " + value + " waiters)", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDialogNegativeClick(AppCompatDialogFragment dialog) {
+//        Toast.makeText(this, "onDialogNegativeClick", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSnackbarMessage(String message) {
+        Snackbar.make(findViewById(R.id.parent_view), message, Snackbar.LENGTH_LONG).show();
+    }
+
     public ViewPager getViewPager() {
         return this.mViewPager;
     }
@@ -404,6 +452,12 @@ public class MainActivity extends AppCompatActivity
         Log.d("MainActivity", "onFragmentInteractionMaps");
         mEventFragment.refreshEventsList();
         SuggestionHelper.refreshSuggestions();
+    }
+
+    @Override
+    public void onMapsEventClicked(int eventPosition) {
+        requestDialogFragment.setEventId(mEventList.get(eventPosition).getId());
+        requestDialogFragment.show(getSupportFragmentManager(), "RequestDialogFragment");
     }
 
     @Override

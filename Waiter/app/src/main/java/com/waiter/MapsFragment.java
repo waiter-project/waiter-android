@@ -1,6 +1,7 @@
 package com.waiter;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -14,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +54,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener {
+public class MapsFragment extends Fragment implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener,
+        GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener {
 
     private static final String TAG = "MapsFragment";
 
@@ -72,6 +78,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private View mBottomSheet;
     private BottomSheetBehavior mBottomSheetBehavior;
 
+    private View mRootView;
     private TextView mEventTitle;
     private TextView mEventPrice;
     private TextView mEventDescription;
@@ -83,6 +90,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private Animation mGrowAnimation;
     private Animation mShrinkAnimation;
+
+    private int eventPosition = -1;
 
     private WaiterClient waiterClient;
     private ErrorResponse errorResponse;
@@ -106,14 +115,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
         waiterClient = ServiceGenerator.createService(WaiterClient.class);
 
         /*
         ** Start Init Maps
          */
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        mMapView = (MapView) mRootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume();
@@ -140,11 +149,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         /*
         ** Start Bottom Sheet
          */
-        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator);
+        mCoordinatorLayout = (CoordinatorLayout) mRootView.findViewById(R.id.coordinator);
         initializeUI();
         // End BottomSheet
 
-        return rootView;
+        return mRootView;
     }
 
     private void initializeUI() {
@@ -159,17 +168,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> listOfWaiters = new ArrayList<>();
-                List<Double> location = new ArrayList<Double>();
-                location.add(2.2945 + MainActivity.mEventList.size());
-                location.add(48.8584 + MainActivity.mEventList.size());
-                MainActivity.mEventList.add(new Event("58fc51e531087c0011378ebc",
-                        "Event" + (MainActivity.mEventList.size() + 1),
-                        "Description",
-                        "Address",
-                        location,
-                        "Date",
-                        listOfWaiters));
+                mListener.onMapsEventClicked(eventPosition);
             }
         });
 
@@ -264,14 +263,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        int eventID = Integer.parseInt(marker.getTitle());
+        eventPosition = Integer.parseInt(marker.getTitle());
 
-        mEventTitle.setText(MainActivity.mEventList.get(eventID).getName());
+        mEventTitle.setText(MainActivity.mEventList.get(eventPosition).getName());
         //mEventPrice.setText();
-        mEventDescription.setText(MainActivity.mEventList.get(eventID).getDescription());
-        mEventAddress.setText(MainActivity.mEventList.get(eventID).getAddress());
-        mEventDate.setText(MainActivity.mEventList.get(eventID).getDate());
-        mEventWaitersAvailable.setText(getString(R.string.waiters_available, MainActivity.mEventList.get(eventID).getListOfWaiters().size()));
+        mEventDescription.setText(MainActivity.mEventList.get(eventPosition).getDescription());
+        mEventAddress.setText(MainActivity.mEventList.get(eventPosition).getAddress());
+        mEventDate.setText(MainActivity.mEventList.get(eventPosition).getDate());
+        mEventWaitersAvailable.setText(getString(R.string.waiters_available, MainActivity.mEventList.get(eventPosition).getListOfWaiters().size()));
+
         return true;
     }
 
@@ -506,7 +506,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteractionMaps();
+        void onMapsEventClicked(int eventPosition);
     }
 }
