@@ -15,7 +15,7 @@ public class ServiceGenerator {
         if (Utils.isEmulator()) {
             return "http://10.0.2.2:5000";
         }
-        return "http://192.168.1.9:5000";
+        return "http://wait4me.tk:5000/";
     }
 
     private static Retrofit.Builder builder =
