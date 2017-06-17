@@ -17,4 +17,9 @@
         android:icon="@drawable/ic_sync_black_24dp"
         android:title="@string/pref_header_data_sync" />
 
+    <header
+        android:fragment="com.waiter.SettingsActivity$DebugPreferenceFragment"
+        android:icon="@drawable/ic_bug_report_black_24dp"
+        android:title="@string/pref_header_debug" />
+
 </preference-headers>

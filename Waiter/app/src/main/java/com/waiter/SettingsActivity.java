@@ -10,6 +10,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -18,6 +19,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.List;
@@ -34,6 +36,12 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
+    public static final String KEY_PREF_SERVER = "pref_server";
+    public static final String KEY_PREF_CUSTOM_API = "pref_customApi";
+    public static final String KEY_PREF_CUSTOM_API_URL = "pref_customApiUrl";
+    private static final String TAG = "SettingsActivity";
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -41,6 +49,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
+
             String stringValue = value.toString();
 
             if (preference instanceof ListPreference) {
@@ -77,6 +86,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     }
                 }
 
+            } else if (preference instanceof EditTextPreference) {
+                if (preference.getKey().equals(KEY_PREF_CUSTOM_API_URL)) {
+                    preference.setSummary(stringValue);
+                }
             } else {
                 // For all other preferences, set the summary to the value's
                 // simple string representation.
@@ -158,6 +171,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
+                || DebugPreferenceFragment.class.getName().equals(fragmentName)
                 || NotificationPreferenceFragment.class.getName().equals(fragmentName);
     }
 
@@ -239,6 +253,35 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class DebugPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_debug);
+            setHasOptionsMenu(true);
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
+            bindPreferenceSummaryToValue(findPreference("pref_server"));
+            bindPreferenceSummaryToValue(findPreference("pref_customApiUrl"));
+
+            PreferenceManager.setDefaultValues(WaiterApplication.getInstance(), R.xml.pref_debug, false);
         }
 
         @Override
