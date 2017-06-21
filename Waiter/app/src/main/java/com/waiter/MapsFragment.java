@@ -230,9 +230,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mGoogleMap.setOnCameraMoveListener(this);
         mGoogleMap.setOnCameraMoveCanceledListener(this);
 
-        if (Utils.isEmulator()) {
-            mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
-        }
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+//        if (Utils.isEmulator()) {
+//            mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+//        }
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         mGoogleMap.setOnMarkerClickListener(this);
