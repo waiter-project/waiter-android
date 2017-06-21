@@ -106,7 +106,7 @@
     <string name="request">Request</string>
     <string name="request_one_waiter">Request 1 waiter</string>
     <string name="request_waiters">Request %1$d waiters</string>
-    <string name="requesting_waiters">Requesting waiters…</string>
+    <string name="requesting_waiters">Requesting %1$d waiters…</string>
     <string name="request_sent">Request Sent</string>
 
     <!-- General strings -->

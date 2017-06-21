@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
@@ -43,8 +45,11 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
     private ErrorResponse errorResponse;
 
     // UI References
+    private LinearLayout mRequestFormLayout;
+    private LinearLayout mRequestingLayout;
     private NumberPicker mNumberPicker;
     private Button mRequestButton;
+    private TextView mRequestingTextView;
     private ProgressDialog mProgressDialog;
 
     private Context sContext;
@@ -70,10 +75,15 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(dialogRootView);
 
+        mRequestFormLayout = (LinearLayout) dialogRootView.findViewById(R.id.request_form_layout);
+        mRequestingLayout = (LinearLayout) dialogRootView.findViewById(R.id.requesting_layout);
+
         mNumberPicker = (NumberPicker) dialogRootView.findViewById(R.id.number_picker);
         mNumberPicker.setValueChangedListener(this);
         mRequestButton = (Button) dialogRootView.findViewById(R.id.request_btn);
         mRequestButton.setOnClickListener(this);
+
+        mRequestingTextView = (TextView) dialogRootView.findViewById(R.id.requesting_text_view);
 
         waiterClient = ServiceGenerator.createService(WaiterClient.class);
         requestCreateWait = new RequestCreateWait();
@@ -96,13 +106,14 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.request_btn:
-                mListener.onDialogPositiveClick(RequestDialogFragment.this, mNumberPicker.getValue());
                 requestWaiters();
                 break;
         }
     }
 
     private void requestWaiters() {
+        showProgressLayout();
+
         requestCreateWait.setEventId(eventId);
         requestCreateWait.setUserId(MainActivity.getUserId());
         requestCreateWait.setNumberOfWaiters(mNumberPicker.getValue());
@@ -111,7 +122,8 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
         call.enqueue(new Callback<Wait>() {
             @Override
             public void onResponse(@NonNull Call<Wait> call, @NonNull Response<Wait> response) {
-                mProgressDialog.dismiss();
+                hideProgressLayout();
+                mListener.onDialogPositiveClick(RequestDialogFragment.this, mNumberPicker.getValue());
                 if (response.isSuccessful()) {
                     Wait body = response.body();
                     if (body != null) {
@@ -135,11 +147,25 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
 
             @Override
             public void onFailure(@NonNull Call<Wait> call, @NonNull Throwable t) {
-                mProgressDialog.dismiss();
+                hideProgressLayout();
+//                mListener.onDialogPositiveClick(RequestDialogFragment.this, mNumberPicker.getValue());
                 mListener.showSnackbarMessage(t.getLocalizedMessage());
             }
         });
 
+    }
+
+    private void showProgressLayout() {
+        setCancelable(false);
+        mRequestingTextView.setText(getString(R.string.requesting_waiters, mNumberPicker.getValue()));
+        mRequestFormLayout.setVisibility(View.GONE);
+        mRequestingLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressLayout() {
+        setCancelable(true);
+        mRequestFormLayout.setVisibility(View.VISIBLE);
+        mRequestingLayout.setVisibility(View.GONE);
     }
 
     public String getEventId() {
