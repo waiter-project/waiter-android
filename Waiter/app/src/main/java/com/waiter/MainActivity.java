@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        boolean waiterMode = new SecurePreferences(this).getBoolean("waiter_mode", false);
+        setTheme(waiterMode ? R.style.AppThemeWaiter_NoActionBar : R.style.AppTheme_NoActionBar);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -230,6 +233,7 @@ public class MainActivity extends AppCompatActivity
     private void logout() {
         SharedPreferences prefs = new SecurePreferences(this);
         prefs.edit().remove("is_logged_in").apply();
+        prefs.edit().remove("waiter_mode").apply();
         prefs.edit().remove("user_id").apply();
         prefs.edit().remove("first_name").apply();
         prefs.edit().remove("last_name").apply();
@@ -427,6 +431,14 @@ public class MainActivity extends AppCompatActivity
         switch (v.getId()) {
             case R.id.footer_nav_drawer:
 //                mDrawerLayout.closeDrawers();
+                SharedPreferences prefs = new SecurePreferences(this);
+                boolean waiterMode = prefs.getBoolean("waiter_mode", false);
+                if (!waiterMode) {
+                    prefs.edit().putBoolean("waiter_mode", true).apply();
+                } else {
+                    prefs.edit().putBoolean("waiter_mode", false).apply();
+                }
+
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();

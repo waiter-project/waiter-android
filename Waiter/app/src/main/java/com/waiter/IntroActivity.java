@@ -110,6 +110,7 @@ public class IntroActivity extends MaterialIntroActivity {
                     .apply();
         }
         prefs.edit().putBoolean("is_logged_in", true).apply();
+        prefs.edit().putBoolean("waiter_mode", false).apply();
 
         checkSecurePreferences();
 
