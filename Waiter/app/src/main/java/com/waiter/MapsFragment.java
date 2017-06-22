@@ -470,20 +470,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                         MainActivity.mEventList = body.getData().getEvents();
                         putMarkersOnMap();
                         mListener.onFragmentInteractionMaps();
-//                        Snackbar.make(((MainActivity)getActivity()).getViewPager(), getString(R.string.update_success, "Events"), Snackbar.LENGTH_LONG).show();
+//                        mListener.showErrorSnackbar(getString(R.string.update_success, "Events"));
                     } else {
-                        Snackbar.make(((MainActivity)getActivity()).getViewPager(), getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                        mListener.showErrorSnackbar(getString(R.string.response_body_null));
                     }
                 } else {
                     errorResponse = ErrorUtils.parseError(response);
                     if (errorResponse != null && errorResponse.getData() != null) {
                         if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
-                            Snackbar.make(((MainActivity)getActivity()).getViewPager(), errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                            mListener.showErrorSnackbar(errorResponse.getData().getMessage());
                         } else {
-                            Snackbar.make(((MainActivity)getActivity()).getViewPager(), errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                            mListener.showErrorSnackbar(errorResponse.getData().getCauses().get(0));
                         }
                     } else {
-                        Snackbar.make(((MainActivity)getActivity()).getViewPager(), getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                        mListener.showErrorSnackbar(getString(R.string.internal_error));
                     }
 
                 }
@@ -491,7 +491,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
             @Override
             public void onFailure(@NonNull Call<ResponseEventsNearLocation> call, @NonNull Throwable t) {
-                Snackbar.make(((MainActivity)getActivity()).getViewPager(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                mListener.showErrorSnackbar(t.getLocalizedMessage());
             }
         });
     }
@@ -509,5 +509,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     public interface OnFragmentInteractionListener {
         void onFragmentInteractionMaps();
         void onMapsEventClicked(int eventPosition);
+        void showErrorSnackbar(String message);
     }
 }

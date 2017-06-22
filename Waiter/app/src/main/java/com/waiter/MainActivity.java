@@ -461,6 +461,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void showErrorSnackbar(String message) {
+        Snackbar.make(mViewPager, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
     public void onListFragmentInteractionEvent(int position) {
         Intent intent = new Intent(this, FullEventActivity.class);
         intent.putExtra("EVENT_POSITION", position);
