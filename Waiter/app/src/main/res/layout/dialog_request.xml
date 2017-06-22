@@ -30,7 +30,8 @@
             numberpicker:unit="1"
             numberpicker:focusable="false"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp"/>
+            android:paddingBottom="8dp"
+            android:layout_gravity="center_horizontal" />
 
         <Button
             android:id="@+id/request_btn"
