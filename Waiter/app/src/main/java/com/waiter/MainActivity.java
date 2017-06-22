@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,14 +41,16 @@ public class MainActivity extends AppCompatActivity
         EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener,
         FloatingSearchView.OnFocusChangeListener, FloatingSearchView.OnQueryChangeListener,
         FloatingSearchView.OnSearchListener, AppBarLayout.OnOffsetChangedListener,
-        RequestDialogFragment.RequestDialogListener {
+        RequestDialogFragment.RequestDialogListener, View.OnClickListener {
 
     private final String TAG = "MainActivity";
     private static final int REQUEST_CODE_PROFILE = 1;
 
     private static final int NUM_PAGES = 2;
 
+    private DrawerLayout mDrawerLayout;
     private View navHeaderLayout;
+    private LinearLayout footerNavDrawer;
 
     private FloatingSearchView mSearchView;
 
@@ -75,22 +78,27 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        overridePendingTransition(R.anim.flip_in, R.anim.flip_out);
+
         /*
         ** Begin NavigationDrawer
          */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         navHeaderLayout = navigationView.getHeaderView(0);
         setNavDrawerData();
+
+        footerNavDrawer = (LinearLayout) findViewById(R.id.footer_nav_drawer);
+        footerNavDrawer.setOnClickListener(this);
         // End NavigationDrawer
 
         /*
         ** Begin SearchView
          */
         mSearchView = (FloatingSearchView) findViewById(R.id.floating_search_view);
-        mSearchView.attachNavigationDrawerToMenuButton(drawer);
+        mSearchView.attachNavigationDrawerToMenuButton(mDrawerLayout);
         mSearchView.setOnMenuItemClickListener(this);
         mSearchView.setOnQueryChangeListener(this);
         mSearchView.setOnSearchListener(this);
@@ -412,6 +420,18 @@ public class MainActivity extends AppCompatActivity
 
     public ViewPager getViewPager() {
         return this.mViewPager;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.footer_nav_drawer:
+//                mDrawerLayout.closeDrawers();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
