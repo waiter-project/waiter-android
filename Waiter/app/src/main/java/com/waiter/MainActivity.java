@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity
     private static String userId;
     private static String userEmail;
 
+    private boolean waiterMode;
+
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
     private LinearLayout mCurrentWaitLayout;
 
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        boolean waiterMode = new SecurePreferences(this).getBoolean("waiter_mode", false);
+        waiterMode = new SecurePreferences(this).getBoolean("waiter_mode", false);
         setTheme(waiterMode ? R.style.AppThemeWaiter_NoActionBar : R.style.AppTheme_NoActionBar);
 
         super.onCreate(savedInstanceState);
@@ -123,8 +125,6 @@ public class MainActivity extends AppCompatActivity
          */
         mCurrentWaitLayout = (LinearLayout) findViewById(R.id.current_wait_layout);
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        Log.d(TAG, "onCreate: mSlidingUpPanelLayout.getPanelHeight() = " + mSlidingUpPanelLayout.getPanelHeight());
-        Log.d(TAG, "onCreate: mSlidingUpPanelLayout.getPanelState() = " + mSlidingUpPanelLayout.getPanelState());
         waiterClient = ServiceGenerator.createService(WaiterClient.class);
         checkCurrentWait();
         // Get Current Wait
@@ -191,7 +191,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void checkCurrentWait() {
-        Call<ResponseWait> call = waiterClient.getCurrentWait(userId);
+        Call<ResponseWait> call;
+        if (waiterMode) {
+            call = waiterClient.getCurrentWait("waiter", userId);
+        } else {
+            call = waiterClient.getCurrentWait("client", userId);
+        }
         call.enqueue(new Callback<ResponseWait>() {
             @Override
             public void onResponse(@NonNull Call<ResponseWait> call, @NonNull Response<ResponseWait> response) {
