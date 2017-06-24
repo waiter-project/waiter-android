@@ -144,11 +144,15 @@ public class SignupEmailFragment extends SlideFragment {
                             introActivity.showMessage(getString(R.string.response_body_null));
                         }
                     } else {
-                        ResponseBody errorBody = response.errorBody();
-                        if (errorBody != null) {
-                            introActivity.showMessage(getString(R.string.email_already_used));
+                        if (response.code() == 409) {
+                            ResponseBody errorBody = response.errorBody();
+                            if (errorBody != null) {
+                                introActivity.showMessage(getString(R.string.email_already_used));
+                            } else {
+                                introActivity.showMessage(getString(R.string.response_error_body_null));
+                            }
                         } else {
-                            introActivity.showMessage(getString(R.string.response_error_body_null));
+                            introActivity.showMessage(getString(R.string.unknown_error));
                         }
                     }
                     mProgressBar.setVisibility(View.GONE);
