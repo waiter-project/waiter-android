@@ -46,5 +46,6 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'com.github.travijuu:numberpicker:1.0.7'
+    compile 'com.sothree.slidinguppanel:library:3.3.1'
     testCompile 'junit:junit:4.12'
 }

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -31,12 +32,22 @@ import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.onesignal.OneSignal;
 import com.securepreferences.SecurePreferences;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.waiter.data.EventSuggestion;
 import com.waiter.data.SuggestionHelper;
+import com.waiter.models.ErrorResponse;
 import com.waiter.models.Event;
+import com.waiter.models.ResponseWait;
+import com.waiter.network.ServiceGenerator;
+import com.waiter.network.WaiterClient;
+import com.waiter.utils.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapsFragment.OnFragmentInteractionListener,
@@ -76,6 +87,12 @@ public class MainActivity extends AppCompatActivity
     private static String userId;
     private static String userEmail;
 
+    private SlidingUpPanelLayout mSlidingUpPanelLayout;
+    private LinearLayout mCurrentWaitLayout;
+
+    private WaiterClient waiterClient;
+    private ErrorResponse errorResponse;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         boolean waiterMode = new SecurePreferences(this).getBoolean("waiter_mode", false);
@@ -100,6 +117,17 @@ public class MainActivity extends AppCompatActivity
         footerNavDrawer.setOnClickListener(this);
         mProgressBar = (ProgressBar) findViewById(R.id.footer_progress);
         // End NavigationDrawer
+
+        /*
+        ** Get Current Wait
+         */
+        mCurrentWaitLayout = (LinearLayout) findViewById(R.id.current_wait_layout);
+        mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        Log.d(TAG, "onCreate: mSlidingUpPanelLayout.getPanelHeight() = " + mSlidingUpPanelLayout.getPanelHeight());
+        Log.d(TAG, "onCreate: mSlidingUpPanelLayout.getPanelState() = " + mSlidingUpPanelLayout.getPanelState());
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
+        checkCurrentWait();
+        // Get Current Wait
 
         /*
         ** Begin SearchView
@@ -162,11 +190,35 @@ public class MainActivity extends AppCompatActivity
         // End Load Events from API
     }
 
+    private void checkCurrentWait() {
+        Call<ResponseWait> call = waiterClient.getCurrentWait(userId);
+        call.enqueue(new Callback<ResponseWait>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseWait> call, @NonNull Response<ResponseWait> response) {
+                if (response.isSuccessful()) {
+                    ResponseWait body = response.body();
+                    if (body != null) {
+                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    } else {
+                        showErrorSnackbar(getString(R.string.response_body_null));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseWait> call, Throwable t) {
+                showErrorSnackbar(t.getLocalizedMessage());
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
             List fragmentList = getSupportFragmentManager().getFragments();
 

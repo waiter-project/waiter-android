@@ -8,6 +8,7 @@ import com.waiter.models.RequestUpdateProfile;
 import com.waiter.models.ResponseEventsNearLocation;
 import com.waiter.models.ResponseLogin;
 import com.waiter.models.ResponseSignup;
+import com.waiter.models.ResponseWait;
 import com.waiter.models.Wait;
 
 import okhttp3.ResponseBody;
@@ -45,4 +46,7 @@ public interface WaiterClient {
     // Wait Routes
     @POST("/wait")
     Call<Wait> createWait(@Body RequestCreateWait requestCreateWait);
+
+    @GET("/wait/client/{clientId}")
+    Call<ResponseWait> getCurrentWait(@Path("clientId") String clientId);
 }
