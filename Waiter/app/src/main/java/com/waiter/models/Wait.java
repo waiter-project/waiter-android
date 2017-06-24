@@ -18,6 +18,9 @@ public class Wait {
     @SerializedName("eventName")
     @Expose
     private String eventName;
+    @SerializedName("eventLocation")
+    @Expose
+    private List<Double> eventLocation = null;
     @SerializedName("_id")
     @Expose
     private String id;
@@ -57,6 +60,14 @@ public class Wait {
 
     public String getEventName() {
         return eventName;
+    }
+
+    public List<Double> getEventLocation() {
+        return eventLocation;
+    }
+
+    public void setEventLocation(List<Double> eventLocation) {
+        this.eventLocation = eventLocation;
     }
 
     public void setEventName(String eventName) {

@@ -18,10 +18,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -33,11 +35,13 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.onesignal.OneSignal;
 import com.securepreferences.SecurePreferences;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.picasso.Picasso;
 import com.waiter.data.EventSuggestion;
 import com.waiter.data.SuggestionHelper;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.Event;
 import com.waiter.models.ResponseWait;
+import com.waiter.models.Wait;
 import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
 import com.waiter.utils.ErrorUtils;
@@ -204,6 +208,7 @@ public class MainActivity extends AppCompatActivity
                     ResponseWait body = response.body();
                     if (body != null) {
                         mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                        setupCurrentWaitUI(body.getData().getWait());
                     } else {
                         showErrorSnackbar(getString(R.string.response_body_null));
                     }
@@ -211,10 +216,31 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseWait> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseWait> call, @NonNull Throwable t) {
                 showErrorSnackbar(t.getLocalizedMessage());
             }
         });
+    }
+
+    private void setupCurrentWaitUI(Wait wait) {
+        ImageView staticMaps = (ImageView) mCurrentWaitLayout.findViewById(R.id.static_maps);
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = (int) Utils.convertDpToPixel(150, this);
+
+        String staticMapUrl = "http://maps.google.com/maps/api/staticmap"
+                + "?size="
+                + width
+                + "x"
+                + height
+                + "&zoom=15&markers=size:mid|"
+                + wait.getEventLocation().get(1)
+                + ","
+                + wait.getEventLocation().get(0);
+
+        Picasso.with(this).load(staticMapUrl).fit().centerCrop().into(staticMaps);
     }
 
     @Override
