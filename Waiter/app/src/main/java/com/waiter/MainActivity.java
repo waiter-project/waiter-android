@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -224,6 +225,11 @@ public class MainActivity extends AppCompatActivity
 
     private void setupCurrentWaitUI(Wait wait) {
         ImageView staticMaps = (ImageView) mCurrentWaitLayout.findViewById(R.id.static_maps);
+        TextView currentEventName = (TextView) mCurrentWaitLayout.findViewById(R.id.current_event_name);
+        Button waitState = (Button) mCurrentWaitLayout.findViewById(R.id.wait_state);
+
+        currentEventName.setText(wait.getEventName());
+        waitState.setText(wait.getState());
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);

@@ -20,13 +20,14 @@
             android:text="Wait in progress" />
 
         <TextView
-            android:id="@+id/event_name"
+            android:id="@+id/current_event_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/placeholder_title"
             android:layout_below="@id/wait_in_progress" />
 
         <Button
+            android:id="@+id/wait_state"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
