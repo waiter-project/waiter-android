@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +52,8 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout mDrawerLayout;
     private View navHeaderLayout;
-    private LinearLayout footerNavDrawer;
+    private RelativeLayout footerNavDrawer;
+    private ProgressBar mProgressBar;
 
     private FloatingSearchView mSearchView;
 
@@ -93,8 +96,9 @@ public class MainActivity extends AppCompatActivity
         navHeaderLayout = navigationView.getHeaderView(0);
         setNavDrawerData();
 
-        footerNavDrawer = (LinearLayout) findViewById(R.id.footer_nav_drawer);
+        footerNavDrawer = (RelativeLayout) findViewById(R.id.footer_nav_drawer);
         footerNavDrawer.setOnClickListener(this);
+        mProgressBar = (ProgressBar) findViewById(R.id.footer_progress);
         // End NavigationDrawer
 
         /*
@@ -431,6 +435,8 @@ public class MainActivity extends AppCompatActivity
         switch (v.getId()) {
             case R.id.footer_nav_drawer:
 //                mDrawerLayout.closeDrawers();
+                mProgressBar.setVisibility(View.VISIBLE);
+
                 SharedPreferences prefs = new SecurePreferences(this);
                 boolean waiterMode = prefs.getBoolean("waiter_mode", false);
                 if (!waiterMode) {
