@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.waiter.models.Event;
+import com.waiter.models.Wait;
 
 public class FullEventActivity extends AppCompatActivity implements View.OnClickListener, RequestDialogFragment.RequestDialogListener {
 
@@ -38,6 +39,8 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_event);
+
+        setResult(RESULT_CANCELED);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -153,5 +156,10 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void showSnackbarMessage(String message) {
         Snackbar.make(mRootView, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showCurrentWaitLayout(Wait wait) {
+        setResult(RESULT_OK);
     }
 }

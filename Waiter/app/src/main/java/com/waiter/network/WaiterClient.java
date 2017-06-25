@@ -45,7 +45,7 @@ public interface WaiterClient {
 
     // Wait Routes
     @POST("/wait")
-    Call<Wait> createWait(@Body RequestCreateWait requestCreateWait);
+    Call<ResponseWait> createWait(@Body RequestCreateWait requestCreateWait);
 
     @GET("/wait/user/{userId}")
     Call<ResponseWait> getCurrentWait(@Header("x-user-type") String userType, @Path("userId") String userId);

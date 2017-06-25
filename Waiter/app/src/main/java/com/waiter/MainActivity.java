@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity
 
     private final String TAG = "MainActivity";
     private static final int REQUEST_CODE_PROFILE = 1;
+    private static final int REQUEST_CODE_EVENT = 2;
 
     private static final int NUM_PAGES = 2;
 
@@ -229,7 +230,6 @@ public class MainActivity extends AppCompatActivity
                 if (response.isSuccessful()) {
                     ResponseWait body = response.body();
                     if (body != null) {
-                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         setupCurrentWaitUI(body.getData().getWait());
                     } else {
                         showErrorSnackbar(getString(R.string.response_body_null));
@@ -245,6 +245,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupCurrentWaitUI(Wait wait) {
+        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
         ImageView staticMaps = (ImageView) mCurrentWaitLayout.findViewById(R.id.static_maps);
         TextView currentEventName = (TextView) mCurrentWaitLayout.findViewById(R.id.current_event_name);
         Button waitState = (Button) mCurrentWaitLayout.findViewById(R.id.wait_state);
@@ -394,6 +396,10 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 setNavDrawerData();
             }
+        } else if (requestCode == REQUEST_CODE_EVENT) {
+            if (resultCode == RESULT_OK) {
+                checkCurrentWait();
+            }
         }
     }
 
@@ -463,8 +469,10 @@ public class MainActivity extends AppCompatActivity
         mLastQuery = searchSuggestion.getBody();
         int mLastQueryPosition = ((EventSuggestion) searchSuggestion).getEventPosition();
 
+
         Intent intent = new Intent(this, FullEventActivity.class);
         intent.putExtra("EVENT_POSITION", mLastQueryPosition);
+        startActivityForResult(intent, REQUEST_CODE_EVENT);
         startActivity(intent);
     }
 
@@ -534,6 +542,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showSnackbarMessage(String message) {
         Snackbar.make(findViewById(R.id.parent_view), message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showCurrentWaitLayout(Wait wait) {
+        setupCurrentWaitUI(wait);
     }
 
     public ViewPager getViewPager() {

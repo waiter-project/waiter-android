@@ -18,6 +18,7 @@ import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
 import com.travijuu.numberpicker.library.NumberPicker;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestCreateWait;
+import com.waiter.models.ResponseWait;
 import com.waiter.models.Wait;
 import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
@@ -35,6 +36,7 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
 //        void onCreateWaitResponse(Response<Wait> response);
 //        void onCreateWaitFailure(Throwable t);
         void showSnackbarMessage(String message);
+        void showCurrentWaitLayout(Wait wait);
     }
 
     RequestDialogListener mListener;
@@ -118,16 +120,17 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
         requestCreateWait.setUserId(MainActivity.getUserId());
         requestCreateWait.setNumberOfWaiters(mNumberPicker.getValue());
 
-        Call<Wait> call = waiterClient.createWait(requestCreateWait);
-        call.enqueue(new Callback<Wait>() {
+        Call<ResponseWait> call = waiterClient.createWait(requestCreateWait);
+        call.enqueue(new Callback<ResponseWait>() {
             @Override
-            public void onResponse(@NonNull Call<Wait> call, @NonNull Response<Wait> response) {
+            public void onResponse(@NonNull Call<ResponseWait> call, @NonNull Response<ResponseWait> response) {
                 hideProgressLayout();
                 mListener.onDialogPositiveClick(RequestDialogFragment.this, mNumberPicker.getValue());
                 if (response.isSuccessful()) {
-                    Wait body = response.body();
+                    ResponseWait body = response.body();
                     if (body != null) {
                         mListener.showSnackbarMessage(sContext.getString(R.string.request_sent));
+                        mListener.showCurrentWaitLayout(body.getData().getWait());
                     } else {
                         mListener.showSnackbarMessage(sContext.getString(R.string.response_body_null));
                     }
@@ -146,7 +149,7 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
             }
 
             @Override
-            public void onFailure(@NonNull Call<Wait> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseWait> call, @NonNull Throwable t) {
                 hideProgressLayout();
 //                mListener.onDialogPositiveClick(RequestDialogFragment.this, mNumberPicker.getValue());
                 mListener.showSnackbarMessage(t.getLocalizedMessage());
