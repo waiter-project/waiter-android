@@ -109,6 +109,10 @@
     <string name="requesting_waiters">Requesting %1$d waiters…</string>
     <string name="request_sent">Request Sent</string>
 
+    <!-- Current Wait Layout -->
+    <string name="wait_in_progress">Wait in progress</string>
+    <string name="created">Created</string>
+
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
     <string name="please_valid">Please enter a valid %1$s</string>

@@ -5,26 +5,53 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/drag_view"
         android:layout_width="match_parent"
         android:layout_height="68dp"
-        android:paddingLeft="20dp"
-        android:paddingStart="20dp"
+        android:paddingLeft="15dp"
+        android:paddingStart="15dp"
         android:orientation="vertical"
         android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/wait_in_progress"
-            style="@style/TextAppearance.AppCompat.Title"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wait in progress" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/current_event_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder_title"
-            android:layout_below="@id/wait_in_progress" />
+            <ImageView
+                android:id="@+id/close_layout_icon"
+                android:src="@drawable/ic_close_grey_700_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_marginEnd="15dp"
+                android:visibility="gone"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true" />
+
+            <LinearLayout
+                android:id="@+id/current_wait_title_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/wait_in_progress"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wait_in_progress"/>
+
+                <TextView
+                    android:id="@+id/current_event_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/placeholder_title" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/wait_state"
@@ -32,7 +59,7 @@
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Created"
+            android:text="@string/created"
             style="@style/Widget.AppCompat.Button.Borderless.Colored" />
 
     </RelativeLayout>

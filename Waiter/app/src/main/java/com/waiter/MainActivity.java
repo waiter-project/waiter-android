@@ -130,6 +130,27 @@ public class MainActivity extends AppCompatActivity
          */
         mCurrentWaitLayout = (LinearLayout) findViewById(R.id.current_wait_layout);
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mSlidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+//                Log.d(TAG, "onPanelStateChanged: previousState = " + previousState + " | newState = " + newState);
+                if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    mCurrentWaitLayout.findViewById(R.id.close_layout_icon).setVisibility(View.VISIBLE);
+                } else {
+                    mCurrentWaitLayout.findViewById(R.id.close_layout_icon).setVisibility(View.GONE);
+                }
+                if (previousState == SlidingUpPanelLayout.PanelState.EXPANDED && newState == SlidingUpPanelLayout.PanelState.DRAGGING) {
+                    mCurrentWaitLayout.findViewById(R.id.close_layout_icon).setVisibility(View.GONE);
+                }
+                if (previousState != SlidingUpPanelLayout.PanelState.EXPANDED && newState == SlidingUpPanelLayout.PanelState.DRAGGING) {
+                    mCurrentWaitLayout.findViewById(R.id.close_layout_icon).setVisibility(View.VISIBLE);
+                }
+            }
+        });
         waiterClient = ServiceGenerator.createService(WaiterClient.class);
         checkCurrentWait();
         // Get Current Wait
