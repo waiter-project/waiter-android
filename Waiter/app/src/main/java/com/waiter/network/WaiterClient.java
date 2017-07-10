@@ -43,6 +43,12 @@ public interface WaiterClient {
     @GET("/event/long/{long}/lat/{lat}/zoom/{zoom}")
     Call<ResponseEventsNearLocation> getEventsNearLocation(@Path("long") double longitude, @Path("lat") double latitude, @Path("zoom") float zoom);
 
+    @PUT("/event/{eventId}/join/{waiterId}")
+    Call<ResponseBody> joinEvent(@Header("x-access-token") String token, @Path("eventId") String eventId, @Path("waiterId") String waiterId);
+
+    @PUT("/event/{eventId}/leave/{waiterId}")
+    Call<ResponseBody> leaveEvent(@Header("x-access-token") String token, @Path("eventId") String eventId, @Path("waiterId") String waiterId);
+
     // Wait Routes
     @POST("/wait")
     Call<ResponseWait> createWait(@Body RequestCreateWait requestCreateWait);
