@@ -1,8 +1,10 @@
 package com.waiter;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.waiter.models.Event;
 import com.waiter.models.Wait;
@@ -32,6 +35,7 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
     private ProgressBar mProgressBar;
     private LinearLayout mFullEventLayout;
     private Button mRequestButton;
+    private AlertDialog mConfirmDialog;
     RequestDialogFragment requestDialogFragment;
     private ProgressDialog mProgressDialog;
 
@@ -45,6 +49,10 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        int eventPosition = intent.getIntExtra("EVENT_POSITION", -1);
+        Log.d("FullEventActivity", "eventPosition = " + eventPosition);
+
         // Set up UI elements
         mRootView = (LinearLayout) findViewById(R.id.root_view);
         mTitleView = (TextView) findViewById(R.id.event_title);
@@ -57,6 +65,22 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mFullEventLayout = (LinearLayout) findViewById(R.id.content_event_layout);
         mRequestButton = (Button) findViewById(R.id.request_btn);
+        if (MainActivity.waiterMode) {
+            mRequestButton.setText(getString(R.string.join_this_event));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.confirm_join_event_title, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setMessage(R.string.confirm_join_event_message)
+                    .setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            joinEvent();
+                        }
+                    })
+                    .setNegativeButton(R.string.disagree, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            mConfirmDialog = builder.create();
+        }
         mRequestButton.setVisibility(View.VISIBLE);
         mRequestButton.setOnClickListener(this);
         requestDialogFragment = new RequestDialogFragment();
@@ -65,10 +89,6 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage(getString(R.string.requesting_waiters));
         requestDialogFragment.setProgressDialog(mProgressDialog);
-
-        Intent intent = getIntent();
-        int eventPosition = intent.getIntExtra("EVENT_POSITION", -1);
-        Log.d("FullEventActivity", "eventPosition = " + eventPosition);
 
         refreshEvent(eventPosition);
     }
@@ -133,13 +153,21 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.request_btn:
-                showRequestDialog();
+                if (MainActivity.waiterMode) {
+                    mConfirmDialog.show();
+                } else {
+                    showRequestDialog();
+                }
                 break;
         }
     }
 
     public void showRequestDialog() {
         requestDialogFragment.show(getSupportFragmentManager(), "RequestDialogFragment");
+    }
+
+    private void joinEvent() {
+        Toast.makeText(this, "Join Event clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override

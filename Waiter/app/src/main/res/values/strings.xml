@@ -78,6 +78,9 @@
     <!-- FullEvent Activity -->
     <string name="event_title">Event</string>
     <string name="request_a_waiter">Request a Waiter</string>
+    <string name="join_this_event">Join this event</string>
+    <string name="confirm_join_event_title">Join event %1$s?</string>
+    <string name="confirm_join_event_message">By joining this event, I certify that I am available to perform the service if I am requested by a client. I acknowledge that I will not be able to cancel the service without any financial penalty unless I leave this event before I am requested.</string>
 
     <!-- History Activity -->
     <string name="history_title">Wait history</string>
@@ -121,6 +124,8 @@
     <string name="response_error_body_null">Error: Response Error Body is null</string>
     <string name="internal_error">Internal Error</string>
     <string name="unknown_error">Unknown Error</string>
+    <string name="agree">Agree</string>
+    <string name="disagree">Disagree</string>
 
     <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

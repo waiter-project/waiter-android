@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
     private static String userId;
     private static String userEmail;
 
-    private boolean waiterMode;
+    public static boolean waiterMode;
 
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
     private LinearLayout mCurrentWaitLayout;
