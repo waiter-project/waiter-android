@@ -43,9 +43,9 @@ public class HistoryActivity extends AppCompatActivity {
 
         mHistoryList = new ArrayList<>();
         mHistoryList.add(new History("3h 45min", "$33.45", MainActivity.mEventList.get(0), new User(), new ArrayList<User>()));
-        mHistoryList.add(new History("3h 45min", "$33.45", MainActivity.mEventList.get(1), new User(), new ArrayList<User>()));
-        mHistoryList.add(new History("3h 45min", "$33.45", MainActivity.mEventList.get(2), new User(), new ArrayList<User>()));
-        mHistoryList.add(new History("3h 45min", "$33.45", MainActivity.mEventList.get(3), new User(), new ArrayList<User>()));
+        mHistoryList.add(new History("3h 45min", "$33.45", MainActivity.mEventList.get(0), new User(), new ArrayList<User>()));
+        mHistoryList.add(new History("3h 45min", "$33.45", MainActivity.mEventList.get(0), new User(), new ArrayList<User>()));
+        mHistoryList.add(new History("3h 45min", "$33.45", MainActivity.mEventList.get(0), new User(), new ArrayList<User>()));
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
