@@ -3,6 +3,7 @@ package com.waiter;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -15,6 +16,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,7 +61,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener,
-        GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener {
+        GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener, View.OnClickListener {
 
     private static final String TAG = "MapsFragment";
 
@@ -87,6 +90,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private TextView mEventWaitersAvailable;
     private FloatingActionButton mFAB;
     private boolean showFAB = false;
+    private AlertDialog mConfirmDialog;
 
     private Animation mGrowAnimation;
     private Animation mShrinkAnimation;
@@ -165,12 +169,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mEventDate = (TextView) mBottomSheet.findViewById(R.id.event_date);
         mEventWaitersAvailable = (TextView) mBottomSheet.findViewById(R.id.event_waiters_available);
         mFAB = (FloatingActionButton) mCoordinatorLayout.findViewById(R.id.fab);
-        mFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onMapsEventClicked(eventPosition);
-            }
-        });
+        mFAB.setOnClickListener(this);
+        if (MainActivity.waiterMode) {
+            mFAB.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_add_white_24dp, null));
+        }
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(true);
@@ -217,6 +219,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                 }
             }
         });
+    }
+
+    private void joinEvent() {
+        Toast.makeText(getContext(), "Join Event clicked.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -494,6 +500,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                 mListener.showErrorSnackbar(t.getLocalizedMessage());
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
+                if (MainActivity.waiterMode) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle(getString(R.string.confirm_join_event_title, MainActivity.mEventList.get(eventPosition).getName()))
+                            .setMessage(R.string.confirm_join_event_message)
+                            .setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    joinEvent();
+                                }
+                            })
+                            .setNegativeButton(R.string.disagree, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    mConfirmDialog = builder.create();
+                    mConfirmDialog.show();
+                } else {
+                    mListener.onMapsEventClicked(eventPosition);
+                }
+                break;
+        }
     }
 
     /**
