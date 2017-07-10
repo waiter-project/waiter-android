@@ -3,6 +3,8 @@ package com.waiter;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +20,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.securepreferences.SecurePreferences;
+import com.waiter.models.ErrorResponse;
 import com.waiter.models.Event;
 import com.waiter.models.Wait;
+import com.waiter.network.ServiceGenerator;
+import com.waiter.network.WaiterClient;
+import com.waiter.utils.ErrorUtils;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FullEventActivity extends AppCompatActivity implements View.OnClickListener, RequestDialogFragment.RequestDialogListener {
 
@@ -39,6 +51,14 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
     RequestDialogFragment requestDialogFragment;
     private ProgressDialog mProgressDialog;
 
+    private boolean joinedEvent;
+
+    private int eventPosition;
+    private WaiterClient waiterClient;
+    private ErrorResponse errorResponse;
+    private String authToken;
+    private String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +70,15 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        int eventPosition = intent.getIntExtra("EVENT_POSITION", -1);
+        eventPosition = intent.getIntExtra("EVENT_POSITION", -1);
         Log.d("FullEventActivity", "eventPosition = " + eventPosition);
+
+        SharedPreferences prefs = new SecurePreferences(this);
+
+        authToken = prefs.getString("auth_token", "");
+        userId = prefs.getString("user_id", "");
+
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
 
         // Set up UI elements
         mRootView = (LinearLayout) findViewById(R.id.root_view);
@@ -66,6 +93,38 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
         mFullEventLayout = (LinearLayout) findViewById(R.id.content_event_layout);
         mRequestButton = (Button) findViewById(R.id.request_btn);
         if (MainActivity.waiterMode) {
+            checkIfJoinedEvent();
+        }
+        mRequestButton.setVisibility(View.VISIBLE);
+        mRequestButton.setOnClickListener(this);
+        requestDialogFragment = new RequestDialogFragment();
+        mProgressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage(getString(R.string.requesting_waiters));
+        requestDialogFragment.setProgressDialog(mProgressDialog);
+
+        refreshEvent(eventPosition);
+    }
+
+    private void checkIfJoinedEvent() {
+        joinedEvent = MainActivity.mEventList.get(eventPosition).getListOfWaiters().contains(userId);
+        if (joinedEvent) {
+            mRequestButton.setText(getString(R.string.leave_this_event));
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.confirm_leave_event_title, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setMessage(getString(R.string.confirm_leave_event_message, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            leaveEvent();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            mConfirmDialog = builder.create();
+        } else {
             mRequestButton.setText(getString(R.string.join_this_event));
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.confirm_join_event_title, MainActivity.mEventList.get(eventPosition).getName()))
@@ -81,16 +140,6 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
                     });
             mConfirmDialog = builder.create();
         }
-        mRequestButton.setVisibility(View.VISIBLE);
-        mRequestButton.setOnClickListener(this);
-        requestDialogFragment = new RequestDialogFragment();
-        mProgressDialog = new ProgressDialog(this, R.style.AppTheme_Dark_Dialog);
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setMessage(getString(R.string.requesting_waiters));
-        requestDialogFragment.setProgressDialog(mProgressDialog);
-
-        refreshEvent(eventPosition);
     }
 
     @Override
@@ -167,7 +216,83 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void joinEvent() {
-        Toast.makeText(this, "Join Event clicked", Toast.LENGTH_SHORT).show();
+        Call<ResponseBody> call = waiterClient.joinEvent(authToken, MainActivity.mEventList.get(eventPosition).getId(), userId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                mProgressDialog.dismiss();
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        Snackbar.make(mRootView, getString(R.string.join_event_success, MainActivity.mEventList.get(eventPosition).getName()), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                    MainActivity.mEventList.get(eventPosition).getListOfWaiters().add(userId);
+                    checkIfJoinedEvent();
+                    setResult(RESULT_OK);
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mRootView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mRootView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+                    setResult(RESULT_CANCELED);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                mProgressDialog.dismiss();
+                Snackbar.make(mRootView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                setResult(RESULT_CANCELED);
+            }
+        });
+    }
+
+    private void leaveEvent() {
+        Call<ResponseBody> call = waiterClient.leaveEvent(authToken, MainActivity.mEventList.get(eventPosition).getId(), userId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                mProgressDialog.dismiss();
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        Snackbar.make(mRootView, getString(R.string.leave_event_success, MainActivity.mEventList.get(eventPosition).getName()), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                    MainActivity.mEventList.get(eventPosition).getListOfWaiters().remove(userId);
+                    checkIfJoinedEvent();
+                    setResult(RESULT_OK);
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mRootView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mRootView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+                    setResult(RESULT_CANCELED);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                mProgressDialog.dismiss();
+                Snackbar.make(mRootView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                setResult(RESULT_CANCELED);
+            }
+        });
     }
 
     @Override
