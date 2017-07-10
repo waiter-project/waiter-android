@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.securepreferences.SecurePreferences;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.Event;
 import com.waiter.models.ResponseEventsNearLocation;
@@ -97,8 +99,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     private int eventPosition = -1;
 
+    private boolean joinedEvent;
+
     private WaiterClient waiterClient;
     private ErrorResponse errorResponse;
+
+    private String authToken;
+    private String userId;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -122,6 +129,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mRootView = inflater.inflate(R.layout.fragment_maps, container, false);
 
         waiterClient = ServiceGenerator.createService(WaiterClient.class);
+
+        SharedPreferences prefs = new SecurePreferences(getContext());
+        authToken = prefs.getString("auth_token", "");
+        userId = prefs.getString("user_id", "");
 
         /*
         ** Start Init Maps
@@ -170,9 +181,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mEventWaitersAvailable = (TextView) mBottomSheet.findViewById(R.id.event_waiters_available);
         mFAB = (FloatingActionButton) mCoordinatorLayout.findViewById(R.id.fab);
         mFAB.setOnClickListener(this);
-        if (MainActivity.waiterMode) {
-            mFAB.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_add_white_24dp, null));
-        }
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(true);
@@ -221,8 +229,110 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         });
     }
 
+    private void checkIfJoinedEvent() {
+        joinedEvent = MainActivity.mEventList.get(eventPosition).getListOfWaiters().contains(userId);
+        if (joinedEvent) {
+            mFAB.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_clear_white_24dp, null));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(getString(R.string.confirm_leave_event_title, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setMessage(getString(R.string.confirm_leave_event_message, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            leaveEvent();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            mConfirmDialog = builder.create();
+        } else {
+            mFAB.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_add_white_24dp, null));
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(getString(R.string.confirm_join_event_title, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setMessage(R.string.confirm_join_event_message)
+                    .setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            joinEvent();
+                        }
+                    })
+                    .setNegativeButton(R.string.disagree, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            mConfirmDialog = builder.create();
+        }
+    }
+
     private void joinEvent() {
-        Toast.makeText(getContext(), "Join Event clicked.", Toast.LENGTH_SHORT).show();
+        Call<ResponseBody> call = waiterClient.joinEvent(authToken, MainActivity.mEventList.get(eventPosition).getId(), userId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        Snackbar.make(mRootView, getString(R.string.join_event_success, MainActivity.mEventList.get(eventPosition).getName()), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                    MainActivity.mEventList.get(eventPosition).getListOfWaiters().add(userId);
+                    checkIfJoinedEvent();
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mRootView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mRootView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Snackbar.make(mRootView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void leaveEvent() {
+        Call<ResponseBody> call = waiterClient.leaveEvent(authToken, MainActivity.mEventList.get(eventPosition).getId(), userId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        Snackbar.make(mRootView, getString(R.string.leave_event_success, MainActivity.mEventList.get(eventPosition).getName()), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                    MainActivity.mEventList.get(eventPosition).getListOfWaiters().remove(userId);
+                    checkIfJoinedEvent();
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mRootView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mRootView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Snackbar.make(mRootView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -271,6 +381,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         eventPosition = Integer.parseInt(marker.getTitle());
+
+        if (MainActivity.waiterMode) {
+            checkIfJoinedEvent();
+        }
 
         mEventTitle.setText(MainActivity.mEventList.get(eventPosition).getName());
         //mEventPrice.setText();
@@ -507,19 +621,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         switch (v.getId()) {
             case R.id.fab:
                 if (MainActivity.waiterMode) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle(getString(R.string.confirm_join_event_title, MainActivity.mEventList.get(eventPosition).getName()))
-                            .setMessage(R.string.confirm_join_event_message)
-                            .setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    joinEvent();
-                                }
-                            })
-                            .setNegativeButton(R.string.disagree, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            });
-                    mConfirmDialog = builder.create();
+                    checkIfJoinedEvent();
                     mConfirmDialog.show();
                 } else {
                     mListener.onMapsEventClicked(eventPosition);
