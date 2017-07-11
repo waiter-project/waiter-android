@@ -260,7 +260,6 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                mProgressDialog.dismiss();
                 if (response.isSuccessful()) {
                     ResponseBody body = response.body();
                     if (body != null) {
@@ -288,7 +287,6 @@ public class FullEventActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                mProgressDialog.dismiss();
                 Snackbar.make(mRootView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
                 setResult(RESULT_CANCELED);
             }
