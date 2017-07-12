@@ -27,6 +27,12 @@ public class Wait implements Parcelable {
     @SerializedName("createdAt")
     @Expose
     private String createdAt;
+    @SerializedName("queueStart")
+    @Expose
+    private String queueStart;
+    @SerializedName("queueEnd")
+    @Expose
+    private String queueEnd;
     @SerializedName("nresponses")
     @Expose
     private List<Object> nresponses = null;
@@ -50,6 +56,8 @@ public class Wait implements Parcelable {
             instance.eventName = ((String) in.readValue((String.class.getClassLoader())));
             instance.id = ((String) in.readValue((String.class.getClassLoader())));
             instance.createdAt = ((String) in.readValue((String.class.getClassLoader())));
+            instance.queueStart = ((String) in.readValue((String.class.getClassLoader())));
+            instance.queueEnd = ((String) in.readValue((String.class.getClassLoader())));
             in.readList(instance.nresponses, (java.lang.Object.class.getClassLoader()));
             in.readList(instance.eventLocation, (java.lang.Double.class.getClassLoader()));
             in.readList(instance.waitersIds, (java.lang.String.class.getClassLoader()));
@@ -111,6 +119,22 @@ public class Wait implements Parcelable {
         this.createdAt = createdAt;
     }
 
+    public String getQueueStart() {
+        return queueStart;
+    }
+
+    public void setQueueStart(String queueStart) {
+        this.queueStart = queueStart;
+    }
+
+    public String getQueueEnd() {
+        return queueEnd;
+    }
+
+    public void setQueueEnd(String queueEnd) {
+        this.queueEnd = queueEnd;
+    }
+
     public List<Object> getNresponses() {
         return nresponses;
     }
@@ -142,6 +166,8 @@ public class Wait implements Parcelable {
         dest.writeValue(eventName);
         dest.writeValue(id);
         dest.writeValue(createdAt);
+        dest.writeValue(queueStart);
+        dest.writeValue(queueEnd);
         dest.writeList(nresponses);
         dest.writeList(eventLocation);
         dest.writeList(waitersIds);
