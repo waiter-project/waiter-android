@@ -4,20 +4,37 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.waiter.models.Wait;
 
+import org.ocpsoft.prettytime.PrettyTime;
 
-public class CurrentWaitWaiterFragment extends Fragment {
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+
+public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickListener {
 
     private static final String ARG_CURRENT_WAIT = "CURRENT_WAIT";
+    private static final String TAG = "CurrentWaitWaiterFragme";
 
     private Wait mWait;
 
     private OnFragmentInteractionListener mListener;
+
+    // UI Elements
+    private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState;
+    private Button mButtonWaitCanStart, mButtonWaitFinished, mCancelButton;
 
     public CurrentWaitWaiterFragment() {
         // Required empty public constructor
@@ -43,13 +60,54 @@ public class CurrentWaitWaiterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_current_wait_waiter, container, false);
-        setupUI();
+        setupUI(view);
+        refreshUI();
         return view;
     }
 
-    private void setupUI() {
-
+    private void setupUI(View view) {
+        mWaitTitle = (TextView) view.findViewById(R.id.wait_title);
+        mWaitDescription = (TextView) view.findViewById(R.id.wait_description);
+        mEventAddress = (TextView) view.findViewById(R.id.event_address);
+        mWaitUpdate = (TextView) view.findViewById(R.id.wait_update);
+        mWaitersState = (TextView) view.findViewById(R.id.waiters_state);
+        mButtonWaitCanStart = (Button) view.findViewById(R.id.btn_wait_can_start);
+        mButtonWaitCanStart.setOnClickListener(this);
+        mButtonWaitFinished = (Button) view.findViewById(R.id.btn_wait_finished);
+        mButtonWaitFinished.setOnClickListener(this);
+        mCancelButton = (Button) view.findViewById(R.id.btn_cancel_this_wait);
+        mCancelButton.setOnClickListener(this);
     }
+
+    private void refreshUI() {
+        mWaitTitle.setText(getString(R.string.wait_id, mWait.getId().substring(0, 6)));
+//        mWaitDescription.setText();
+        mEventAddress.setText(mWait.getEventLocation().toString());
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+        Log.d(TAG, "onCreateView: mWait.getCreatedAt() = " + mWait.getCreatedAt());
+        try {
+            Date convertedDate = df.parse(mWait.getCreatedAt());
+            Log.d(TAG, "onCreateView: convertedDate = " + convertedDate);
+            mWaitUpdate.setText(getString(R.string.requested_on, new PrettyTime().format(convertedDate)));
+        } catch (ParseException e) {
+            mWaitUpdate.setText(getString(R.string.unknown_error));
+            e.printStackTrace();
+        }
+        mWaitersState.setText(getString(R.string.waiters_requested, mWait.getWaitersIds().size()));
+        if (mWait.getState().equals("created")) {
+            mButtonWaitCanStart.setVisibility(View.VISIBLE);
+            mButtonWaitFinished.setVisibility(View.GONE);
+        } else if (mWait.getState().equals("queue-start")) {
+            mButtonWaitCanStart.setVisibility(View.GONE);
+            mButtonWaitFinished.setVisibility(View.VISIBLE);
+        } else if (mWait.getState().equals("queue-done")) {
+            mButtonWaitCanStart.setVisibility(View.GONE);
+            mButtonWaitFinished.setVisibility(View.GONE);
+            mCancelButton.setVisibility(View.GONE);
+        }
+    }
+
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -72,6 +130,19 @@ public class CurrentWaitWaiterFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_wait_can_start:
+                break;
+            case R.id.btn_wait_finished:
+                break;
+            case R.id.btn_cancel_this_wait:
+                Toast.makeText(getContext(), "Cancel wait clicked.", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     /**

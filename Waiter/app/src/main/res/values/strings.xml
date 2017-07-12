@@ -124,7 +124,11 @@
     <string name="wait_can_start">I\'m ready, the wait can start</string>
     <string name="wait_finished">I\'m in the front of the line</string>
     <string name="cancel_this_wait">Cancel this wait</string>
-    <string name="last_update_update">Last update on %1$s</string>
+    <string name="requested_on">Requested %1$s</string>
+    <string name="created_on">Created %1$s</string>
+    <string name="last_update_on">Last update %1$s</string>
+    <string name="wait_id">Wait #%1$s</string>
+    <string name="waiters_requested">%1$d waiters requested</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
