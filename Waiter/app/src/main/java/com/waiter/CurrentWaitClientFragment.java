@@ -101,6 +101,9 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
             mWaitUpdate.setText(getString(R.string.unknown_error));
             e.printStackTrace();
         }
+        if (mWait.getState().equals("queue-done")) {
+            mCancelButton.setVisibility(View.GONE);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
