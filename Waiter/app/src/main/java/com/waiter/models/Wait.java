@@ -1,10 +1,13 @@
 package com.waiter.models;
 
 import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Wait {
+public class Wait implements Parcelable {
 
     @SerializedName("state")
     @Expose
@@ -18,9 +21,6 @@ public class Wait {
     @SerializedName("eventName")
     @Expose
     private String eventName;
-    @SerializedName("eventLocation")
-    @Expose
-    private List<Double> eventLocation = null;
     @SerializedName("_id")
     @Expose
     private String id;
@@ -29,10 +29,39 @@ public class Wait {
     private String createdAt;
     @SerializedName("nresponses")
     @Expose
-    private List<String> nresponses = null;
+    private List<Object> nresponses = null;
+    @SerializedName("eventLocation")
+    @Expose
+    private List<Double> eventLocation = null;
     @SerializedName("waitersIds")
     @Expose
     private List<String> waitersIds = null;
+    public final static Parcelable.Creator<Wait> CREATOR = new Creator<Wait>() {
+
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Wait createFromParcel(Parcel in) {
+            Wait instance = new Wait();
+            instance.state = ((String) in.readValue((String.class.getClassLoader())));
+            instance.clientId = ((String) in.readValue((String.class.getClassLoader())));
+            instance.eventId = ((String) in.readValue((String.class.getClassLoader())));
+            instance.eventName = ((String) in.readValue((String.class.getClassLoader())));
+            instance.id = ((String) in.readValue((String.class.getClassLoader())));
+            instance.createdAt = ((String) in.readValue((String.class.getClassLoader())));
+            in.readList(instance.nresponses, (java.lang.Object.class.getClassLoader()));
+            in.readList(instance.eventLocation, (java.lang.Double.class.getClassLoader()));
+            in.readList(instance.waitersIds, (java.lang.String.class.getClassLoader()));
+            return instance;
+        }
+
+        public Wait[] newArray(int size) {
+            return (new Wait[size]);
+        }
+
+    }
+            ;
 
     public String getState() {
         return state;
@@ -62,14 +91,6 @@ public class Wait {
         return eventName;
     }
 
-    public List<Double> getEventLocation() {
-        return eventLocation;
-    }
-
-    public void setEventLocation(List<Double> eventLocation) {
-        this.eventLocation = eventLocation;
-    }
-
     public void setEventName(String eventName) {
         this.eventName = eventName;
     }
@@ -90,12 +111,20 @@ public class Wait {
         this.createdAt = createdAt;
     }
 
-    public List<String> getNresponses() {
+    public List<Object> getNresponses() {
         return nresponses;
     }
 
-    public void setNresponses(List<String> nresponses) {
+    public void setNresponses(List<Object> nresponses) {
         this.nresponses = nresponses;
+    }
+
+    public List<Double> getEventLocation() {
+        return eventLocation;
+    }
+
+    public void setEventLocation(List<Double> eventLocation) {
+        this.eventLocation = eventLocation;
     }
 
     public List<String> getWaitersIds() {
@@ -104,6 +133,22 @@ public class Wait {
 
     public void setWaitersIds(List<String> waitersIds) {
         this.waitersIds = waitersIds;
+    }
+
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(state);
+        dest.writeValue(clientId);
+        dest.writeValue(eventId);
+        dest.writeValue(eventName);
+        dest.writeValue(id);
+        dest.writeValue(createdAt);
+        dest.writeList(nresponses);
+        dest.writeList(eventLocation);
+        dest.writeList(waitersIds);
+    }
+
+    public int describeContents() {
+        return 0;
     }
 
 }

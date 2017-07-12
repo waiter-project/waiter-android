@@ -13,27 +13,42 @@ import com.waiter.models.Wait;
 
 public class CurrentWaitWaiterFragment extends Fragment {
 
+    private static final String ARG_CURRENT_WAIT = "CURRENT_WAIT";
+
+    private Wait mWait;
+
     private OnFragmentInteractionListener mListener;
 
     public CurrentWaitWaiterFragment() {
         // Required empty public constructor
     }
 
-    public static CurrentWaitWaiterFragment newInstance() {
+    public static CurrentWaitWaiterFragment newInstance(Wait wait) {
         CurrentWaitWaiterFragment fragment = new CurrentWaitWaiterFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_CURRENT_WAIT, wait);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mWait = getArguments().getParcelable(ARG_CURRENT_WAIT);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_current_wait_waiter, container, false);
+        View view = inflater.inflate(R.layout.fragment_current_wait_waiter, container, false);
+        setupUI();
+        return view;
+    }
+
+    private void setupUI() {
+
     }
 
     public void onButtonPressed(Uri uri) {
