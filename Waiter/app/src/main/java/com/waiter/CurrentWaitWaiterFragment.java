@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -100,6 +101,7 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
         mEventAddress.setText(mWait.getEventLocation().toString());
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
         Log.d(TAG, "onCreateView: mWait.getCreatedAt() = " + mWait.getCreatedAt());
         try {
             Date convertedDate;
