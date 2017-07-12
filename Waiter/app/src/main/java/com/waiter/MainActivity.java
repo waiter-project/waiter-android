@@ -270,6 +270,14 @@ public class MainActivity extends AppCompatActivity
                 + wait.getEventLocation().get(0);
 
         Picasso.with(this).load(staticMapUrl).fit().centerCrop().into(staticMaps);
+
+        Fragment currentWaitFragment;
+        if (waiterMode) {
+            currentWaitFragment = new CurrentWaitWaiterFragment();
+        } else {
+            currentWaitFragment = new CurrentWaitClientFragment();
+        }
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, currentWaitFragment).commit();
     }
 
     @Override

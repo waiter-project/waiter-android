@@ -121,6 +121,10 @@
     <!-- Current Wait Layout -->
     <string name="wait_in_progress">Wait in progress</string>
     <string name="created">Created</string>
+    <string name="wait_can_start">I\'m ready, the wait can start</string>
+    <string name="wait_finished">I\'m in the front of the line</string>
+    <string name="cancel_this_wait">Cancel this wait</string>
+    <string name="last_update_update">Last update on %1$s</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
@@ -154,6 +158,8 @@
     <string name="placeholder_date_time">Mar 03 - 8:25 AM</string>
     <string name="placeholder_time">3h 47min</string>
     <string name="placeholder_total_price">$23.54</string>
+    <string name="placeholder_wait_description">Wait description</string>
+    <string name="placeholder_waiters_state">Waiters state</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
