@@ -55,4 +55,7 @@ public interface WaiterClient {
 
     @GET("/wait/user/{userId}")
     Call<ResponseWait> getCurrentWait(@Header("x-user-type") String userType, @Path("userId") String userId);
+
+    @PUT("/wait/{waitId}/queue-start/{waiterId}")
+    Call<ResponseWait> queueStart(@Path("waitId") String waitId, @Path("waiterId") String waiterId);
 }

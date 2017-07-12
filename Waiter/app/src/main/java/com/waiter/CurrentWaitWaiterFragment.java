@@ -3,6 +3,8 @@ package com.waiter;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +14,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.waiter.models.ErrorResponse;
+import com.waiter.models.ResponseWait;
 import com.waiter.models.Wait;
+import com.waiter.network.ServiceGenerator;
+import com.waiter.network.WaiterClient;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -22,6 +28,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickListener {
 
@@ -30,9 +40,13 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
 
     private Wait mWait;
 
-    private OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListenerCurrentWaitWaiter mListener;
+
+    private WaiterClient waiterClient;
+    private ErrorResponse errorResponse;
 
     // UI Elements
+    private View mView;
     private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState;
     private Button mButtonWaitCanStart, mButtonWaitFinished, mCancelButton;
 
@@ -59,23 +73,24 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_current_wait_waiter, container, false);
-        setupUI(view);
+        mView = inflater.inflate(R.layout.fragment_current_wait_waiter, container, false);
+        setupUI();
         refreshUI();
-        return view;
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
+        return mView;
     }
 
-    private void setupUI(View view) {
-        mWaitTitle = (TextView) view.findViewById(R.id.wait_title);
-        mWaitDescription = (TextView) view.findViewById(R.id.wait_description);
-        mEventAddress = (TextView) view.findViewById(R.id.event_address);
-        mWaitUpdate = (TextView) view.findViewById(R.id.wait_update);
-        mWaitersState = (TextView) view.findViewById(R.id.waiters_state);
-        mButtonWaitCanStart = (Button) view.findViewById(R.id.btn_wait_can_start);
+    private void setupUI() {
+        mWaitTitle = (TextView) mView.findViewById(R.id.wait_title);
+        mWaitDescription = (TextView) mView.findViewById(R.id.wait_description);
+        mEventAddress = (TextView) mView.findViewById(R.id.event_address);
+        mWaitUpdate = (TextView) mView.findViewById(R.id.wait_update);
+        mWaitersState = (TextView) mView.findViewById(R.id.waiters_state);
+        mButtonWaitCanStart = (Button) mView.findViewById(R.id.btn_wait_can_start);
         mButtonWaitCanStart.setOnClickListener(this);
-        mButtonWaitFinished = (Button) view.findViewById(R.id.btn_wait_finished);
+        mButtonWaitFinished = (Button) mView.findViewById(R.id.btn_wait_finished);
         mButtonWaitFinished.setOnClickListener(this);
-        mCancelButton = (Button) view.findViewById(R.id.btn_cancel_this_wait);
+        mCancelButton = (Button) mView.findViewById(R.id.btn_cancel_this_wait);
         mCancelButton.setOnClickListener(this);
     }
 
@@ -111,19 +126,19 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.refreshCurrentWait(mWait);
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+        if (context instanceof OnFragmentInteractionListenerCurrentWaitWaiter) {
+            mListener = (OnFragmentInteractionListenerCurrentWaitWaiter) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
@@ -136,6 +151,7 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_wait_can_start:
+                startWait();
                 break;
             case R.id.btn_wait_finished:
                 break;
@@ -143,6 +159,30 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
                 Toast.makeText(getContext(), "Cancel wait clicked.", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void startWait() {
+        Call<ResponseWait> call = waiterClient.queueStart(mWait.getId(), MainActivity.getUserId());;
+        call.enqueue(new Callback<ResponseWait>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseWait> call, @NonNull Response<ResponseWait> response) {
+                if (response.isSuccessful()) {
+                    ResponseWait body = response.body();
+                    if (body != null) {
+                        mWait = body.getData().getWait();
+                        refreshUI();
+                        mListener.refreshCurrentWait(mWait);
+                    } else {
+                        Snackbar.make(mView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseWait> call, @NonNull Throwable t) {
+                Snackbar.make(mView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
@@ -155,8 +195,7 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    public interface OnFragmentInteractionListenerCurrentWaitWaiter {
+        void refreshCurrentWait(Wait wait);
     }
 }

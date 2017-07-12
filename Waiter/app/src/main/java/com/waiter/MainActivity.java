@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         EventFragment.OnListFragmentInteractionListener, FloatingSearchView.OnMenuItemClickListener,
         FloatingSearchView.OnFocusChangeListener, FloatingSearchView.OnQueryChangeListener,
         FloatingSearchView.OnSearchListener, AppBarLayout.OnOffsetChangedListener,
-        RequestDialogFragment.RequestDialogListener, View.OnClickListener {
+        RequestDialogFragment.RequestDialogListener, View.OnClickListener, CurrentWaitWaiterFragment.OnFragmentInteractionListenerCurrentWaitWaiter {
 
     private final String TAG = "MainActivity";
     private static final int REQUEST_CODE_PROFILE = 1;
@@ -584,6 +584,11 @@ public class MainActivity extends AppCompatActivity
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void refreshCurrentWait(Wait wait) {
+        setupCurrentWaitUI(wait);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
