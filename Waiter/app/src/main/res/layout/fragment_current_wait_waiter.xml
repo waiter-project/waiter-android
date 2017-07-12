@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="4dp"
     tools:context="com.waiter.CurrentWaitWaiterFragment">
 
@@ -32,6 +33,36 @@
                 android:textColor="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/validation_layout"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- First name Label -->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_validation_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:errorTextAppearance="@style/error_appearance">
+                    <EditText
+                        android:id="@+id/input_validation_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_validation_code"
+                        android:inputType="textPersonName|textCapWords" />
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btn_validate_wait"
+                    android:text="@string/validate_wait"
+                    android:textColor="@android:color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_cancel_this_wait"

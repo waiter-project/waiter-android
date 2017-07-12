@@ -131,6 +131,10 @@
     <string name="last_update_on">Last update %1$s</string>
     <string name="wait_id">Wait #%1$s</string>
     <string name="waiters_requested">%1$d waiters requested</string>
+    <string name="generate_code">Generate validation code</string>
+    <string name="validate_wait">Validate wait</string>
+    <string name="validation_code">Validation code</string>
+    <string name="hint_validation_code">Validation code</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>

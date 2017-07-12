@@ -35,7 +35,7 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
 
     // UI Elements
     private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState;
-    private Button mCancelButton;
+    private Button mCancelButton, mGenerateCodeButton;
 
     public CurrentWaitClientFragment() {
         // Required empty public constructor
@@ -74,6 +74,8 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
         mWaitersState = (TextView) view.findViewById(R.id.waiters_state);
         mCancelButton = (Button) view.findViewById(R.id.btn_cancel_this_wait);
         mCancelButton.setOnClickListener(this);
+        mGenerateCodeButton = (Button) view.findViewById(R.id.btn_generate_code);
+        mGenerateCodeButton.setOnClickListener(this);
     }
 
     private void refreshUI() {
@@ -104,6 +106,7 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
         mWaitersState.setText(getString(R.string.waiters_requested, mWait.getWaitersIds().size()));
         if (mWait.getState().equals("queue-done")) {
             mCancelButton.setVisibility(View.GONE);
+            mGenerateCodeButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -136,6 +139,9 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
         switch (v.getId()) {
             case R.id.btn_cancel_this_wait:
                 Toast.makeText(getContext(), "Cancel button clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_generate_code:
+                Toast.makeText(getContext(), "Generate code button clicked.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

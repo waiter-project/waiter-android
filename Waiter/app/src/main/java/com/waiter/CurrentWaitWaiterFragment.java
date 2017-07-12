@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +51,8 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
     // UI Elements
     private View mView;
     private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState;
-    private Button mButtonWaitCanStart, mButtonWaitFinished, mCancelButton;
+    private EditText mInputValidationoCode;
+    private Button mButtonWaitCanStart, mButtonWaitFinished, mCancelButton, mValidateWaitButton;
 
     public CurrentWaitWaiterFragment() {
         // Required empty public constructor
@@ -131,6 +134,11 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
             mButtonWaitCanStart.setVisibility(View.GONE);
             mButtonWaitFinished.setVisibility(View.GONE);
             mCancelButton.setVisibility(View.GONE);
+            LinearLayout validationLayout = (LinearLayout) mView.findViewById(R.id.validation_layout);
+            validationLayout.setVisibility(View.VISIBLE);
+            mInputValidationoCode = (EditText) mView.findViewById(R.id.input_validation_code);
+            mValidateWaitButton = (Button) mView.findViewById(R.id.btn_validate_wait);
+            mValidateWaitButton.setOnClickListener(this);
         }
     }
 
@@ -169,6 +177,9 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
                 break;
             case R.id.btn_cancel_this_wait:
                 Toast.makeText(getContext(), "Cancel wait clicked.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_validate_wait:
+                Toast.makeText(getContext(), "Validate wait clicked.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
