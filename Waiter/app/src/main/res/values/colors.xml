@@ -21,9 +21,9 @@
     <!-- End client mode colors -->
 
     <!-- Start client mode colors -->
-    <color name="colorPrimaryWaiter">#1A2632</color>
-    <color name="colorPrimaryDarkWaiter">#16202B</color>
-    <color name="colorAccentWaiter">#ec6565</color>
+    <color name="colorPrimaryWaiter">#263238</color>
+    <color name="colorPrimaryDarkWaiter">#000a12</color>
+    <color name="colorAccentWaiter">#4f5b62</color>
 
     <color name="colorPrimaryLightWaiter">#42607e</color>
 
