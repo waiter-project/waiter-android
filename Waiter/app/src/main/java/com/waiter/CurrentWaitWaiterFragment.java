@@ -151,9 +151,10 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_wait_can_start:
-                startWait();
+                updateWait(true);
                 break;
             case R.id.btn_wait_finished:
+                updateWait(false);
                 break;
             case R.id.btn_cancel_this_wait:
                 Toast.makeText(getContext(), "Cancel wait clicked.", Toast.LENGTH_SHORT).show();
@@ -161,8 +162,13 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
         }
     }
 
-    private void startWait() {
-        Call<ResponseWait> call = waiterClient.queueStart(mWait.getId(), MainActivity.getUserId());;
+    private void updateWait(boolean startWait) {
+        Call<ResponseWait> call;
+        if (startWait) {
+            call = waiterClient.queueStart(mWait.getId(), MainActivity.getUserId());;
+        } else {
+            call = waiterClient.queueDone(mWait.getId(), MainActivity.getUserId());;
+        }
         call.enqueue(new Callback<ResponseWait>() {
             @Override
             public void onResponse(@NonNull Call<ResponseWait> call, @NonNull Response<ResponseWait> response) {

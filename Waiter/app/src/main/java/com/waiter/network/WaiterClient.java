@@ -58,4 +58,7 @@ public interface WaiterClient {
 
     @PUT("/wait/{waitId}/queue-start/{waiterId}")
     Call<ResponseWait> queueStart(@Path("waitId") String waitId, @Path("waiterId") String waiterId);
+
+    @PUT("/wait/{waitId}/queue-done/{waiterId}")
+    Call<ResponseWait> queueDone(@Path("waitId") String waitId, @Path("waiterId") String waiterId);
 }
