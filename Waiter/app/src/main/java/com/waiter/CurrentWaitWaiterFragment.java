@@ -102,9 +102,18 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
         Log.d(TAG, "onCreateView: mWait.getCreatedAt() = " + mWait.getCreatedAt());
         try {
-            Date convertedDate = df.parse(mWait.getCreatedAt());
+            Date convertedDate;
+            if (mWait.getState().equals("created")) {
+                convertedDate = df.parse(mWait.getCreatedAt());
+                mWaitUpdate.setText(getString(R.string.requested_on, new PrettyTime().format(convertedDate)));
+            } else if (mWait.getState().equals("queue-start")) {
+                convertedDate = df.parse(mWait.getQueueStart());
+                mWaitUpdate.setText(getString(R.string.started_on, new PrettyTime().format(convertedDate)));
+            } else {
+                convertedDate = df.parse(mWait.getQueueEnd());
+                mWaitUpdate.setText(getString(R.string.finished_on, new PrettyTime().format(convertedDate)));
+            }
             Log.d(TAG, "onCreateView: convertedDate = " + convertedDate);
-            mWaitUpdate.setText(getString(R.string.requested_on, new PrettyTime().format(convertedDate)));
         } catch (ParseException e) {
             mWaitUpdate.setText(getString(R.string.unknown_error));
             e.printStackTrace();
