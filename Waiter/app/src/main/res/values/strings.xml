@@ -170,6 +170,7 @@
     <string name="placeholder_total_price">$23.54</string>
     <string name="placeholder_wait_description">Wait description</string>
     <string name="placeholder_waiters_state">Waiters state</string>
+    <string name="placeholder_code">12345</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

@@ -18,13 +18,25 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent" />
 
-            <Button
-                android:id="@+id/btn_generate_code"
-                android:text="@string/generate_code"
-                android:textColor="@android:color/white"
+            <LinearLayout
+                android:id="@+id/validation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:orientation="vertical"
+                android:visibility="gone">
+                <Button
+                    android:id="@+id/btn_generate_code"
+                    android:text="@string/generate_code"
+                    android:textColor="@android:color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/validation_code"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Headline" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btn_cancel_this_wait"

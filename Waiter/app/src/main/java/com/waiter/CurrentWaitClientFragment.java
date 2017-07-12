@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
     private OnFragmentInteractionListener mListener;
 
     // UI Elements
+    private View mView;
     private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState;
     private Button mCancelButton, mGenerateCodeButton;
 
@@ -60,21 +62,21 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_current_wait_client, container, false);
-        setupUI(view);
+        mView = inflater.inflate(R.layout.fragment_current_wait_client, container, false);
+        setupUI();
         refreshUI();
-        return view;
+        return mView;
     }
 
-    private void setupUI(View view) {
-        mWaitTitle = (TextView) view.findViewById(R.id.wait_title);
-        mWaitDescription = (TextView) view.findViewById(R.id.wait_description);
-        mEventAddress = (TextView) view.findViewById(R.id.event_address);
-        mWaitUpdate = (TextView) view.findViewById(R.id.wait_update);
-        mWaitersState = (TextView) view.findViewById(R.id.waiters_state);
-        mCancelButton = (Button) view.findViewById(R.id.btn_cancel_this_wait);
+    private void setupUI() {
+        mWaitTitle = (TextView) mView.findViewById(R.id.wait_title);
+        mWaitDescription = (TextView) mView.findViewById(R.id.wait_description);
+        mEventAddress = (TextView) mView.findViewById(R.id.event_address);
+        mWaitUpdate = (TextView) mView.findViewById(R.id.wait_update);
+        mWaitersState = (TextView) mView.findViewById(R.id.waiters_state);
+        mCancelButton = (Button) mView.findViewById(R.id.btn_cancel_this_wait);
         mCancelButton.setOnClickListener(this);
-        mGenerateCodeButton = (Button) view.findViewById(R.id.btn_generate_code);
+        mGenerateCodeButton = (Button) mView.findViewById(R.id.btn_generate_code);
         mGenerateCodeButton.setOnClickListener(this);
     }
 
@@ -106,7 +108,8 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
         mWaitersState.setText(getString(R.string.waiters_requested, mWait.getWaitersIds().size()));
         if (mWait.getState().equals("queue-done")) {
             mCancelButton.setVisibility(View.GONE);
-            mGenerateCodeButton.setVisibility(View.VISIBLE);
+            LinearLayout validationLayout = (LinearLayout) mView.findViewById(R.id.validation_layout);
+            validationLayout.setVisibility(View.VISIBLE);
         }
     }
 
