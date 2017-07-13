@@ -129,7 +129,7 @@ public class RequestDialogFragment extends AppCompatDialogFragment implements Vi
                 if (response.isSuccessful()) {
                     ResponseWait body = response.body();
                     if (body != null) {
-                        mListener.showSnackbarMessage(sContext.getString(R.string.request_sent));
+//                        mListener.showSnackbarMessage(sContext.getString(R.string.request_sent));
                         mListener.showCurrentWaitLayout(body.getData().getWait());
                     } else {
                         mListener.showSnackbarMessage(sContext.getString(R.string.response_body_null));
