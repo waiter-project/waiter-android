@@ -5,6 +5,7 @@ import com.waiter.models.RequestLogin;
 import com.waiter.models.RequestSignup;
 import com.waiter.models.RequestUpdatePassword;
 import com.waiter.models.RequestUpdateProfile;
+import com.waiter.models.RequestValidateWait;
 import com.waiter.models.ResponseEventsNearLocation;
 import com.waiter.models.ResponseGenerateCode;
 import com.waiter.models.ResponseLogin;
@@ -63,4 +64,7 @@ public interface WaiterClient {
 
     @PUT("/wait/{waitId}/generate-code/{clientId}")
     Call<ResponseGenerateCode> generateCode(@Path("waitId") String waitId, @Path("clientId") String clientId);
+
+    @PUT("/wait/{waitId}/validate")
+    Call<ResponseWait> validateWait(@Path("waitId") String waitId, @Body RequestValidateWait requestValidateWait);
 }

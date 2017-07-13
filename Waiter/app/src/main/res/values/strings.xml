@@ -144,6 +144,7 @@
     <string name="validate_wait">Validate wait</string>
     <string name="validation_code">Validation code</string>
     <string name="hint_validation_code">Validation code</string>
+    <string name="verifying_code">Verifying code…</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>

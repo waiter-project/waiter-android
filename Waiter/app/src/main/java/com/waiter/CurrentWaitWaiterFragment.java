@@ -1,5 +1,6 @@
 package com.waiter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,10 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.waiter.models.ErrorResponse;
+import com.waiter.models.RequestValidateWait;
 import com.waiter.models.ResponseWait;
 import com.waiter.models.Wait;
 import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
+import com.waiter.utils.ErrorUtils;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -53,6 +56,7 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
     private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState;
     private EditText mInputValidationoCode;
     private Button mButtonWaitCanStart, mButtonWaitFinished, mCancelButton, mValidateWaitButton;
+    private ProgressDialog mProgressDialog;
 
     public CurrentWaitWaiterFragment() {
         // Required empty public constructor
@@ -96,6 +100,10 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
         mButtonWaitFinished.setOnClickListener(this);
         mCancelButton = (Button) mView.findViewById(R.id.btn_cancel_this_wait);
         mCancelButton.setOnClickListener(this);
+        mProgressDialog = new ProgressDialog(getContext(), R.style.AppTheme_Dark_Dialog);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage(getString(R.string.verifying_code));
     }
 
     private void refreshUI() {
@@ -175,11 +183,11 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
             case R.id.btn_wait_finished:
                 updateWait(false);
                 break;
+            case R.id.btn_validate_wait:
+                validateWait();
+                break;
             case R.id.btn_cancel_this_wait:
                 Toast.makeText(getContext(), "Cancel wait clicked.", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.btn_validate_wait:
-                Toast.makeText(getContext(), "Validate wait clicked.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -187,9 +195,9 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
     private void updateWait(boolean startWait) {
         Call<ResponseWait> call;
         if (startWait) {
-            call = waiterClient.queueStart(mWait.getId(), MainActivity.getUserId());;
+            call = waiterClient.queueStart(mWait.getId(), MainActivity.getUserId());
         } else {
-            call = waiterClient.queueDone(mWait.getId(), MainActivity.getUserId());;
+            call = waiterClient.queueDone(mWait.getId(), MainActivity.getUserId());
         }
         call.enqueue(new Callback<ResponseWait>() {
             @Override
@@ -203,11 +211,64 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
                     } else {
                         Snackbar.make(mView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
                     }
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseWait> call, @NonNull Throwable t) {
+                Snackbar.make(mView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void validateWait() {
+        mProgressDialog.show();
+        String validationCode = "";
+        if (mInputValidationoCode != null)
+            validationCode = mInputValidationoCode.getText().toString().trim();
+        RequestValidateWait requestValidateWait = new RequestValidateWait(MainActivity.getUserId(), validationCode);
+        Call<ResponseWait> call = waiterClient.validateWait(mWait.getId(), requestValidateWait);
+        call.enqueue(new Callback<ResponseWait>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseWait> call, @NonNull Response<ResponseWait> response) {
+                mProgressDialog.dismiss();
+                if (response.isSuccessful()) {
+                    ResponseWait body = response.body();
+                    if (body != null) {
+                        mWait = body.getData().getWait();
+                        refreshUI();
+                        mListener.refreshCurrentWait(mWait);
+                    } else {
+                        Snackbar.make(mView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseWait> call, @NonNull Throwable t) {
+                mProgressDialog.dismiss();
                 Snackbar.make(mView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
