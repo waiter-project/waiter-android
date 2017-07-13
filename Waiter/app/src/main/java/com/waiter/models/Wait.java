@@ -3,12 +3,14 @@ package com.waiter.models;
 import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Wait implements Parcelable {
 
+    @SerializedName("_id")
+    @Expose
+    private String id;
     @SerializedName("state")
     @Expose
     private String state;
@@ -21,9 +23,9 @@ public class Wait implements Parcelable {
     @SerializedName("eventName")
     @Expose
     private String eventName;
-    @SerializedName("_id")
+    @SerializedName("eventLocation")
     @Expose
-    private String id;
+    private List<Double> eventLocation = null;
     @SerializedName("createdAt")
     @Expose
     private String createdAt;
@@ -33,12 +35,12 @@ public class Wait implements Parcelable {
     @SerializedName("queueEnd")
     @Expose
     private String queueEnd;
+    @SerializedName("confirmationCode")
+    @Expose
+    private String confirmationCode;
     @SerializedName("nresponses")
     @Expose
     private List<Object> nresponses = null;
-    @SerializedName("eventLocation")
-    @Expose
-    private List<Double> eventLocation = null;
     @SerializedName("waitersIds")
     @Expose
     private List<String> waitersIds = null;
@@ -50,16 +52,17 @@ public class Wait implements Parcelable {
         })
         public Wait createFromParcel(Parcel in) {
             Wait instance = new Wait();
+            instance.id = ((String) in.readValue((String.class.getClassLoader())));
             instance.state = ((String) in.readValue((String.class.getClassLoader())));
             instance.clientId = ((String) in.readValue((String.class.getClassLoader())));
             instance.eventId = ((String) in.readValue((String.class.getClassLoader())));
             instance.eventName = ((String) in.readValue((String.class.getClassLoader())));
-            instance.id = ((String) in.readValue((String.class.getClassLoader())));
+            in.readList(instance.eventLocation, (java.lang.Double.class.getClassLoader()));
             instance.createdAt = ((String) in.readValue((String.class.getClassLoader())));
             instance.queueStart = ((String) in.readValue((String.class.getClassLoader())));
             instance.queueEnd = ((String) in.readValue((String.class.getClassLoader())));
+            instance.confirmationCode = ((String) in.readValue((String.class.getClassLoader())));
             in.readList(instance.nresponses, (java.lang.Object.class.getClassLoader()));
-            in.readList(instance.eventLocation, (java.lang.Double.class.getClassLoader()));
             in.readList(instance.waitersIds, (java.lang.String.class.getClassLoader()));
             return instance;
         }
@@ -70,6 +73,14 @@ public class Wait implements Parcelable {
 
     }
             ;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getState() {
         return state;
@@ -103,12 +114,12 @@ public class Wait implements Parcelable {
         this.eventName = eventName;
     }
 
-    public String getId() {
-        return id;
+    public List<Double> getEventLocation() {
+        return eventLocation;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEventLocation(List<Double> eventLocation) {
+        this.eventLocation = eventLocation;
     }
 
     public String getCreatedAt() {
@@ -135,20 +146,20 @@ public class Wait implements Parcelable {
         this.queueEnd = queueEnd;
     }
 
+    public String getConfirmationCode() {
+        return confirmationCode;
+    }
+
+    public void setConfirmationCode(String confirmationCode) {
+        this.confirmationCode = confirmationCode;
+    }
+
     public List<Object> getNresponses() {
         return nresponses;
     }
 
     public void setNresponses(List<Object> nresponses) {
         this.nresponses = nresponses;
-    }
-
-    public List<Double> getEventLocation() {
-        return eventLocation;
-    }
-
-    public void setEventLocation(List<Double> eventLocation) {
-        this.eventLocation = eventLocation;
     }
 
     public List<String> getWaitersIds() {
@@ -160,16 +171,17 @@ public class Wait implements Parcelable {
     }
 
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(id);
         dest.writeValue(state);
         dest.writeValue(clientId);
         dest.writeValue(eventId);
         dest.writeValue(eventName);
-        dest.writeValue(id);
+        dest.writeList(eventLocation);
         dest.writeValue(createdAt);
         dest.writeValue(queueStart);
         dest.writeValue(queueEnd);
+        dest.writeValue(confirmationCode);
         dest.writeList(nresponses);
-        dest.writeList(eventLocation);
         dest.writeList(waitersIds);
     }
 

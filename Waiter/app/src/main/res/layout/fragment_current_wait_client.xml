@@ -30,11 +30,21 @@
                     android:textColor="@android:color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="4dp" />
                 <TextView
                     android:id="@+id/validation_code"
-                    android:gravity="center"
+                    android:textIsSelectable="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp"
                     style="@style/TextAppearance.AppCompat.Headline" />
             </LinearLayout>
 

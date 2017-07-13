@@ -6,17 +6,16 @@ import com.waiter.models.RequestSignup;
 import com.waiter.models.RequestUpdatePassword;
 import com.waiter.models.RequestUpdateProfile;
 import com.waiter.models.ResponseEventsNearLocation;
+import com.waiter.models.ResponseGenerateCode;
 import com.waiter.models.ResponseLogin;
 import com.waiter.models.ResponseSignup;
 import com.waiter.models.ResponseWait;
-import com.waiter.models.Wait;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -61,4 +60,7 @@ public interface WaiterClient {
 
     @PUT("/wait/{waitId}/queue-done/{waiterId}")
     Call<ResponseWait> queueDone(@Path("waitId") String waitId, @Path("waiterId") String waiterId);
+
+    @PUT("/wait/{waitId}/generate-code/{clientId}")
+    Call<ResponseGenerateCode> generateCode(@Path("waitId") String waitId, @Path("clientId") String clientId);
 }

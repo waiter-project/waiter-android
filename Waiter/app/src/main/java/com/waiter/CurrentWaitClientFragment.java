@@ -3,6 +3,8 @@ package com.waiter;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,10 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.waiter.models.ErrorResponse;
+import com.waiter.models.ResponseGenerateCode;
 import com.waiter.models.Wait;
+import com.waiter.network.ServiceGenerator;
+import com.waiter.network.WaiterClient;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -24,6 +31,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class CurrentWaitClientFragment extends Fragment implements View.OnClickListener {
 
@@ -31,13 +42,18 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
     private static final String TAG = "CurrentWaitClientFragme";
 
     private Wait mWait;
+    private String mCode;
 
     private OnFragmentInteractionListener mListener;
 
+    private WaiterClient waiterClient;
+    private ErrorResponse errorResponse;
+
     // UI Elements
     private View mView;
-    private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState;
+    private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState, mValidationCode;
     private Button mCancelButton, mGenerateCodeButton;
+    private ProgressBar mProgressBar;
 
     public CurrentWaitClientFragment() {
         // Required empty public constructor
@@ -63,6 +79,7 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_current_wait_client, container, false);
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
         setupUI();
         refreshUI();
         return mView;
@@ -78,6 +95,8 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
         mCancelButton.setOnClickListener(this);
         mGenerateCodeButton = (Button) mView.findViewById(R.id.btn_generate_code);
         mGenerateCodeButton.setOnClickListener(this);
+        mValidationCode = (TextView) mView.findViewById(R.id.validation_code);
+        mProgressBar = (ProgressBar) mView.findViewById(R.id.progress_bar);
     }
 
     private void refreshUI() {
@@ -110,6 +129,11 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
             mCancelButton.setVisibility(View.GONE);
             LinearLayout validationLayout = (LinearLayout) mView.findViewById(R.id.validation_layout);
             validationLayout.setVisibility(View.VISIBLE);
+            if (mCode != null) {
+                mValidationCode.setText(mCode);
+                mProgressBar.setVisibility(View.GONE);
+                mValidationCode.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -144,9 +168,38 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
                 Toast.makeText(getContext(), "Cancel button clicked", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_generate_code:
-                Toast.makeText(getContext(), "Generate code button clicked.", Toast.LENGTH_SHORT).show();
+                generateCode();
                 break;
         }
+    }
+
+    private void generateCode() {
+        mValidationCode.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        Call<ResponseGenerateCode> call = waiterClient.generateCode(mWait.getId(), MainActivity.getUserId());;
+        call.enqueue(new Callback<ResponseGenerateCode>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseGenerateCode> call, @NonNull Response<ResponseGenerateCode> response) {
+                if (response.isSuccessful()) {
+                    ResponseGenerateCode body = response.body();
+                    if (body != null) {
+                        mCode = body.getData().getCode();
+                        Log.d(TAG, "onResponse: mCode = " + mCode);
+                        refreshUI();
+//                        mListener.refreshCurrentWait(mWait);
+                    } else {
+                        mProgressBar.setVisibility(View.GONE);
+                        Snackbar.make(mView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseGenerateCode> call, @NonNull Throwable t) {
+                mProgressBar.setVisibility(View.GONE);
+                Snackbar.make(mView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
