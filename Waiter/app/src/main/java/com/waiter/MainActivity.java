@@ -45,7 +45,6 @@ import com.waiter.models.ResponseWait;
 import com.waiter.models.Wait;
 import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
-import com.waiter.utils.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -252,7 +251,20 @@ public class MainActivity extends AppCompatActivity
         Button waitState = (Button) mCurrentWaitLayout.findViewById(R.id.wait_state);
 
         currentEventName.setText(wait.getEventName());
-        waitState.setText(wait.getState());
+        switch (wait.getState()) {
+            case "created":
+                waitState.setText(getString(R.string.requested));
+                break;
+            case "queue-start":
+                waitState.setText(getString(R.string.in_progress));
+                break;
+            case "queue-done":
+                waitState.setText(getString(R.string.finished));
+                break;
+            default:
+                waitState.setText(getString(R.string.unknown_error));
+                break;
+        }
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);

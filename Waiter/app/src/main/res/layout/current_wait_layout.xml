@@ -41,7 +41,7 @@
                     style="@style/TextAppearance.AppCompat.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/wait_in_progress"/>
+                    android:text="@string/your_current_wait"/>
 
                 <TextView
                     android:id="@+id/current_event_name"

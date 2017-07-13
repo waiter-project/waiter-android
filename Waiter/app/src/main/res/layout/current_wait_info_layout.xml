@@ -20,7 +20,7 @@
             android:id="@+id/wait_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/wait_in_progress" />
+            android:text="@string/your_current_wait" />
 
         <LinearLayout
             android:layout_width="match_parent"
