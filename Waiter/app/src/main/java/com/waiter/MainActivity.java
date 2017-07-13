@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private View navHeaderLayout;
     private RelativeLayout footerNavDrawer;
+    private TextView mFooterText;
     private ProgressBar mProgressBar;
 
     private FloatingSearchView mSearchView;
@@ -122,6 +123,8 @@ public class MainActivity extends AppCompatActivity
 
         footerNavDrawer = (RelativeLayout) findViewById(R.id.footer_nav_drawer);
         footerNavDrawer.setOnClickListener(this);
+        mFooterText = (TextView) findViewById(R.id.footer_text);
+        mFooterText.setText((waiterMode) ? R.string.switch_to_client_mode : R.string.switch_to_waiter_mode);
         mProgressBar = (ProgressBar) findViewById(R.id.footer_progress);
         // End NavigationDrawer
 

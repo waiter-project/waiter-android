@@ -50,7 +50,7 @@
                     android:layout_height="48dp"
                     android:gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:text="@string/become_a_waiter"
+                    android:text="@string/switch_to_waiter_mode"
                     android:layout_toEndOf="@id/footer_icon"
                     android:layout_toRightOf="@id/footer_icon" />
 

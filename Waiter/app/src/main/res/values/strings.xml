@@ -14,6 +14,8 @@
     <string name="nav_settings">Settings</string>
     <string name="nav_about">About Waiter</string>
     <string name="become_a_waiter">Become a waiter</string>
+    <string name="switch_to_client_mode">Switch to client mode</string>
+    <string name="switch_to_waiter_mode">Switch to waiter mode</string>
 
     <!-- Options Menu -->
     <string name="action_location">Location</string>
