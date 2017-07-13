@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity
 
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
     private LinearLayout mCurrentWaitLayout;
+    private Fragment mCurrentWaitFragment;
 
     private WaiterClient waiterClient;
     private ErrorResponse errorResponse;
@@ -286,16 +287,19 @@ public class MainActivity extends AppCompatActivity
 
         Picasso.with(this).load(staticMapUrl).fit().centerCrop().into(staticMaps);
 
-        Fragment currentWaitFragment;
         Bundle args = new Bundle();
         args.putParcelable("CURRENT_WAIT", wait);
         if (waiterMode) {
-            currentWaitFragment = new CurrentWaitWaiterFragment();
+            mCurrentWaitFragment = new CurrentWaitWaiterFragment();
         } else {
-            currentWaitFragment = new CurrentWaitClientFragment();
+            mCurrentWaitFragment = new CurrentWaitClientFragment();
         }
-        currentWaitFragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, currentWaitFragment).commit();
+        mCurrentWaitFragment.setArguments(args);
+        if (mCurrentWaitFragment == null) {
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mCurrentWaitFragment).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mCurrentWaitFragment).commit();
+        }
     }
 
     @Override
