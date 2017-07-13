@@ -128,8 +128,9 @@
     <string name="started">Started</string>
     <string name="in_progress">In progress</string>
     <string name="finished">Finished</string>
-    <string name="Validated">Validated</string>
+    <string name="validated">Validated</string>
     <string name="in_conflict">In conflict</string>
+    <string name="paid">Paid</string>
     <string name="wait_can_start">I\'m ready, the wait can start</string>
     <string name="wait_finished">I\'m in the front of the line</string>
     <string name="cancel_this_wait">Cancel this wait</string>

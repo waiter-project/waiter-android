@@ -55,6 +55,7 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
     private View mView;
     private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState;
     private EditText mInputValidationoCode;
+    private LinearLayout mValidationLayout;
     private Button mButtonWaitCanStart, mButtonWaitFinished, mCancelButton, mValidateWaitButton;
     private ProgressDialog mProgressDialog;
 
@@ -104,6 +105,7 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage(getString(R.string.verifying_code));
+        mValidationLayout = (LinearLayout) mView.findViewById(R.id.validation_layout);
     }
 
     private void refreshUI() {
@@ -132,21 +134,36 @@ public class CurrentWaitWaiterFragment extends Fragment implements View.OnClickL
             e.printStackTrace();
         }
         mWaitersState.setText(getString(R.string.waiters_requested, mWait.getWaitersIds().size()));
-        if (mWait.getState().equals("created")) {
-            mButtonWaitCanStart.setVisibility(View.VISIBLE);
-            mButtonWaitFinished.setVisibility(View.GONE);
-        } else if (mWait.getState().equals("queue-start")) {
-            mButtonWaitCanStart.setVisibility(View.GONE);
-            mButtonWaitFinished.setVisibility(View.VISIBLE);
-        } else if (mWait.getState().equals("queue-done")) {
-            mButtonWaitCanStart.setVisibility(View.GONE);
-            mButtonWaitFinished.setVisibility(View.GONE);
-            mCancelButton.setVisibility(View.GONE);
-            LinearLayout validationLayout = (LinearLayout) mView.findViewById(R.id.validation_layout);
-            validationLayout.setVisibility(View.VISIBLE);
-            mInputValidationoCode = (EditText) mView.findViewById(R.id.input_validation_code);
-            mValidateWaitButton = (Button) mView.findViewById(R.id.btn_validate_wait);
-            mValidateWaitButton.setOnClickListener(this);
+        switch (mWait.getState()) {
+            case "created":
+                mButtonWaitCanStart.setVisibility(View.VISIBLE);
+                mButtonWaitFinished.setVisibility(View.GONE);
+                mCancelButton.setVisibility(View.VISIBLE);
+                mValidationLayout.setVisibility(View.GONE);
+                break;
+            case "queue-start":
+                mButtonWaitCanStart.setVisibility(View.GONE);
+                mButtonWaitFinished.setVisibility(View.VISIBLE);
+                mCancelButton.setVisibility(View.VISIBLE);
+                mValidationLayout.setVisibility(View.GONE);
+                break;
+            case "queue-done":
+                mButtonWaitCanStart.setVisibility(View.GONE);
+                mButtonWaitFinished.setVisibility(View.GONE);
+                mCancelButton.setVisibility(View.GONE);
+                mValidationLayout.setVisibility(View.VISIBLE);
+                mInputValidationoCode = (EditText) mView.findViewById(R.id.input_validation_code);
+                mValidateWaitButton = (Button) mView.findViewById(R.id.btn_validate_wait);
+                mValidateWaitButton.setOnClickListener(this);
+                break;
+            case "paid":
+                mButtonWaitCanStart.setVisibility(View.GONE);
+                mButtonWaitFinished.setVisibility(View.GONE);
+                mCancelButton.setVisibility(View.GONE);
+                mValidationLayout.setVisibility(View.GONE);
+                break;
+            default:
+                break;
         }
     }
 

@@ -265,6 +265,9 @@ public class MainActivity extends AppCompatActivity
             case "queue-done":
                 waitState.setText(getString(R.string.finished));
                 break;
+            case "paid":
+                waitState.setText(getString(R.string.validated));
+                break;
             default:
                 waitState.setText(getString(R.string.unknown_error));
                 break;

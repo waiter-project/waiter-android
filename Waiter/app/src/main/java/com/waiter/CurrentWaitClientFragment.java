@@ -53,6 +53,7 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
     // UI Elements
     private View mView;
     private TextView mWaitTitle, mWaitDescription, mEventAddress, mWaitUpdate, mWaitersState, mValidationCode;
+    private LinearLayout mValidationLayout;
     private Button mCancelButton, mGenerateCodeButton;
     private ProgressBar mProgressBar;
 
@@ -98,6 +99,7 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
         mGenerateCodeButton.setOnClickListener(this);
         mValidationCode = (TextView) mView.findViewById(R.id.validation_code);
         mProgressBar = (ProgressBar) mView.findViewById(R.id.progress_bar);
+        mValidationLayout = (LinearLayout) mView.findViewById(R.id.validation_layout);
     }
 
     private void refreshUI() {
@@ -126,15 +128,31 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
             e.printStackTrace();
         }
         mWaitersState.setText(getString(R.string.waiters_requested, mWait.getWaitersIds().size()));
-        if (mWait.getState().equals("queue-done")) {
-            mCancelButton.setVisibility(View.GONE);
-            LinearLayout validationLayout = (LinearLayout) mView.findViewById(R.id.validation_layout);
-            validationLayout.setVisibility(View.VISIBLE);
-            if (mCode != null) {
-                mValidationCode.setText(mCode);
-                mProgressBar.setVisibility(View.GONE);
-                mValidationCode.setVisibility(View.VISIBLE);
-            }
+
+        switch (mWait.getState()) {
+            case "created":
+                mCancelButton.setVisibility(View.VISIBLE);
+                mValidationLayout.setVisibility(View.GONE);
+                break;
+            case "queue-start":
+                mCancelButton.setVisibility(View.VISIBLE);
+                mValidationLayout.setVisibility(View.GONE);
+                break;
+            case "queue-done":
+                mCancelButton.setVisibility(View.GONE);
+                mValidationLayout.setVisibility(View.VISIBLE);
+                if (mCode != null) {
+                    mValidationCode.setText(mCode);
+                    mProgressBar.setVisibility(View.GONE);
+                    mValidationCode.setVisibility(View.VISIBLE);
+                }
+                break;
+            case "paid":
+                mCancelButton.setVisibility(View.GONE);
+                mValidationLayout.setVisibility(View.GONE);
+                break;
+            default:
+                break;
         }
     }
 
