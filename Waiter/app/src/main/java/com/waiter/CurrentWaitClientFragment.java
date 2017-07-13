@@ -21,6 +21,7 @@ import com.waiter.models.ResponseGenerateCode;
 import com.waiter.models.Wait;
 import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
+import com.waiter.utils.ErrorUtils;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -190,6 +191,17 @@ public class CurrentWaitClientFragment extends Fragment implements View.OnClickL
                     } else {
                         mProgressBar.setVisibility(View.GONE);
                         Snackbar.make(mView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                }  else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
                     }
                 }
             }
