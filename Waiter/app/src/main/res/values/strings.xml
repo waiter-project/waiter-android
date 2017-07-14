@@ -149,7 +149,13 @@
 
     <!-- Payment Activity -->
     <string name="payment_title">Payment</string>
+    <string name="payment_methods">Payment Methods</string>
     <string name="add_payment_method">Add payment method</string>
+    <string name="credit_debit_card">Credit or Debit Card</string>
+    <string name="android_pay">Android Pay</string>
+    <string name="paypal">PayPal</string>
+    <string name="card_last_4">•••• %1$s</string>
+    <string name="no_payment_methods">No payments methods</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
@@ -186,6 +192,7 @@
     <string name="placeholder_wait_description">Wait description</string>
     <string name="placeholder_waiters_state">Waiters state</string>
     <string name="placeholder_code">12345</string>
+    <string name="placeholder_payment">•••• 4242</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
