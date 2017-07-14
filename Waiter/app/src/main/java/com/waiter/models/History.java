@@ -6,87 +6,61 @@ import com.google.gson.annotations.SerializedName;
 
 public class History {
 
-    public class Wait {
-        @SerializedName("duration")
+    public class Price {
+
+        @SerializedName("total")
         @Expose
-        private String duration;
-        @SerializedName("price")
+        private Double total;
+        @SerializedName("pricebyHours")
         @Expose
-        private String price;
+        private List<Integer> pricebyHours = null;
 
-        /**
-         * No args constructor for use in serialization
-         *
-         */
-        public Wait() {
+        public Double getTotal() {
+            return total;
         }
 
-        /**
-         *
-         * @param duration
-         * @param price
-         */
-        public Wait(String duration, String price) {
-            super();
-            this.duration = duration;
-            this.price = price;
+        public void setTotal(Double total) {
+            this.total = total;
         }
 
-        public String getDuration() {
-            return duration;
+        public List<Integer> getPricebyHours() {
+            return pricebyHours;
         }
 
-        public void setDuration(String duration) {
-            this.duration = duration;
+        public void setPricebyHours(List<Integer> pricebyHours) {
+            this.pricebyHours = pricebyHours;
         }
 
-        public String getPrice() {
-            return price;
-        }
-
-        public void setPrice(String price) {
-            this.price = price;
-        }
     }
 
-    @SerializedName("wait")
+    @SerializedName("_id")
     @Expose
-    private Wait wait;
-    @SerializedName("event")
-    @Expose
-    private Event event;
+    private String id;
     @SerializedName("client")
     @Expose
     private User client;
+    @SerializedName("__v")
+    @Expose
+    private Integer v;
+    @SerializedName("price")
+    @Expose
+    private Price price;
+    @SerializedName("wait")
+    @Expose
+    private Wait wait;
     @SerializedName("waiters")
     @Expose
     private List<User> waiters = null;
+    @SerializedName("event")
+    @Expose
+    private Event event;
 
-    public History() {
+    public String getId() {
+        return id;
     }
 
-    public History(String waitDuration, String waitPrice, Event event, User client, List<User> waiters) {
-        super();
-        this.wait = new Wait(waitDuration, waitPrice);
-        this.event = event;
-        this.client = client;
-        this.waiters = waiters;
-    }
-
-    public Wait getWait() {
-        return wait;
-    }
-
-    public void setWait(Wait wait) {
-        this.wait = wait;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public User getClient() {
@@ -97,6 +71,30 @@ public class History {
         this.client = client;
     }
 
+    public Integer getV() {
+        return v;
+    }
+
+    public void setV(Integer v) {
+        this.v = v;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public void setPrice(Price price) {
+        this.price = price;
+    }
+
+    public Wait getWait() {
+        return wait;
+    }
+
+    public void setWait(Wait wait) {
+        this.wait = wait;
+    }
+
     public List<User> getWaiters() {
         return waiters;
     }
@@ -105,4 +103,11 @@ public class History {
         this.waiters = waiters;
     }
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 }
