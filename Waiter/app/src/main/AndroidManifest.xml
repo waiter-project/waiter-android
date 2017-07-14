@@ -56,6 +56,10 @@
         <activity
             android:name=".AddPaymentActivity"
             android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddCardActivity"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".SettingsActivity"

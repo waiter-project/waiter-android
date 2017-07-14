@@ -1,5 +1,6 @@
 package com.waiter;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.widget.Toast;
 
 public class AddPaymentActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE_ADD_CARD = 84;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +26,8 @@ public class AddPaymentActivity extends AppCompatActivity {
     }
 
     public void onClickAddCreditDebitCard(View view) {
-        Toast.makeText(this, "Add Credit Debit Card", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, AddCardActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_ADD_CARD);
     }
 
     public void onClickAddAndroidPay(View view) {
@@ -32,5 +36,16 @@ public class AddPaymentActivity extends AppCompatActivity {
 
     public void onClickAddPaypal(View view) {
         Toast.makeText(this, "Add PayPal", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_CARD) {
+            if (resultCode == RESULT_OK) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        }
     }
 }

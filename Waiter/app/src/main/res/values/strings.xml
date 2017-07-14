@@ -156,6 +156,10 @@
     <string name="paypal">PayPal</string>
     <string name="card_last_4">•••• %1$s</string>
     <string name="no_payment_methods">No payments methods</string>
+    <string name="add_card">Add card</string>
+    <string name="saving_card">Saving card…</string>
+    <string name="invalid_card_data">Invalid card data</string>
+    <string name="card_succesfully_added">Card succesfully added</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>

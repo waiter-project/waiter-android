@@ -1,6 +1,7 @@
 package com.waiter;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -90,7 +91,8 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD_PAYMENT) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "New payment method added", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.card_succesfully_added), Snackbar.LENGTH_SHORT).show();
             }
         }
     }

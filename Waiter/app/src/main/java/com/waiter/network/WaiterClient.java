@@ -40,6 +40,9 @@ public interface WaiterClient {
     @PUT("/user/{userId}/password")
     Call<ResponseBody> updatePassword(@Header("x-access-token") String token, @Path("userId") String userId, @Body RequestUpdatePassword requestUpdatePassword);
 
+    @PUT("/user/{userId}/add-new-card/{cardToken}")
+    Call<ResponseBody> addNewCard(@Header("x-access-token") String token, @Path("userId") String userId, @Path("cardToken") String cardToken);
+
     // Event Routes
     @GET("/event/long/{long}/lat/{lat}/zoom/{zoom}")
     Call<ResponseEventsNearLocation> getEventsNearLocation(@Path("long") double longitude, @Path("lat") double latitude, @Path("zoom") float zoom);
