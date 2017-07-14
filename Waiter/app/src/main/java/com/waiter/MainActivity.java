@@ -446,7 +446,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, ProfileActivity.class);
             startActivityForResult(intent, REQUEST_CODE_PROFILE);
         } else if (id == R.id.nav_payment) {
-
+            Intent intent = new Intent(this, PaymentActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_history) {
             Intent intent = new Intent(this, HistoryActivity.class);
             startActivity(intent);

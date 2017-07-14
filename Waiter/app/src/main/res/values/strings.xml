@@ -147,6 +147,10 @@
     <string name="hint_validation_code">Validation code</string>
     <string name="verifying_code">Verifying code…</string>
 
+    <!-- Payment Activity -->
+    <string name="payment_title">Payment</string>
+    <string name="add_payment_method">Add payment method</string>
+
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
     <string name="please_valid">Please enter a valid %1$s</string>

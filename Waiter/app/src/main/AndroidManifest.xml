@@ -50,6 +50,10 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".PaymentActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
 
@@ -65,9 +69,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <!-- Example: Sets all OneSignal notification's accent color to Green by default.  -->
+        <!-- Example: Sets all OneSignal notification's accent color to Green by default. -->
         <!-- Color format is in ARGB. -->
-        <meta-data android:name="com.onesignal.NotificationAccentColor.DEFAULT" android:value="FF1E4561" />
+        <meta-data
+            android:name="com.onesignal.NotificationAccentColor.DEFAULT"
+            android:value="FF1E4561" />
 
     </application>
 
