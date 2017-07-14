@@ -1,6 +1,7 @@
 package com.waiter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "PaymentRecyclerViewAdapter";
+    private static final String TAG = "PaymentRecyclerViewAdap";
 
     private final List<Card> mValues;
     private final PaymentActivity.OnListFragmentInteractionListener mListener;
@@ -59,6 +60,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     }
 
     public void refreshList(List<Card> list) {
+        Log.d(TAG, "refreshList: ");
         mValues.clear();
         mValues.addAll(list);
         notifyDataSetChanged();

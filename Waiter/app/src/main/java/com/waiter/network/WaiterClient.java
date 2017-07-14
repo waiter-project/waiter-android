@@ -6,6 +6,7 @@ import com.waiter.models.RequestSignup;
 import com.waiter.models.RequestUpdatePassword;
 import com.waiter.models.RequestUpdateProfile;
 import com.waiter.models.RequestValidateWait;
+import com.waiter.models.ResponseCards;
 import com.waiter.models.ResponseEventsNearLocation;
 import com.waiter.models.ResponseGenerateCode;
 import com.waiter.models.ResponseHistory;
@@ -42,6 +43,9 @@ public interface WaiterClient {
 
     @PUT("/user/{userId}/add-new-card/{cardToken}")
     Call<ResponseBody> addNewCard(@Header("x-access-token") String token, @Path("userId") String userId, @Path("cardToken") String cardToken);
+
+    @GET("/user/{userId}/get-cards")
+    Call<ResponseCards> getCards(@Header("x-access-token") String token, @Path("userId") String userId);
 
     // Event Routes
     @GET("/event/long/{long}/lat/{lat}/zoom/{zoom}")
