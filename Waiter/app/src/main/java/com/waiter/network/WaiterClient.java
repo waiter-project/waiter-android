@@ -8,6 +8,7 @@ import com.waiter.models.RequestUpdateProfile;
 import com.waiter.models.RequestValidateWait;
 import com.waiter.models.ResponseEventsNearLocation;
 import com.waiter.models.ResponseGenerateCode;
+import com.waiter.models.ResponseHistory;
 import com.waiter.models.ResponseLogin;
 import com.waiter.models.ResponseSignup;
 import com.waiter.models.ResponseWait;
@@ -67,4 +68,8 @@ public interface WaiterClient {
 
     @PUT("/wait/{waitId}/validate")
     Call<ResponseWait> validateWait(@Path("waitId") String waitId, @Body RequestValidateWait requestValidateWait);
+
+    // History Routes
+    @GET("/history/user/{userId}")
+    Call<ResponseHistory> getHistory(@Header("x-user-type") String userType, @Path("userId") String userId);
 }

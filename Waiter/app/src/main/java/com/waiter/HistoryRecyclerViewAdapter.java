@@ -10,7 +10,14 @@ import android.widget.TextView;
 import com.waiter.HistoryActivity.OnListFragmentInteractionListener;
 import com.waiter.models.History;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
 
@@ -36,8 +43,21 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.mItem = mValues.get(position);
 //        holder.mImageView.setImageResource();
         holder.mTitleView.setText(mValues.get(position).getEvent().getName());
-        holder.mDurationView.setText(mValues.get(position).getWait().getDuration());
-        holder.mPriceView.setText(mValues.get(position).getWait().getPrice());
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            Date convertedDate = dateFormat.parse(mValues.get(position).getWait().getQueueEnd());
+            holder.mDurationView.setText(convertedDate.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            holder.mDurationView.setText(R.string.unknown_error);
+        }
+
+        double totalPrice = mValues.get(position).getPrice().getTotal();
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        String totalPriceFormated = "$" + decimalFormat.format(totalPrice);
+        holder.mPriceView.setText(totalPriceFormated);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +81,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         notifyDataSetChanged();
     }
 
-    public void refreshList() {
+    public void refreshList(List<History> list) {
+        mValues.clear();
+        mValues.addAll(list);
         notifyDataSetChanged();
     }
 
