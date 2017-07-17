@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    private static String BASE_URL = setApiBaseUrl();
+    private static String BASE_URL = "http://wait4me.tk:5000";
 
     private static String setApiBaseUrl() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(WaiterApplication.getInstance().getApplicationContext());
@@ -29,7 +29,7 @@ public class ServiceGenerator {
                 return "http://wait4me.tk:5000";
             }
         } else {
-            String apiUrlPref = sharedPref.getString(SettingsActivity.KEY_PREF_CUSTOM_API_URL, "http://wait4me.tk:5000");
+            String apiUrlPref = sharedPref.getString(SettingsActivity.KEY_PREF_CUSTOM_API_URL, "http://1a031e58.ngrok.io");
             return apiUrlPref;
         }
     }
