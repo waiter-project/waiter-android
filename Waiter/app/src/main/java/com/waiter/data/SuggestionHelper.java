@@ -144,10 +144,9 @@ public class SuggestionHelper {
     }
 
     private static void initEventWrapperList(Context context) {
-
         sEventSuggestions = new ArrayList<>();
-        for (Event event : MainActivity.mEventList) {
-            sEventSuggestions.add(new EventSuggestion(event.getName()));
+        for (int i = 0; i < MainActivity.mEventList.size(); i++) {
+            sEventSuggestions.add(new EventSuggestion(MainActivity.mEventList.get(i).getName(), MainActivity.mEventList.get(i).getId(), i));
 
 //        if (sEventSuggestions.isEmpty()) {
 //            sEventSuggestions = new ArrayList<>();
@@ -157,6 +156,13 @@ public class SuggestionHelper {
 //            sEventSuggestions.add(new EventSuggestion("toto"));
 //            sEventSuggestions.add(new EventSuggestion("tata"));
 //            sEventSuggestions.add(new EventSuggestion("titi"));
+        }
+    }
+
+    public static void refreshSuggestions() {
+        sEventSuggestions.clear();
+        for (int i = 0; i < MainActivity.mEventList.size(); i++) {
+            sEventSuggestions.add(new EventSuggestion(MainActivity.mEventList.get(i).getName(), MainActivity.mEventList.get(i).getId(), i));
         }
     }
 

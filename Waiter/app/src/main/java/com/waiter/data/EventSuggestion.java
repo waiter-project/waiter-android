@@ -9,8 +9,13 @@ public class EventSuggestion implements SearchSuggestion {
     private String mEventName;
     private boolean mIsHistory = false;
 
-    public EventSuggestion(String suggestion) {
-        this.mEventName = suggestion.toLowerCase();
+    private String mEventId;
+    private int mEventPosition;
+
+    public EventSuggestion(String suggestion, String id, int position) {
+        this.mEventName = suggestion;
+        this.mEventId = id;
+        this.mEventPosition = position;
     }
 
     public EventSuggestion(Parcel source) {
@@ -29,6 +34,14 @@ public class EventSuggestion implements SearchSuggestion {
     @Override
     public String getBody() {
         return mEventName;
+    }
+
+    public String getEventId() {
+        return mEventId;
+    }
+
+    public int getEventPosition() {
+        return mEventPosition;
     }
 
     public static final Creator<EventSuggestion> CREATOR = new Creator<EventSuggestion>() {

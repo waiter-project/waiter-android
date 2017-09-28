@@ -22,30 +22,51 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/colorPrimaryLight"
-            android:clickable="true"
-            android:orientation="horizontal">
+            android:background="@color/colorPrimaryLight">
 
-            <ImageView
-                android:src="@drawable/ic_work_white_48dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="10dp"
-                android:layout_width="24dp"
-                android:layout_height="24dp" />
-
-            <TextView
-                android:id="@+id/footer_item_1"
+            <RelativeLayout
+                android:id="@+id/footer_nav_drawer"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:text="@string/become_a_waiter" />
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/footer_icon"
+                    android:src="@drawable/ic_work_white_48dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+                <TextView
+                    android:id="@+id/footer_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:text="@string/switch_to_waiter_mode"
+                    android:layout_toEndOf="@id/footer_icon"
+                    android:layout_toRightOf="@id/footer_icon" />
+
+                <ProgressBar
+                    android:id="@+id/footer_progress"
+                    android:visibility="gone"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true" />
+
+            </RelativeLayout>
+
+        </FrameLayout>
 
     </android.support.design.widget.NavigationView>
 

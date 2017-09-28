@@ -10,6 +10,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        manifestPlaceholders = [onesignal_app_id               : "7d0bc3b2-2567-4ea0-bfae-ec67478165cd",
+                                // Project number pulled from dashboard, local value is ignored.
+                                onesignal_google_project_number: "REMOTE"]
     }
     buildTypes {
         release {
@@ -24,19 +28,26 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile project(':material-intro-screen')
     compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.onesignal:OneSignal:[3.5.3,4.0.0)'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.android.gms:play-services-maps:9.0.2'
-    compile 'com.google.android.gms:play-services-location:9.0.2'
+    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-location:10.0.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.github.arimorty:floatingsearchview:2.0.4'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
     compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
+    compile 'com.github.travijuu:numberpicker:1.0.7'
+    compile 'com.sothree.slidinguppanel:library:3.3.1'
+    compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
+    compile 'com.stripe:stripe-android:4.1.1'
     testCompile 'junit:junit:4.12'
-    compile project(':material-intro-screen')
 }

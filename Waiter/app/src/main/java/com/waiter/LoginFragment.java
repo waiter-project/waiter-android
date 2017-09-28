@@ -11,6 +11,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,12 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
 import com.securepreferences.SecurePreferences;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestLogin;
 import com.waiter.models.ResponseLogin;
-import com.waiter.network.ClientGenerator;
+import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
 import com.waiter.utils.ErrorUtils;
 
@@ -57,6 +59,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
     private ErrorResponse errorResponse;
 
     private String userId;
+    private String userEmail;
     private String authToken;
     private String firstName;
     private String lastName;
@@ -96,7 +99,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 
         introActivity = ((IntroActivity)getActivity());
 
-        waiterClient = ClientGenerator.createClient(WaiterClient.class);
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
         requestLogin = new RequestLogin();
 
         return view;
@@ -128,6 +131,8 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
     public String getAuthToken() { return this.authToken; }
 
     public String getUserId() { return this.userId; }
+
+    public String getUserEmail() { return this.userEmail; }
 
     public String getFirstName() { return this.firstName; }
 
@@ -166,8 +171,15 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 
         requestLogin.setEmail(mInputEmail.getText().toString());
         requestLogin.setPassword(mInputPassword.getText().toString());
-        Call<ResponseLogin> call = waiterClient.login(requestLogin);
+        OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+            @Override
+            public void idsAvailable(String userId, String registrationId) {
+                requestLogin.setDeviceId(userId);
+                Log.d("OneSignal", "UserId:" + userId);
+            }
+        });
 
+        Call<ResponseLogin> call = waiterClient.login(requestLogin);
         call.enqueue(new Callback<ResponseLogin>() {
             @Override
             public void onResponse(@NonNull Call<ResponseLogin> call, @NonNull Response<ResponseLogin> response) {
@@ -176,7 +188,7 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
                     ResponseLogin body = response.body();
                     if (body != null) {
                         loggedIn = true;
-                        mWelcomeUser.setText(getString(R.string.welcome_back_user, body.getData().getUser().getFirstname()));
+                        mWelcomeUser.setText(getString(R.string.welcome_back_user, body.getData().getUser().getFirstName()));
                         mLinkForgotPassword.setVisibility(View.GONE);
                         mScrollView.setVisibility(View.GONE);
                         mWelcomeUser.setVisibility(View.VISIBLE);
@@ -186,14 +198,15 @@ public class LoginFragment extends SlideFragment implements View.OnClickListener
 
                         authToken = body.getData().getToken();
                         userId = body.getData().getUser().getId();
-                        firstName = body.getData().getUser().getFirstname();
-                        lastName = body.getData().getUser().getLastname();
+                        userEmail = mInputEmail.getText().toString();
+                        firstName = body.getData().getUser().getFirstName();
+                        lastName = body.getData().getUser().getLastName();
                     } else {
                         introActivity.showMessage(getString(R.string.response_body_null));
                     }
                 } else {
                     errorResponse = ErrorUtils.parseError(response);
-                    if (errorResponse != null) {
+                    if (errorResponse != null && errorResponse.getData() != null) {
                         if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
                             introActivity.showMessage(errorResponse.getData().getMessage());
                         } else {

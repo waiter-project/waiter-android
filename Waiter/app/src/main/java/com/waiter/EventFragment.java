@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,6 +55,9 @@ public class EventFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), mLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         // Set the adapter
         if (recyclerView != null) {
@@ -73,7 +77,7 @@ public class EventFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mAdapter.refreshList();
+                refreshEventsList();
                 swipeContainer.setRefreshing(false);
             }
         });
@@ -81,6 +85,11 @@ public class EventFragment extends Fragment {
         return view;
     }
 
+    public void refreshEventsList() {
+        mAdapter.clear();
+        mAdapter.addAll(MainActivity.mEventList);
+        mAdapter.refreshList();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -110,6 +119,6 @@ public class EventFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteractionEvent(Event event);
+        void onListFragmentInteractionEvent(int position);
     }
 }

@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.waiter.utils.CustomTextWatcher;
+
 import agency.tango.materialintroscreen.SlideFragment;
 
 public class SignupNameFragment extends SlideFragment {
@@ -39,8 +41,8 @@ public class SignupNameFragment extends SlideFragment {
         mInputLayoutFirstName = (TextInputLayout) view.findViewById(R.id.input_layout_fname);
         mInputLayoutLastName = (TextInputLayout) view.findViewById(R.id.input_layout_lname);
 
-        mInputFirstName.addTextChangedListener(new MyTextWatcher(mInputFirstName));
-        mInputLastName.addTextChangedListener(new MyTextWatcher(mInputLastName));
+        mInputFirstName.addTextChangedListener(new CustomTextWatcher(mInputFirstName, mInputLayoutFirstName, getString(R.string.is_required, "First name")));
+        mInputLastName.addTextChangedListener(new CustomTextWatcher(mInputLastName, mInputLayoutLastName, getString(R.string.is_required, "Last name")));
 
         introActivity = (IntroActivity)getActivity();
 
@@ -100,57 +102,9 @@ public class SignupNameFragment extends SlideFragment {
         return getString(R.string.please_enter_name);
     }
 
-    private boolean validateFirstName() {
-        String firstName = mInputFirstName.getText().toString().trim();
-        if (firstName.isEmpty()) {
-            mInputLayoutFirstName.setError(getString(R.string.is_required, "First name"));
-//            requestFocus(mInputFirstName);
-            return false;
-        } else {
-            mInputLayoutFirstName.setErrorEnabled(false);
-        }
-        return true;
-    }
-
-    private boolean validateLastName() {
-        String lastName = mInputLastName.getText().toString().trim();
-        if (lastName.isEmpty()) {
-            mInputLayoutLastName.setError(getString(R.string.is_required, "Last name"));
-//            requestFocus(mInputLastName);
-            return false;
-        } else {
-            mInputLayoutLastName.setErrorEnabled(false);
-        }
-        return true;
-    }
-
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-
-    private class MyTextWatcher implements TextWatcher {
-
-        private View view;
-
-        private MyTextWatcher(View view) {
-            this.view = view;
-        }
-
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-        public void afterTextChanged(Editable editable) {
-            switch (view.getId()) {
-                case R.id.input_fname:
-                    validateFirstName();
-                    break;
-                case R.id.input_lname:
-                    validateLastName();
-                    break;
-            }
         }
     }
 }

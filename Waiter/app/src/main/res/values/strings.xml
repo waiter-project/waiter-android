@@ -10,13 +10,18 @@
     <string name="nav_events">Events</string>
     <string name="nav_payment">Payment</string>
     <string name="nav_history">History</string>
-    <string name="nav_logout">Logout</string>
+    <string name="nav_logout">Log out</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_about">About Waiter</string>
     <string name="become_a_waiter">Become a waiter</string>
+    <string name="switch_to_client_mode">Switch to client mode</string>
+    <string name="switch_to_waiter_mode">Switch to waiter mode</string>
 
     <!-- Options Menu -->
     <string name="action_location">Location</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_about">About Us</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_maps">Maps View</string>
+    <string name="action_list">List View</string>
 
     <!-- Welcome Activity -->
     <string name="log_in">Log In</string>
@@ -69,6 +74,93 @@
     <!-- MapsFragment -->
     <string name="waiters_available">%1$d waiters available</string>
 
+    <!-- EventFragment -->
+    <string name="save_event">Save this event</string>
+
+    <!-- FullEvent Activity -->
+    <string name="event_title">Event</string>
+    <string name="request_a_waiter">Request a Waiter</string>
+    <string name="join_this_event">Join this event</string>
+    <string name="leave_this_event">Leave this event</string>
+    <string name="confirm_join_event_title">Join event %1$s?</string>
+    <string name="confirm_leave_event_title">Leave event %1$s?</string>
+    <string name="confirm_join_event_message">By joining this event, I certify that I am available to perform the service if I am requested by a client. I acknowledge that I will not be able to cancel the service without any financial penalty unless I leave this event before I am requested.</string>
+    <string name="confirm_leave_event_message">Are you sure you want to leave event %1$s?</string>
+    <string name="join_event_success">You successfully joined the event %1$s</string>
+    <string name="leave_event_success">You successfully left the event %1$s</string>
+
+    <!-- History Activity -->
+    <string name="history_title">Wait history</string>
+
+    <!-- Profile Activity -->
+    <string name="profile_title">Profile</string>
+    <string name="action_edit">Edit profile</string>
+    <string name="change_password">Change password</string>
+    <string name="save_changes">Save changes</string>
+    <string name="hint_phone">Phone number</string>
+    <string name="hint_street_address">Street address</string>
+    <string name="dialog_discard_changes">Discard your changes?</string>
+    <string name="discard">Discard</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="updating_profile">Updating Profile…</string>
+    <string name="update_success">%1$s updated successfully</string>
+
+    <!-- UpdatePassword Activity -->
+    <string name="update_password">Update Password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="updating_password">Updating Password…</string>
+
+    <!-- RequestDialog Fragment -->
+    <string name="how_many_waiters">How many waiters?</string>
+    <string name="request">Request</string>
+    <string name="request_one_waiter">Request 1 waiter</string>
+    <string name="request_waiters">Request %1$d waiters</string>
+    <string name="requesting_waiters">Requesting %1$d waiters…</string>
+    <string name="request_sent">Request Sent</string>
+
+    <!-- Current Wait Layout -->
+    <string name="your_current_wait">Your current wait</string>
+    <string name="wait_in_progress">Wait in progress</string>
+    <string name="created">Created</string>
+    <string name="requested">Requested</string>
+    <string name="started">Started</string>
+    <string name="in_progress">In progress</string>
+    <string name="finished">Finished</string>
+    <string name="validated">Validated</string>
+    <string name="in_conflict">In conflict</string>
+    <string name="paid">Paid</string>
+    <string name="wait_can_start">I\'m ready, the wait can start</string>
+    <string name="wait_finished">I\'m in the front of the line</string>
+    <string name="cancel_this_wait">Cancel this wait</string>
+    <string name="requested_on">Requested %1$s</string>
+    <string name="started_on">Started %1$s</string>
+    <string name="created_on">Created %1$s</string>
+    <string name="finished_on">Finished %1$s</string>
+    <string name="last_update_on">Last update %1$s</string>
+    <string name="wait_id">Wait #%1$s</string>
+    <string name="waiters_requested">%1$d waiters requested</string>
+    <string name="generate_code">Generate validation code</string>
+    <string name="validate_wait">Validate wait</string>
+    <string name="validation_code">Validation code</string>
+    <string name="hint_validation_code">Validation code</string>
+    <string name="verifying_code">Verifying code…</string>
+
+    <!-- Payment Activity -->
+    <string name="payment_title">Payment</string>
+    <string name="payment_methods">Payment Methods</string>
+    <string name="add_payment_method">Add payment method</string>
+    <string name="credit_debit_card">Credit or Debit Card</string>
+    <string name="android_pay">Android Pay</string>
+    <string name="paypal">PayPal</string>
+    <string name="card_last_4">•••• %1$s</string>
+    <string name="no_payment_methods">No payments methods</string>
+    <string name="add_card">Add card</string>
+    <string name="saving_card">Saving card…</string>
+    <string name="invalid_card_data">Invalid card data</string>
+    <string name="card_succesfully_added">Card succesfully added</string>
+
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
     <string name="please_valid">Please enter a valid %1$s</string>
@@ -76,10 +168,19 @@
     <string name="response_body_null">Error: Response Body is null</string>
     <string name="response_error_body_null">Error: Response Error Body is null</string>
     <string name="internal_error">Internal Error</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="agree">Agree</string>
+    <string name="disagree">Disagree</string>
 
     <!-- Placeholders -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="placeholder_email">email@domain.com</string>
+    <string name="placeholder_phone">(123) 456-7890</string>
+    <string name="placeholder_full_name">John Doe</string>
+    <string name="placeholder_fname">John</string>
+    <string name="placeholder_lname">Doe</string>
+    <string name="placeholder_profile_address">202 Park Street, Los Angeles</string>
     <string name="placeholder_title">Event Title</string>
     <string name="placeholder_price">$8/hr</string>
     <string name="placeholder_description">Event Description</string>
@@ -89,4 +190,101 @@
     <string name="placeholder_content">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id vulputate libero. Cras suscipit ligula sit amet lectus condimentum, non pretium nulla consequat. Vivamus sed pellentesque mi, eu pulvinar enim. Sed consequat tempus erat, nec condimentum lectus dictum ut. Phasellus ultrices sed nunc non imperdiet. Quisque sagittis dolor eget fringilla cursus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
     </string>
+    <string name="placeholder_date_time">Mar 03 - 8:25 AM</string>
+    <string name="placeholder_time">3h 47min</string>
+    <string name="placeholder_total_price">$23.54</string>
+    <string name="placeholder_wait_description">Wait description</string>
+    <string name="placeholder_waiters_state">Waiters state</string>
+    <string name="placeholder_code">12345</string>
+    <string name="placeholder_payment">•••• 4242</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+
+    <!-- Debug settings -->
+    <string name="pref_header_debug">Debug</string>
+    <string name="pref_server">Server to connect to</string>
+    <string-array name="pref_server_entries">
+        <item>Localhost</item>
+        <item>wait4me.tk</item>
+    </string-array>
+    <string-array name="pref_server_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string name="pref_customApi">Use to a custom API url?</string>
+    <string name="pref_customApi_summ">Set a custom API url to connect to</string>
+    <string name="custom_api_url_title">Custom Waiter API url</string>
+    <string name="custom_api_url_message">Set a custom Waiter API url</string>
+    <string name="default_api_url">http://wait4me.tk:5000/</string>
+
 </resources>

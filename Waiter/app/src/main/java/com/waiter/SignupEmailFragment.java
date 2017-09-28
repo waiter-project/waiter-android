@@ -18,8 +18,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.waiter.network.ClientGenerator;
+import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
+import com.waiter.utils.CustomTextWatcher;
 
 import agency.tango.materialintroscreen.SlideFragment;
 import okhttp3.ResponseBody;
@@ -54,13 +55,13 @@ public class SignupEmailFragment extends SlideFragment {
         mInputLayoutEmail = (TextInputLayout) view.findViewById(R.id.input_layout_email);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
-        mInputEmail.addTextChangedListener(new MyTextWatcher(mInputEmail));
+        mInputEmail.addTextChangedListener(new CustomTextWatcher(mInputEmail, mInputLayoutEmail, getString(R.string.err_msg_email)));
 
         errorEmailMessage = getString(R.string.please_enter_email);
 
         introActivity = (IntroActivity)getActivity();
 
-        waiterClient = ClientGenerator.createClient(WaiterClient.class);
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
 
         return view;
     }
@@ -90,32 +91,6 @@ public class SignupEmailFragment extends SlideFragment {
     public int buttonsColor() {
         return R.color.colorPrimaryDark;
     }
-
-//    private class CheckEmailTask extends AsyncTask<String, Void, ResponseBody> {
-//        protected ResponseBody doInBackground(String... urls) {
-//            String email = urls[0];
-//            Call<ResponseBody> call = waiterClient.checkEmailAvailable(email);
-//            try {
-//                ResponseBody response = call.execute().body();
-//                Log.d(TAG, "doInBackground: try success");
-//                waitResponse = false;
-//                return response;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                Log.d(TAG, "doInBackground: try exception = " + e.getMessage());
-//            }
-//            waitResponse = false;
-//            return null;
-//        }
-//
-//        protected void onProgressUpdate() {
-//            Log.d(TAG, "onProgressUpdate");
-//        }
-//
-//        protected void onPostExecute(ResponseBody responseBody) {
-//            Log.d(TAG, "onPostExecute");
-//        }
-//    }
 
     @Override
     public boolean canMoveFurther() {
@@ -149,7 +124,7 @@ public class SignupEmailFragment extends SlideFragment {
         isAvailable = false;
 
         final String email = mInputEmail.getText().toString().trim();
-        if (isValidEmail(email)) {
+        if (CustomTextWatcher.isValidEmail(email)) {
             Log.d(TAG, "onNext: Email is valid");
 
             mInputLayoutEmail.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.9f));
@@ -169,11 +144,15 @@ public class SignupEmailFragment extends SlideFragment {
                             introActivity.showMessage(getString(R.string.response_body_null));
                         }
                     } else {
-                        ResponseBody errorBody = response.errorBody();
-                        if (errorBody != null) {
-                            introActivity.showMessage(getString(R.string.email_already_used));
+                        if (response.code() == 409) {
+                            ResponseBody errorBody = response.errorBody();
+                            if (errorBody != null) {
+                                introActivity.showMessage(getString(R.string.email_already_used));
+                            } else {
+                                introActivity.showMessage(getString(R.string.response_error_body_null));
+                            }
                         } else {
-                            introActivity.showMessage(getString(R.string.response_error_body_null));
+                            introActivity.showMessage(getString(R.string.unknown_error));
                         }
                     }
                     mProgressBar.setVisibility(View.GONE);
@@ -211,48 +190,10 @@ public class SignupEmailFragment extends SlideFragment {
     public String cantMoveFurtherErrorMessage() {
         return errorEmailMessage;
     }
+
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-
-    private boolean validateEmail() {
-        String email = mInputEmail.getText().toString().trim();
-
-        if (email.isEmpty() || !isValidEmail(email)) {
-            mInputLayoutEmail.setError(getString(R.string.err_msg_email));
-//            requestFocus(mInputEmail);
-            return false;
-        } else {
-            mInputLayoutEmail.setErrorEnabled(false);
-        }
-
-        return true;
-    }
-
-    private static boolean isValidEmail(String email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private class MyTextWatcher implements TextWatcher {
-
-        private View view;
-
-        private MyTextWatcher(View view) {
-            this.view = view;
-        }
-
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-        public void afterTextChanged(Editable editable) {
-            switch (view.getId()) {
-                case R.id.input_email:
-                    validateEmail();
-                    break;
-            }
         }
     }
 }

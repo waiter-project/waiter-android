@@ -1,7 +1,10 @@
 package com.waiter;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -11,8 +14,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,14 +43,33 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.securepreferences.SecurePreferences;
+import com.waiter.models.ErrorResponse;
 import com.waiter.models.Event;
+import com.waiter.models.ResponseEventsNearLocation;
+import com.waiter.network.ServiceGenerator;
+import com.waiter.network.WaiterClient;
+import com.waiter.utils.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MapsFragment extends Fragment implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveStartedListener,
+        GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveCanceledListener, View.OnClickListener {
+
+    private static final String TAG = "MapsFragment";
 
     private static final int PERMISSIONS_REQUEST_LOCATION = 1;
+    private static final float DEFAULT_ZOOM = 14;
+
     private boolean mPermissionDenied = false;
 
     private MapView mMapView;
@@ -57,6 +83,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private View mBottomSheet;
     private BottomSheetBehavior mBottomSheetBehavior;
 
+    private View mRootView;
     private TextView mEventTitle;
     private TextView mEventPrice;
     private TextView mEventDescription;
@@ -65,9 +92,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private TextView mEventWaitersAvailable;
     private FloatingActionButton mFAB;
     private boolean showFAB = false;
+    private AlertDialog mConfirmDialog;
 
     private Animation mGrowAnimation;
     private Animation mShrinkAnimation;
+
+    private int eventPosition = -1;
+
+    private boolean joinedEvent;
+
+    private WaiterClient waiterClient;
+    private ErrorResponse errorResponse;
+
+    private String authToken;
+    private String userId;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -88,12 +126,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
+
+        SharedPreferences prefs = new SecurePreferences(getContext());
+        authToken = prefs.getString("auth_token", "");
+        userId = prefs.getString("user_id", "");
 
         /*
         ** Start Init Maps
          */
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        mMapView = (MapView) mRootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume();
@@ -120,37 +164,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         /*
         ** Start Bottom Sheet
          */
-        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator);
+        mCoordinatorLayout = (CoordinatorLayout) mRootView.findViewById(R.id.coordinator);
         initializeUI();
         // End BottomSheet
 
-        return rootView;
+        return mRootView;
     }
 
     private void initializeUI() {
         mBottomSheet = mCoordinatorLayout.findViewById(R.id.event_bottom_sheet);
-        mEventTitle = (TextView) mBottomSheet.findViewById(R.id.eventTitle);
-        mEventPrice = (TextView) mBottomSheet.findViewById(R.id.eventPrice);
-        mEventDescription = (TextView) mBottomSheet.findViewById(R.id.eventDescription);
-        mEventAddress = (TextView) mBottomSheet.findViewById(R.id.eventAddress);
-        mEventDate = (TextView) mBottomSheet.findViewById(R.id.eventDate);
-        mEventWaitersAvailable = (TextView) mBottomSheet.findViewById(R.id.eventWaitersAvailable);
+        mEventTitle = (TextView) mBottomSheet.findViewById(R.id.event_title);
+        mEventPrice = (TextView) mBottomSheet.findViewById(R.id.event_price);
+        mEventDescription = (TextView) mBottomSheet.findViewById(R.id.event_description);
+        mEventAddress = (TextView) mBottomSheet.findViewById(R.id.event_address);
+        mEventDate = (TextView) mBottomSheet.findViewById(R.id.event_date);
+        mEventWaitersAvailable = (TextView) mBottomSheet.findViewById(R.id.event_waiters_available);
         mFAB = (FloatingActionButton) mCoordinatorLayout.findViewById(R.id.fab);
-        mFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> listOfWaiters = new ArrayList<>();
-                MainActivity.mEventList.add(new Event("58fc51e531087c0011378ebc",
-                        "Event" + (MainActivity.mEventList.size() + 1),
-                        "Description",
-                        "Address",
-                        48.8584 + MainActivity.mEventList.size(),
-                        2.2945 + MainActivity.mEventList.size(),
-                        "Date",
-                        1,
-                        listOfWaiters));
-            }
-        });
+        mFAB.setOnClickListener(this);
 
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setHideable(true);
@@ -199,30 +229,147 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         });
     }
 
+    private void checkIfJoinedEvent() {
+        joinedEvent = MainActivity.mEventList.get(eventPosition).getListOfWaiters().contains(userId);
+        if (joinedEvent) {
+            mFAB.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_clear_white_24dp, null));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(getString(R.string.confirm_leave_event_title, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setMessage(getString(R.string.confirm_leave_event_message, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            leaveEvent();
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            mConfirmDialog = builder.create();
+        } else {
+            mFAB.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_add_white_24dp, null));
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(getString(R.string.confirm_join_event_title, MainActivity.mEventList.get(eventPosition).getName()))
+                    .setMessage(R.string.confirm_join_event_message)
+                    .setPositiveButton(R.string.agree, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            joinEvent();
+                        }
+                    })
+                    .setNegativeButton(R.string.disagree, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            mConfirmDialog = builder.create();
+        }
+    }
+
+    private void joinEvent() {
+        Call<ResponseBody> call = waiterClient.joinEvent(authToken, MainActivity.mEventList.get(eventPosition).getId(), userId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        Snackbar.make(mRootView, getString(R.string.join_event_success, MainActivity.mEventList.get(eventPosition).getName()), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                    MainActivity.mEventList.get(eventPosition).getListOfWaiters().add(userId);
+                    checkIfJoinedEvent();
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mRootView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mRootView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Snackbar.make(mRootView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void leaveEvent() {
+        Call<ResponseBody> call = waiterClient.leaveEvent(authToken, MainActivity.mEventList.get(eventPosition).getId(), userId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        Snackbar.make(mRootView, getString(R.string.leave_event_success, MainActivity.mEventList.get(eventPosition).getName()), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.response_body_null), Snackbar.LENGTH_LONG).show();
+                    }
+                    MainActivity.mEventList.get(eventPosition).getListOfWaiters().remove(userId);
+                    checkIfJoinedEvent();
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            Snackbar.make(mRootView, errorResponse.getData().getMessage(), Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(mRootView, errorResponse.getData().getCauses().get(0), Snackbar.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Snackbar.make(mRootView, getString(R.string.internal_error), Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Snackbar.make(mRootView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
         checkLocationPermission();
-        mGoogleMap.setOnMyLocationButtonClickListener(this);
+
+        mGoogleMap.setOnCameraIdleListener(this);
+        mGoogleMap.setOnCameraMoveStartedListener(this);
+        mGoogleMap.setOnCameraMoveListener(this);
+        mGoogleMap.setOnCameraMoveCanceledListener(this);
 
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_resized);
-
-//        LatLng latLng = new LatLng(48.8151239, 2.3631254); // Epitech Paris location
-        for (int i = 0; i < MainActivity.mEventList.size(); i++) {
-//            latLng = new LatLng(MainActivity.mEventList.get(i).getLong(), MainActivity.mEventList.get(i).getLat());
-            LatLng latLng = new LatLng(MainActivity.mEventList.get(i).getLong(), MainActivity.mEventList.get(i).getLat());
-            mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(String.valueOf(i)).icon(icon));
-        }
-//        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
-//        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//        if (Utils.isEmulator()) {
+//            mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+//        }
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         mGoogleMap.setOnMarkerClickListener(this);
         mGoogleMap.setOnMapClickListener(this);
     }
+
+    private void putMarkersOnMap() {
+        mGoogleMap.clear();
+
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.custom_marker_resized);
+//        LatLng latLng = new LatLng(48.8151239, 2.3631254); // Epitech Paris location
+        for (int i = 0; i < MainActivity.mEventList.size(); i++) {
+//            latLng = new LatLng(MainActivity.mEventList.get(i).getLong(), MainActivity.mEventList.get(i).getLat());
+            LatLng latLng = new LatLng(MainActivity.mEventList.get(i).getLocation().get(1), MainActivity.mEventList.get(i).getLocation().get(0));
+            mGoogleMap.addMarker(new MarkerOptions().position(latLng).title(String.valueOf(i)).icon(icon));
+        }
+//        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
+//        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -233,14 +380,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        int eventID = Integer.parseInt(marker.getTitle());
+        eventPosition = Integer.parseInt(marker.getTitle());
 
-        mEventTitle.setText(MainActivity.mEventList.get(eventID).getName());
+        if (MainActivity.waiterMode) {
+            checkIfJoinedEvent();
+        }
+
+        mEventTitle.setText(MainActivity.mEventList.get(eventPosition).getName());
         //mEventPrice.setText();
-        mEventDescription.setText(MainActivity.mEventList.get(eventID).getDescription());
-        mEventAddress.setText(MainActivity.mEventList.get(eventID).getAddress());
-        mEventDate.setText(MainActivity.mEventList.get(eventID).getDate());
-        mEventWaitersAvailable.setText(getString(R.string.waiters_available, MainActivity.mEventList.get(eventID).getListOfWaiters().size()));
+        mEventDescription.setText(MainActivity.mEventList.get(eventPosition).getDescription());
+        mEventAddress.setText(MainActivity.mEventList.get(eventPosition).getAddress());
+        mEventDate.setText(MainActivity.mEventList.get(eventPosition).getDate());
+        mEventWaitersAvailable.setText(getString(R.string.waiters_available, MainActivity.mEventList.get(eventPosition).getListOfWaiters().size()));
+
         return true;
     }
 
@@ -285,11 +437,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             return false;
         }
         return true;
-    }
-
-    @Override
-    public boolean onMyLocationButtonClick() {
-        return false;
     }
 
     @Override
@@ -338,9 +485,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed() {
         if (mListener != null) {
-            mListener.onFragmentInteractionMaps(uri);
+            mListener.onFragmentInteractionMaps();
         }
     }
 
@@ -361,8 +508,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mListener = null;
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    public void setLastKnownLocation(boolean withAnimation) {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_LOCATION);
             return;
@@ -375,8 +521,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             Toast.makeText(getContext(), "Get current location failed.", Toast.LENGTH_SHORT).show();
         }
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(14).build();
-        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(DEFAULT_ZOOM).build();
+        if (withAnimation) {
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } else {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        setLastKnownLocation(false);
     }
 
     @Override
@@ -387,6 +542,92 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public void onCameraMoveStarted(int reason) {
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            Log.d(TAG, "onCameraMoveStarted: The user gestured on the map.");
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_API_ANIMATION) {
+            Log.d(TAG, "onCameraMoveStarted: The user tapped something on the map.");
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_DEVELOPER_ANIMATION) {
+            Log.d(TAG, "onCameraMoveStarted: The app moved the camera.");
+        }
+    }
+
+    @Override
+    public void onCameraMove() {
+        Log.d(TAG, "onCameraMove: The camera is moving.");
+    }
+
+    @Override
+    public void onCameraMoveCanceled() {
+        Log.d(TAG, "onCameraMoveCanceled: Camera movement canceled.");
+    }
+
+    @Override
+    public void onCameraIdle() {
+        Log.d(TAG, "onCameraIdle: The camera has stopped moving: " + mGoogleMap.getCameraPosition().toString());
+//        Toast.makeText(getContext(), "onCameraIdle: The camera has stopped moving: " + mGoogleMap.getCameraPosition().toString(), Toast.LENGTH_LONG).show();
+        if (mGoogleMap.getCameraPosition().target.latitude != 0 && mGoogleMap.getCameraPosition().target.longitude != 0) {
+//            Toast.makeText(getContext(), mGoogleMap.getCameraPosition().target.toString(), Toast.LENGTH_LONG).show();
+            loadEvents();
+        }
+    }
+
+    private void loadEvents() {
+        Call<ResponseEventsNearLocation> call = waiterClient.getEventsNearLocation(
+                mGoogleMap.getCameraPosition().target.longitude,
+                mGoogleMap.getCameraPosition().target.latitude,
+                mGoogleMap.getCameraPosition().zoom);
+
+        call.enqueue(new Callback<ResponseEventsNearLocation>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseEventsNearLocation> call, @NonNull Response<ResponseEventsNearLocation> response) {
+                if (response.isSuccessful()) {
+                    ResponseEventsNearLocation body = response.body();
+                    if (body != null) {
+                        MainActivity.mEventList = body.getData().getEvents();
+                        putMarkersOnMap();
+                        mListener.onFragmentInteractionMaps();
+//                        mListener.showErrorSnackbar(getString(R.string.update_success, "Events"));
+                    } else {
+                        mListener.showErrorSnackbar(getString(R.string.response_body_null));
+                    }
+                } else {
+                    errorResponse = ErrorUtils.parseError(response);
+                    if (errorResponse != null && errorResponse.getData() != null) {
+                        if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
+                            mListener.showErrorSnackbar(errorResponse.getData().getMessage());
+                        } else {
+                            mListener.showErrorSnackbar(errorResponse.getData().getCauses().get(0));
+                        }
+                    } else {
+                        mListener.showErrorSnackbar(getString(R.string.internal_error));
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseEventsNearLocation> call, @NonNull Throwable t) {
+                mListener.showErrorSnackbar(t.getLocalizedMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
+                if (MainActivity.waiterMode) {
+                    checkIfJoinedEvent();
+                    mConfirmDialog.show();
+                } else {
+                    mListener.onMapsEventClicked(eventPosition);
+                }
+                break;
+        }
     }
 
     /**
@@ -400,7 +641,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteractionMaps(Uri uri);
+        void onFragmentInteractionMaps();
+        void onMapsEventClicked(int eventPosition);
+        void showErrorSnackbar(String message);
     }
 }

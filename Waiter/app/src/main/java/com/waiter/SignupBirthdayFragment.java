@@ -22,12 +22,14 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
 import com.waiter.custom.CustomTextInputLayout;
 import com.waiter.models.ErrorResponse;
 import com.waiter.models.RequestSignup;
 import com.waiter.models.ResponseSignup;
-import com.waiter.network.ClientGenerator;
+import com.waiter.network.ServiceGenerator;
 import com.waiter.network.WaiterClient;
+import com.waiter.utils.CustomTextWatcher;
 import com.waiter.utils.ErrorUtils;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -93,7 +95,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
 
         introActivity = ((IntroActivity)getActivity());
 
-        waiterClient = ClientGenerator.createClient(WaiterClient.class);
+        waiterClient = ServiceGenerator.createService(WaiterClient.class);
         requestSignup = new RequestSignup();
 
         setupDatePicker();
@@ -185,7 +187,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
         Utils.hideKeyboard(getActivity());
 
         if (firstAttempt) {
-            mInputBirthday.addTextChangedListener(new MyTextWatcher(mInputBirthday));
+            mInputBirthday.addTextChangedListener(new CustomTextWatcher(mInputBirthday, mInputLayoutBirthday, getString(R.string.birthday_instructions)));
             firstAttempt = false;
         }
 
@@ -199,12 +201,20 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
     private void signup() {
         mProgressDialog.show();
 
-        requestSignup.setFirstname(introActivity.getFirstName());
-        requestSignup.setLastname(introActivity.getLastName());
+        requestSignup.setFirstName(introActivity.getFirstName());
+        requestSignup.setLastName(introActivity.getLastName());
         requestSignup.setEmail(introActivity.getEmailAddress());
         requestSignup.setPassword(introActivity.getPassword());
         requestSignup.setBirthday(mInputBirthday.getText().toString().trim());
         requestSignup.setType(0);
+        OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+            @Override
+            public void idsAvailable(String userId, String registrationId) {
+                requestSignup.setDeviceId(userId);
+                Log.d("OneSignal", "UserId:" + userId);
+            }
+        });
+
         Log.d(TAG, "signup: requestSignup = " + requestSignup);
         Call<ResponseSignup> call = waiterClient.signup(requestSignup);
 
@@ -218,7 +228,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                     if (body != null) {
                         signedUp = true;
                         Log.d(TAG, "onResponse: user = " + body.getData().getUser());
-                        mWelcomeUser.setText(getString(R.string.hi_user_welcome, requestSignup.getFirstname()));
+                        mWelcomeUser.setText(getString(R.string.hi_user_welcome, requestSignup.getFirstName()));
                         mScrollView.setVisibility(View.GONE);
                         mWelcomeUser.setVisibility(View.VISIBLE);
 
@@ -232,7 +242,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                     }
                 } else {
                     errorResponse = ErrorUtils.parseError(response);
-                    if (errorResponse != null) {
+                    if (errorResponse != null && errorResponse.getData() != null) {
                         if (errorResponse.getData().getCauses() == null || errorResponse.getData().getCauses().isEmpty()) {
                             introActivity.showMessage(errorResponse.getData().getMessage());
                         } else {
@@ -241,27 +251,6 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
                     } else {
                         introActivity.showMessage(getString(R.string.internal_error));
                     }
-//                    ResponseBody errorBody = response.errorBody();
-//                    if (errorBody != null) {
-//                        try {
-//                            Log.d(TAG, "onResponse: errorBody = " + errorBody.string());
-//                            Gson gson = new Gson();
-//
-//                            TypeAdapter<ErrorResponse> adapter = gson.getAdapter(ErrorResponse.class);
-//                            errorResponse = adapter.fromJson(errorBody.string());
-//                            if (errorResponse.getData().getCauses().isEmpty()) {
-//                                introActivity.showMessage(errorResponse.getData().getMessage());
-//                            } else {
-//                                introActivity.showMessage(errorResponse.getData().getCauses().get(0));
-//                            }
-//                        } catch (IOException e) {
-//                            introActivity.showMessage(getString(R.string.internal_error));
-//                            Log.d(TAG, "onResponse: error = " + e.getLocalizedMessage());
-//                            e.printStackTrace();
-//                        }
-//                    } else {
-//                        introActivity.showMessage(getString(R.string.response_error_body_null));
-//                    }
                 }
             }
 
@@ -284,7 +273,7 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
     private boolean validateBirthday() {
         String birthday = mInputBirthday.getText().toString();
 
-        if (!isValidBirthday(birthday)) {
+        if (!CustomTextWatcher.isValidBirthday(birthday)) {
             if (!mInputLayoutBirthday.isErrorEnabled()) {
                 mInputLayoutBirthday.setHelperTextEnabled(true);
             }
@@ -297,34 +286,9 @@ public class SignupBirthdayFragment extends SlideFragment implements View.OnClic
         return true;
     }
 
-    private boolean isValidBirthday(String birthday) {
-        return !TextUtils.isEmpty(birthday);
-    }
-
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-
-    private class MyTextWatcher implements TextWatcher {
-
-        private View view;
-
-        private MyTextWatcher(View view) {
-            this.view = view;
-        }
-
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-        public void afterTextChanged(Editable editable) {
-            switch (view.getId()) {
-                case R.id.input_birthday:
-                    validateBirthday();
-                    break;
-            }
         }
     }
 }

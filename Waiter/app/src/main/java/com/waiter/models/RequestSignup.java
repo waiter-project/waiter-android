@@ -7,12 +7,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class RequestSignup {
 
-    @SerializedName("firstname")
+    @SerializedName("firstName")
     @Expose
-    private String firstname;
-    @SerializedName("lastname")
+    private String firstName;
+    @SerializedName("lastName")
     @Expose
-    private String lastname;
+    private String lastName;
     @SerializedName("email")
     @Expose
     private String email;
@@ -25,21 +25,24 @@ public class RequestSignup {
     @SerializedName("type")
     @Expose
     private Integer type;
+    @SerializedName("deviceId")
+    @Expose
+    private String deviceId;
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -72,6 +75,14 @@ public class RequestSignup {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     @Override

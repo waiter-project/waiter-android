@@ -1,0 +1,63 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp"
+    tools:context="com.waiter.CurrentWaitClientFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/current_wait_info_layout"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/validation_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <Button
+                    android:id="@+id/btn_generate_code"
+                    android:text="@string/generate_code"
+                    android:textColor="@android:color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="4dp" />
+                <TextView
+                    android:id="@+id/validation_code"
+                    android:textIsSelectable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp"
+                    style="@style/TextAppearance.AppCompat.Headline" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_cancel_this_wait"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel_this_wait"
+                android:textColor="@android:color/white"
+                android:theme="@style/CancelButton" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

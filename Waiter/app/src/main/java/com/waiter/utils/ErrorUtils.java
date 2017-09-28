@@ -3,7 +3,7 @@ package com.waiter.utils;
 import android.util.Log;
 
 import com.waiter.models.ErrorResponse;
-import com.waiter.network.ClientGenerator;
+import com.waiter.network.ServiceGenerator;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -18,7 +18,7 @@ public class ErrorUtils {
 
     public static ErrorResponse parseError(Response<?> response) {
         Converter<ResponseBody, ErrorResponse> converter =
-                ClientGenerator.retrofit().responseBodyConverter(ErrorResponse.class, new Annotation[0]);
+                ServiceGenerator.retrofit().responseBodyConverter(ErrorResponse.class, new Annotation[0]);
 
         ErrorResponse error = new ErrorResponse();
 

@@ -10,6 +10,7 @@
     <!--<color name="colorPrimaryDark">#004d40</color>-->
     <!--<color name="colorAccent">#FFFFFF</color>-->
 
+    <!-- Start client mode colors -->
     <color name="colorPrimary">#1E4561</color>
     <color name="colorPrimaryDark">#153145</color>
     <color name="colorAccent">#ec6565</color>
@@ -17,6 +18,17 @@
     <color name="colorPrimaryLight">#446f8f</color>
 
     <color name="blueAccent">#7AC2BC</color>
+    <!-- End client mode colors -->
+
+    <!-- Start client mode colors -->
+    <color name="colorPrimaryWaiter">#263238</color>
+    <color name="colorPrimaryDarkWaiter">#000a12</color>
+    <color name="colorAccentWaiter">#4f5b62</color>
+
+    <color name="colorPrimaryLightWaiter">#42607e</color>
+
+    <color name="blueAccentWaiter">#7AC2BC</color>
+    <!-- End client mode colors -->
 
     <color name="primary">#E43F3F</color>
     <color name="iron">#CCCCCC</color>
