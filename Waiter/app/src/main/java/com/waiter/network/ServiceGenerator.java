@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    private static String BASE_URL = "http://wait4me.tk:5000";
+    private static String BASE_URL = "https://waiter-api.herokuapp.com";
 
     private static String setApiBaseUrl() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(WaiterApplication.getInstance().getApplicationContext());
