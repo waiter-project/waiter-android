@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">material-intro-screen</string>
+    <string name="impassable_slide">Impossible de passer cette page.</string>
+    <string name="grant_permissions">Autoriser la localisation</string>
+    <string name="please_grant_permissions">Veuillez accorder les permissions nécessaires</string>
+</resources>

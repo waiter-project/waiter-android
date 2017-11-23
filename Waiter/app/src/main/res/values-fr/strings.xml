@@ -1,0 +1,290 @@
+<resources>
+    <string name="app_name">Waiter</string>
+
+    <!-- Main Activity -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Navigation Drawer -->
+    <string name="nav_profile">Profil</string>
+    <string name="nav_events">Événements</string>
+    <string name="nav_payment">Paiement</string>
+    <string name="nav_history">Historique</string>
+    <string name="nav_logout">Déconnexion</string>
+    <string name="nav_settings">Paramètres</string>
+    <string name="nav_about">À propos de Waiter</string>
+    <string name="become_a_waiter">Devenir un waiter</string>
+    <string name="switch_to_client_mode">Passer en mode client</string>
+    <string name="switch_to_waiter_mode">Passer en mode waiter</string>
+
+    <!-- Options Menu -->
+    <string name="action_location">Localisation</string>
+    <string name="action_refresh">Actualiser</string>
+    <string name="action_maps">Vue Carte</string>
+    <string name="action_list">Vue Liste</string>
+
+    <!-- Welcome Activity -->
+    <string name="log_in">Connexion</string>
+    <string name="sign_up">Inscription</string>
+    <string name="welcome">Bienvenue sur Waiter</string>
+
+    <!-- IntroActivity -->
+    <string name="we_need_your_permission">Nous avons besoin de votre permission de localisation</string>
+    <string name="permission_location_description">Afin de vous présenter des événements locaux</string>
+
+    <!-- LoginFragment -->
+    <string name="sign_in">Connexion</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Mot de passe</string>
+    <string name="action_log_in_short">Connexion</string>
+    <string name="forgot_password">Mot de passe oublié ?</string>
+    <string name="no_account_yet">Pas encore inscrit ? Rejoignez-nous !</string>
+    <string name="please_sign_in">Veuillez vous connecter avant de continuer</string>
+    <string name="action_log_in">Connexion</string>
+    <string name="action_sign_in">Connexion</string>
+    <string name="logged_in">Connecté !</string>
+    <string name="signing_in">En cours de connexion…</string>
+    <string name="err_msg_email">Entrez une adresse email valide</string>
+    <string name="err_msg_password">Entrez un mot de passe valide</string>
+    <string name="err_login">Connexion échouée</string>
+    <string name="welcome_back_user">Rebonjour, %1$s !</string>
+
+    <!-- Signup Fragments -->
+    <string name="whats_your_name">Quel est votre nom ?</string>
+    <string name="hint_fname">Prénom</string>
+    <string name="hint_lname">Nom de famille</string>
+    <string name="please_enter_name">Veuillez entrer votre nom avant de continuer</string>
+    <string name="whats_your_email">Votre adresse email ?</string>
+    <string name="hint_email_address">Adresse email</string>
+    <string name="email_already_used">Cette adresse email est déjà utilisée</string>
+    <string name="please_enter_email">Veuillez entrer une adresse email valide avant de continuer</string>
+    <string name="create_password">Créer un mot de passe</string>
+    <string name="password_instructions">Utilisez au moins 8 caractères, une lettre majuscule et un nombre.</string>
+    <string name="password_confirmation">Confirmation du mot de passe</string>
+    <string name="err_msg_password_confirmation">Les mots de passes ne correspondent pas</string>
+    <string name="when_your_birthday">Quand est votre date de naissance ?</string>
+    <string name="hint_birthday">Date de naissance</string>
+    <string name="birthday_instructions">Vous devez avoir au moins 18 ans pour utiliser Waiter.</string>
+    <string name="datepicker_title">Choisissez votre date de naisse</string>
+    <string name="please_sign_up">Veuillez vous inscrire avant de continuer</string>
+    <string name="signing_up">Inscription en cours…</string>
+    <string name="action_sign_up">Inscription</string>
+    <string name="hi_user_welcome">Bonjour, %1$s ! Bienvenue sur Waiter !</string>
+
+    <!-- MapsFragment -->
+    <string name="waiters_available">%1$d waiters disponibles</string>
+
+    <!-- EventFragment -->
+    <string name="save_event">Sauvegarder cet événement</string>
+
+    <!-- FullEvent Activity -->
+    <string name="event_title">Événement</string>
+    <string name="request_a_waiter">Réservez un Waiter</string>
+    <string name="join_this_event">Rejoindre cet événement</string>
+    <string name="leave_this_event">Quitter cet événement</string>
+    <string name="confirm_join_event_title">Rejoindre %1$s ?</string>
+    <string name="confirm_leave_event_title">Quitter %1$s ?</string>
+    <string name="confirm_join_event_message">En rejoingnant cet événement, je certifie que je suis disponible pour effectuer le service d\'attente si un client me réserve. Je reconnais que je ne serai pas en mesure d\'annuler le service sans pénalité financière à moins que je quitte cet événement avant que je ne sois réservé.</string>
+    <string name="confirm_leave_event_message">Êtes-vous sûr de vouloir quitter %1$s ?</string>
+    <string name="join_event_success">Vous avez rejoint %1$s</string>
+    <string name="leave_event_success">Vous avez quitter %1$s</string>
+
+    <!-- History Activity -->
+    <string name="history_title">Historique de waits</string>
+
+    <!-- Profile Activity -->
+    <string name="profile_title">Profil</string>
+    <string name="action_edit">Éditez votre profil</string>
+    <string name="change_password">Modifier votre mot de passe</string>
+    <string name="save_changes">Sauvegarder</string>
+    <string name="hint_phone">Téléphone</string>
+    <string name="hint_street_address">Adresse</string>
+    <string name="dialog_discard_changes">Annuler vos changements ?</string>
+    <string name="discard">Oui</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Annuler</string>
+    <string name="updating_profile">Mise à jour du profil…</string>
+    <string name="update_success">%1$s mis à jour</string>
+
+    <!-- UpdatePassword Activity -->
+    <string name="update_password">Change le mot de passe</string>
+    <string name="current_password">Mot de passe actuel</string>
+    <string name="new_password">Nouveau mot de passe</string>
+    <string name="updating_password">Mis à jour du mot de passe…</string>
+
+    <!-- RequestDialog Fragment -->
+    <string name="how_many_waiters">Combien de waiters ?</string>
+    <string name="request">Réserver</string>
+    <string name="request_one_waiter">Réserver 1 waiter</string>
+    <string name="request_waiters">Réserver %1$d waiters</string>
+    <string name="requesting_waiters">Réservation de %1$d waiters…</string>
+    <string name="request_sent">Réservation envoyée</string>
+
+    <!-- Current Wait Layout -->
+    <string name="your_current_wait">Votre wait actuel</string>
+    <string name="wait_in_progress">Wait en cours</string>
+    <string name="created">Créé</string>
+    <string name="requested">Réservé</string>
+    <string name="started">Commencé</string>
+    <string name="in_progress">En cours</string>
+    <string name="finished">Terminé</string>
+    <string name="validated">Validé</string>
+    <string name="in_conflict">En conflit</string>
+    <string name="paid">Payé</string>
+    <string name="wait_can_start">Je suis prêt, le wait peut commencer</string>
+    <string name="wait_finished">Je suis au devant de la file d\'attente</string>
+    <string name="cancel_this_wait">Annuler ce wait</string>
+    <string name="requested_on">Réservé %1$s</string>
+    <string name="started_on">Commencé %1$s</string>
+    <string name="created_on">Créé %1$s</string>
+    <string name="finished_on">Terminé %1$s</string>
+    <string name="last_update_on">Dernière mis à jour %1$s</string>
+    <string name="wait_id">Wait #%1$s</string>
+    <string name="waiters_requested">%1$d waiters réservés</string>
+    <string name="generate_code">Générer le code de validation</string>
+    <string name="validate_wait">Valider le wait</string>
+    <string name="validation_code">Code de validation</string>
+    <string name="hint_validation_code">Code de validation</string>
+    <string name="verifying_code">Validation du code...</string>
+
+    <!-- Payment Activity -->
+    <string name="payment_title">Paiement</string>
+    <string name="payment_methods">Méthodes de paiements</string>
+    <string name="add_payment_method">Ajouter une méthode de paiement</string>
+    <string name="credit_debit_card">Carte bancaire</string>
+    <string name="android_pay">Android Pay</string>
+    <string name="paypal">PayPal</string>
+    <string name="card_last_4">•••• %1$s</string>
+    <string name="no_payment_methods">Aucune méthodes de paiements</string>
+    <string name="add_card">Ajouter une carte</string>
+    <string name="saving_card">Enregistrement de la carte…</string>
+    <string name="invalid_card_data">Carte invalide</string>
+    <string name="card_succesfully_added">Carte ajoutée</string>
+
+    <!-- General strings -->
+    <string name="is_required">%1$s est nécessaire</string>
+    <string name="please_valid">Veuillez entrez un(e) %1$s valide</string>
+    <string name="is_invalid">%1$s est invalide</string>
+    <string name="response_body_null">Error: Response Body is null</string>
+    <string name="response_error_body_null">Error: Response Error Body is null</string>
+    <string name="internal_error">Erreur interne</string>
+    <string name="unknown_error">Erreur inconnue</string>
+    <string name="agree">Accepter</string>
+    <string name="disagree">Refuser</string>
+
+    <!-- Placeholders -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Carte</string>
+    <string name="placeholder_email">email@domaine.fr</string>
+    <string name="placeholder_phone">06 11 22 33 44</string>
+    <string name="placeholder_full_name">John Doe</string>
+    <string name="placeholder_fname">John</string>
+    <string name="placeholder_lname">Doe</string>
+    <string name="placeholder_profile_address">202 Park Street, Los Angeles</string>
+    <string name="placeholder_title">Event Title</string>
+    <string name="placeholder_price">$8/hr</string>
+    <string name="placeholder_description">Event Description</string>
+    <string name="placeholder_address">Event Address</string>
+    <string name="placeholder_date">Event Date</string>
+    <string name="placeholder_waiters_available">0 waiters available</string>
+    <string name="placeholder_content">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id vulputate libero. Cras suscipit ligula sit amet lectus condimentum, non pretium nulla consequat. Vivamus sed pellentesque mi, eu pulvinar enim. Sed consequat tempus erat, nec condimentum lectus dictum ut. Phasellus ultrices sed nunc non imperdiet. Quisque sagittis dolor eget fringilla cursus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+    </string>
+    <string name="placeholder_date_time">Mar 03 – 8:25 AM</string>
+    <string name="placeholder_time">3h 47min</string>
+    <string name="placeholder_total_price">$23.54</string>
+    <string name="placeholder_wait_description">Wait description</string>
+    <string name="placeholder_waiters_state">Waiters state</string>
+    <string name="placeholder_code">12345</string>
+    <string name="placeholder_payment">•••• 4242</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+
+    <!-- Debug settings -->
+    <string name="pref_header_debug">Debug</string>
+    <string name="pref_server">Server to connect to</string>
+    <string-array name="pref_server_entries">
+        <item>Localhost</item>
+        <item>wait4me.tk</item>
+    </string-array>
+    <string-array name="pref_server_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string name="pref_customApi">Use to a custom API url?</string>
+    <string name="pref_customApi_summ">Set a custom API url to connect to</string>
+    <string name="custom_api_url_title">Custom Waiter API url</string>
+    <string name="custom_api_url_message">Set a custom Waiter API url</string>
+    <string name="default_api_url">http://wait4me.tk:5000/</string>
+
+</resources>
