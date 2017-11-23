@@ -98,11 +98,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void refreshData() {
-        String userEmail = prefs.getString("user_email", "No email address");
-        String firstName = prefs.getString("first_name", "No first name");
-        String lastName = prefs.getString("last_name", "No last name");
-        String phoneNumber = prefs.getString("phone_number", "No phone number");
-        String streetAddress = prefs.getString("street_address", "No street address");
+        String userEmail = prefs.getString("user_email", "");
+        String firstName = prefs.getString("first_name", "");
+        String lastName = prefs.getString("last_name", "");
+        String phoneNumber = prefs.getString("phone_number", "");
+        String streetAddress = prefs.getString("street_address", "");
 
         // View Mode
         mNameView.setText(firstName + " " + lastName);

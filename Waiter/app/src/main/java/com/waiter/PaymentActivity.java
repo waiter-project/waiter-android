@@ -162,7 +162,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
             if (resultCode == RESULT_OK) {
                 setResult(RESULT_OK);
                 loadCards();
-                Snackbar.make(findViewById(android.R.id.content), getString(R.string.card_succesfully_added), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(android.R.id.content), getString(R.string.card_successfully_added), Snackbar.LENGTH_SHORT).show();
             }
         }
     }

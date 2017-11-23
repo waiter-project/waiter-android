@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity
         mSearchView.setOnQueryChangeListener(this);
         mSearchView.setOnSearchListener(this);
         mSearchView.setOnFocusChangeListener(this);
+        mSearchView.setSearchHint(getString(R.string.search_hint));
         //End Searchview
 
         mAppBar = (AppBarLayout) findViewById(R.id.appbar);
@@ -639,9 +640,9 @@ public class MainActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "MAPS";
+                    return getString(R.string.title_tab_maps);
                 case 1:
-                    return "LIST";
+                    return getString(R.string.title_tab_list);
             }
             return null;
         }

@@ -4,6 +4,9 @@
     <!-- Main Activity -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_tab_maps">Carte</string>
+    <string name="title_tab_list">Liste</string>
+    <string name="search_hint">Rechercher</string>
 
     <!-- Navigation Drawer -->
     <string name="nav_profile">Profil</string>
@@ -132,7 +135,7 @@
     <string name="in_conflict">En conflit</string>
     <string name="paid">Payé</string>
     <string name="wait_can_start">Je suis prêt, le wait peut commencer</string>
-    <string name="wait_finished">Je suis au devant de la file d\'attente</string>
+    <string name="wait_finished">Je suis en tête de la file d\'attente</string>
     <string name="cancel_this_wait">Annuler ce wait</string>
     <string name="requested_on">Réservé %1$s</string>
     <string name="started_on">Commencé %1$s</string>
@@ -145,7 +148,7 @@
     <string name="validate_wait">Valider le wait</string>
     <string name="validation_code">Code de validation</string>
     <string name="hint_validation_code">Code de validation</string>
-    <string name="verifying_code">Validation du code...</string>
+    <string name="verifying_code">Validation du code…</string>
 
     <!-- Payment Activity -->
     <string name="payment_title">Paiement</string>
@@ -182,7 +185,7 @@
     <string name="placeholder_lname">Doe</string>
     <string name="placeholder_profile_address">202 Park Street, Los Angeles</string>
     <string name="placeholder_title">Event Title</string>
-    <string name="placeholder_price">$8/hr</string>
+    <string name="placeholder_price">10€/heure</string>
     <string name="placeholder_description">Event Description</string>
     <string name="placeholder_address">Event Address</string>
     <string name="placeholder_date">Event Date</string>
@@ -190,9 +193,9 @@
     <string name="placeholder_content">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id vulputate libero. Cras suscipit ligula sit amet lectus condimentum, non pretium nulla consequat. Vivamus sed pellentesque mi, eu pulvinar enim. Sed consequat tempus erat, nec condimentum lectus dictum ut. Phasellus ultrices sed nunc non imperdiet. Quisque sagittis dolor eget fringilla cursus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
     </string>
-    <string name="placeholder_date_time">Mar 03 – 8:25 AM</string>
+    <string name="placeholder_date_time">Mar 03 – 8:25</string>
     <string name="placeholder_time">3h 47min</string>
-    <string name="placeholder_total_price">$23.54</string>
+    <string name="placeholder_total_price">23.54€</string>
     <string name="placeholder_wait_description">Wait description</string>
     <string name="placeholder_waiters_state">Waiters state</string>
     <string name="placeholder_code">12345</string>

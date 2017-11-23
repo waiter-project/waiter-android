@@ -4,6 +4,9 @@
     <!-- Main Activity -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_tab_maps">Maps</string>
+    <string name="title_tab_list">List</string>
+    <string name="search_hint">Search</string>
 
     <!-- Navigation Drawer -->
     <string name="nav_profile">Profile</string>
@@ -29,7 +32,7 @@
     <string name="welcome">Welcome to Waiter</string>
 
     <!-- IntroActivity -->
-    <string name="we_need_your_permission">We need your permission</string>
+    <string name="we_need_your_permission">We need your localisation permission</string>
     <string name="permission_location_description">In order to show you local events</string>
 
     <!-- LoginFragment -->
@@ -159,7 +162,7 @@
     <string name="add_card">Add card</string>
     <string name="saving_card">Saving card…</string>
     <string name="invalid_card_data">Invalid card data</string>
-    <string name="card_succesfully_added">Card succesfully added</string>
+    <string name="card_successfully_added">Card successfully added</string>
 
     <!-- General strings -->
     <string name="is_required">%1$s is required</string>
@@ -176,13 +179,13 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="placeholder_email">email@domain.com</string>
-    <string name="placeholder_phone">(123) 456-7890</string>
+    <string name="placeholder_phone">(123) 456–7890</string>
     <string name="placeholder_full_name">John Doe</string>
     <string name="placeholder_fname">John</string>
     <string name="placeholder_lname">Doe</string>
     <string name="placeholder_profile_address">202 Park Street, Los Angeles</string>
     <string name="placeholder_title">Event Title</string>
-    <string name="placeholder_price">$8/hr</string>
+    <string name="placeholder_price">$10/hour</string>
     <string name="placeholder_description">Event Description</string>
     <string name="placeholder_address">Event Address</string>
     <string name="placeholder_date">Event Date</string>
@@ -190,7 +193,7 @@
     <string name="placeholder_content">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id vulputate libero. Cras suscipit ligula sit amet lectus condimentum, non pretium nulla consequat. Vivamus sed pellentesque mi, eu pulvinar enim. Sed consequat tempus erat, nec condimentum lectus dictum ut. Phasellus ultrices sed nunc non imperdiet. Quisque sagittis dolor eget fringilla cursus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
     </string>
-    <string name="placeholder_date_time">Mar 03 - 8:25 AM</string>
+    <string name="placeholder_date_time">Mar 03 – 8:25 AM</string>
     <string name="placeholder_time">3h 47min</string>
     <string name="placeholder_total_price">$23.54</string>
     <string name="placeholder_wait_description">Wait description</string>
