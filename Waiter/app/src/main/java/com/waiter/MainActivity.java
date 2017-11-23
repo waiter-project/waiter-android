@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final int NUM_PAGES = 2;
 
+    private static MainActivity singleton;
+
     private DrawerLayout mDrawerLayout;
     private View navHeaderLayout;
     private RelativeLayout footerNavDrawer;
@@ -102,8 +104,14 @@ public class MainActivity extends AppCompatActivity
     private WaiterClient waiterClient;
     private ErrorResponse errorResponse;
 
+    public static MainActivity getInstance(){
+        return singleton;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        singleton = this;
+
         waiterMode = new SecurePreferences(this).getBoolean("waiter_mode", false);
         setTheme(waiterMode ? R.style.AppThemeWaiter_NoActionBar : R.style.AppTheme_NoActionBar);
 
@@ -221,7 +229,7 @@ public class MainActivity extends AppCompatActivity
         // End Load Events from API
     }
 
-    private void checkCurrentWait() {
+    public void checkCurrentWait() {
         Call<ResponseWait> call;
         if (waiterMode) {
             call = waiterClient.getCurrentWait("waiter", userId);
@@ -249,7 +257,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupCurrentWaitUI(Wait wait) {
-        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED) {
+            mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
 
         ImageView staticMaps = (ImageView) mCurrentWaitLayout.findViewById(R.id.static_maps);
         TextView currentEventName = (TextView) mCurrentWaitLayout.findViewById(R.id.current_event_name);

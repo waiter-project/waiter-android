@@ -13,6 +13,8 @@ class WaiterNotificationReceivedHandler implements OneSignal.NotificationReceive
 
     @Override
     public void notificationReceived(OSNotification notification) {
+        MainActivity.getInstance().checkCurrentWait();
+
         Log.d(TAG, "notificationReceived: Notification received");
 
         JSONObject data = notification.payload.additionalData;
