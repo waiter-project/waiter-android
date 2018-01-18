@@ -290,4 +290,6 @@
     <string name="custom_api_url_message">Set a custom Waiter API url</string>
     <string name="default_api_url">http://wait4me.tk:5000/</string>
 
+    <string name="download_invoice">Télécharger la facture</string>
+
 </resources>

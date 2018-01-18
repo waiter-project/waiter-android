@@ -1,5 +1,6 @@
 package com.waiter;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -142,8 +143,11 @@ public class HistoryActivity extends AppCompatActivity {
 
     public class OnListFragmentInteractionListener {
 
-        public void onListFragmentInteractionHistory(History history) {
-            Log.d(TAG, "onListFragmentInteractionEvent: history = " + history.toString());
+        public void onListFragmentInteractionHistory(int position) {
+            Intent intent = new Intent(HistoryActivity.this, HistoryDetailActivity.class);
+//            intent.putExtra("EVENT_POSITION", position);
+            intent.putExtra("HISTORY_POSITION", position);
+            startActivity(intent);
 //            Toast.makeText(HistoryActivity.this, history.getEvent().getName() + " clicked.", Toast.LENGTH_SHORT).show();
         }
 
