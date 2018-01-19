@@ -84,4 +84,7 @@ public interface WaiterClient {
 
     @PUT("/history/{historyId}")
     Call<ResponseRating> rateHistory(@Path("historyId") String historyId, @Body RequestRating requestRating);
+
+    @GET("/billing/{historyId}.pdf")
+    Call<ResponseBody> getBilling(@Path("historyId") String historyId);
 }
