@@ -78,7 +78,7 @@
         android:background="?android:attr/selectableItemBackground"
         android:padding="@dimen/activity_horizontal_margin">
 
-        <ImageButton
+        <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:alpha="0.36"
@@ -105,7 +105,7 @@
         android:background="?android:attr/selectableItemBackground"
         android:padding="@dimen/activity_horizontal_margin">
 
-        <ImageButton
+        <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:alpha="0.36"
@@ -132,7 +132,7 @@
         android:background="?android:attr/selectableItemBackground"
         android:padding="@dimen/activity_horizontal_margin">
 
-        <ImageButton
+        <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:alpha="0.36"
