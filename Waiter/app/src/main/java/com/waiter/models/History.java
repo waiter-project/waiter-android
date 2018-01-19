@@ -33,15 +33,60 @@ public class History {
 
     }
 
+    public class Notation {
+
+        @SerializedName("notation")
+        @Expose
+        private Integer notation;
+        @SerializedName("date")
+        @Expose
+        private String date;
+
+        /**
+         * No args constructor for use in serialization
+         *
+         */
+        public Notation() {
+        }
+
+        /**
+         *
+         * @param date
+         * @param notation
+         */
+        public Notation(Integer notation, String date) {
+            super();
+            this.notation = notation;
+            this.date = date;
+        }
+
+        public Integer getNotation() {
+            return notation;
+        }
+
+        public void setNotation(Integer notation) {
+            this.notation = notation;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+    }
+
     @SerializedName("_id")
     @Expose
     private String id;
     @SerializedName("client")
     @Expose
     private User client;
-    @SerializedName("__v")
+    @SerializedName("notation")
     @Expose
-    private Integer v;
+    private Notation notation;
     @SerializedName("price")
     @Expose
     private Price price;
@@ -54,6 +99,34 @@ public class History {
     @SerializedName("event")
     @Expose
     private Event event;
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public History() {
+    }
+
+    /**
+     *
+     * @param id
+     * @param waiters
+     * @param price
+     * @param client
+     * @param event
+     * @param wait
+     * @param notation
+     */
+    public History(String id, User client, Notation notation, Price price, Wait wait, List<User> waiters, Event event) {
+        super();
+        this.id = id;
+        this.client = client;
+        this.notation = notation;
+        this.price = price;
+        this.wait = wait;
+        this.waiters = waiters;
+        this.event = event;
+    }
 
     public String getId() {
         return id;
@@ -71,12 +144,12 @@ public class History {
         this.client = client;
     }
 
-    public Integer getV() {
-        return v;
+    public Notation getNotation() {
+        return notation;
     }
 
-    public void setV(Integer v) {
-        this.v = v;
+    public void setNotation(Notation notation) {
+        this.notation = notation;
     }
 
     public Price getPrice() {
@@ -110,4 +183,5 @@ public class History {
     public void setEvent(Event event) {
         this.event = event;
     }
+
 }

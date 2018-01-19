@@ -2,6 +2,7 @@ package com.waiter.network;
 
 import com.waiter.models.RequestCreateWait;
 import com.waiter.models.RequestLogin;
+import com.waiter.models.RequestRating;
 import com.waiter.models.RequestSignup;
 import com.waiter.models.RequestUpdatePassword;
 import com.waiter.models.RequestUpdateProfile;
@@ -11,6 +12,7 @@ import com.waiter.models.ResponseEventsNearLocation;
 import com.waiter.models.ResponseGenerateCode;
 import com.waiter.models.ResponseHistory;
 import com.waiter.models.ResponseLogin;
+import com.waiter.models.ResponseRating;
 import com.waiter.models.ResponseSignup;
 import com.waiter.models.ResponseWait;
 
@@ -79,4 +81,7 @@ public interface WaiterClient {
     // History Routes
     @GET("/history/user/{userId}")
     Call<ResponseHistory> getHistory(@Header("x-user-type") String userType, @Path("userId") String userId);
+
+    @PUT("/history/{historyId}")
+    Call<ResponseRating> rateHistory(@Path("historyId") String historyId, @Body RequestRating requestRating);
 }
